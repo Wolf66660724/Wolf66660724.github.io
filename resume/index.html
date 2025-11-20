@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>个人简历 | Mr.wolf</title><meta name="author" content="Mr.wolf"><meta name="copyright" content="Mr.wolf"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="🎯 个人简历茶总（Wolf） | 全栈开发 &amp; 渗透工程师 &amp; 安全服务    📋 个人信息 Personal Info     项目 内容    姓名 &#x2F; 昵称 茶总（Wolf）   职业定位 全栈开发 &amp; 渗透工程师 &amp; 安全服务   📧 邮箱 2646209087@qq.com   📱 电话 13721127744   💻 GitHub">
+<meta property="og:type" content="website">
+<meta property="og:title" content="个人简历">
+<meta property="og:url" content="http://worldpeace.top/resume/index.html">
+<meta property="og:site_name" content="Mr.wolf">
+<meta property="og:description" content="🎯 个人简历茶总（Wolf） | 全栈开发 &amp; 渗透工程师 &amp; 安全服务    📋 个人信息 Personal Info     项目 内容    姓名 &#x2F; 昵称 茶总（Wolf）   职业定位 全栈开发 &amp; 渗透工程师 &amp; 安全服务   📧 邮箱 2646209087@qq.com   📱 电话 13721127744   💻 GitHub">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://worldpeace.top/img/avatar.jpg">
+<meta property="article:published_time" content="2025-11-20T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-11-20T13:29:36.594Z">
+<meta property="article:author" content="Mr.wolf">
+<meta property="article:tag" content="blog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://worldpeace.top/img/avatar.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://worldpeace.top/resume/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '个人简历',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><link rel="stylesheet" href="/css/_commentbg.css/comment_bg.css"><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/music-player.css"><svg aria-hidden="true" style="position:absolute; overflow:hidden; width:0; height:0"><symbol id="icon-sun" viewBox="0 0 1024 1024"><path d="M960 512l-128 128v192h-192l-128 128-128-128H192v-192l-128-128 128-128V192h192l128-128 128 128h192v192z" fill="#FFD878" p-id="8420"></path><path d="M736 512a224 224 0 1 0-448 0 224 224 0 1 0 448 0z" fill="#FFE4A9" p-id="8421"></path><path d="M512 109.248L626.752 224H800v173.248L914.752 512 800 626.752V800h-173.248L512 914.752 397.248 800H224v-173.248L109.248 512 224 397.248V224h173.248L512 109.248M512 64l-128 128H192v192l-128 128 128 128v192h192l128 128 128-128h192v-192l128-128-128-128V192h-192l-128-128z" fill="#4D5152" p-id="8422"></path><path d="M512 320c105.888 0 192 86.112 192 192s-86.112 192-192 192-192-86.112-192-192 86.112-192 192-192m0-32a224 224 0 1 0 0 448 224 224 0 0 0 0-448z" fill="#4D5152" p-id="8423"></path></symbol><symbol id="icon-moon" viewBox="0 0 1024 1024"><path d="M611.370667 167.082667a445.013333 445.013333 0 0 1-38.4 161.834666 477.824 477.824 0 0 1-244.736 244.394667 445.141333 445.141333 0 0 1-161.109334 38.058667 85.077333 85.077333 0 0 0-65.066666 135.722666A462.08 462.08 0 1 0 747.093333 102.058667a85.077333 85.077333 0 0 0-135.722666 65.024z" fill="#FFB531" p-id="11345"></path><path d="M329.728 274.133333l35.157333-35.157333a21.333333 21.333333 0 1 0-30.165333-30.165333l-35.157333 35.157333-35.114667-35.157333a21.333333 21.333333 0 0 0-30.165333 30.165333l35.114666 35.157333-35.114666 35.157334a21.333333 21.333333 0 1 0 30.165333 30.165333l35.114667-35.157333 35.157333 35.157333a21.333333 21.333333 0 1 0 30.165333-30.165333z" fill="#030835" p-id="11346"></path></symbol></svg><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/rss2.xml" title="Mr.wolf" type="application/rss+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="scarecrow"><div class="scarecrow__hat"><div class="scarecrow__ribbon"></div></div><div class="scarecrow__head"><div class="scarecrow__eye"></div><div class="scarecrow__eye"></div><div class="scarecrow__mouth"></div><div class="scarecrow__pipe"></div></div><div class="scarecrow__body"><div class="scarecrow__glove scarecrow__glove--l"></div><div class="scarecrow__sleeve scarecrow__sleeve--l"></div><div class="scarecrow__bow"></div><div class="scarecrow__shirt"></div><div class="scarecrow__coat"></div><div class="scarecrow__waistcoat"></div><div class="scarecrow__sleeve scarecrow__sleeve--r"></div><div class="scarecrow__glove scarecrow__glove--r"></div><div class="scarecrow__coattails"></div><div class="scarecrow__pants"></div></div><div class="scarecrow__arms"></div><div class="scarecrow__leg">  </div></div></div><script></script><script async="async">var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> {preloader.endLoading()})
+document.getElementById('loading-box').addEventListener('click',()=> {preloader.endLoading()})</script><div id="web_bg" style="background-color: #efefef;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/loading.gif" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div><div class="menus_item"><a class="site-page" href="/resume/"><i class="fa-fw fas fa-id-card"></i><span> 简历</span></a></div></div></div></div><div class="page type-resume" id="body-wrap"><header class="not-home-page" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Mr.wolf</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> home</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div><div class="menus_item"><a class="site-page" href="/resume/"><i class="fa-fw fas fa-id-card"></i><span> 简历</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title">个人简历</h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="container" id="article-container"><div align="center">
+
+<h1 id="🎯-个人简历"><a href="#🎯-个人简历" class="headerlink" title="🎯 个人简历"></a>🎯 个人简历</h1><p><strong>茶总（Wolf）</strong> | 全栈开发 &amp; 渗透工程师 &amp; 安全服务</p>
+</div>
+
+<hr>
+<h2 id="📋-个人信息-Personal-Info"><a href="#📋-个人信息-Personal-Info" class="headerlink" title="📋 个人信息 Personal Info"></a>📋 个人信息 Personal Info</h2><div class="resume-info">
+
+<table>
+<thead>
+<tr>
+<th align="center">项目</th>
+<th align="left">内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>姓名 &#x2F; 昵称</strong></td>
+<td align="left">茶总（Wolf）</td>
+</tr>
+<tr>
+<td align="center"><strong>职业定位</strong></td>
+<td align="left">全栈开发 &amp; 渗透工程师 &amp; 安全服务</td>
+</tr>
+<tr>
+<td align="center"><strong>📧 邮箱</strong></td>
+<td align="left"><a href="mailto:&#50;&#54;&#52;&#x36;&#x32;&#48;&#x39;&#x30;&#56;&#55;&#64;&#113;&#x71;&#46;&#99;&#x6f;&#109;">2646209087@qq.com</a></td>
+</tr>
+<tr>
+<td align="center"><strong>📱 电话</strong></td>
+<td align="left">13721127744</td>
+</tr>
+<tr>
+<td align="center"><strong>💻 GitHub</strong></td>
+<td align="left"><a target="_blank" rel="noopener" href="https://github.com/Wolf66660724">GitHub 链接</a></td>
+</tr>
+<tr>
+<td align="center"><strong>🌐 Blog</strong></td>
+<td align="left"><a href="http://worldpeace.top/">个人博客链接</a></td>
+</tr>
+</tbody></table>
+<p><strong>技能标签：</strong> <code>网络安全</code> <code>渗透测试</code> <code>Web 前后端</code> <code>Linux</code> <code>单片机</code> <code>嵌入式</code></p>
+</div>
+
+<hr>
+<h2 id="🛠️-技能-Skills"><a href="#🛠️-技能-Skills" class="headerlink" title="🛠️ 技能 Skills"></a>🛠️ 技能 Skills</h2><h3 id="🔐-网络安全"><a href="#🔐-网络安全" class="headerlink" title="🔐 网络安全"></a>🔐 网络安全</h3><ul>
+<li><strong>渗透测试全流程</strong>：熟悉从信息收集、漏洞扫描、漏洞利用、权限提升到权限维持的完整攻防方法</li>
+<li><strong>安全工具</strong>：熟练使用 Burp Suite、Nmap、Nessus、AWVS、SQLmap、Goby、御剑、Fscan、Dirsearch、TideFinger 等综合测试工具</li>
+<li><strong>Web 安全</strong>：熟悉常见 Web 安全漏洞（OWASP TOP 10）及其成因、防护策略，具备漏洞复现、分析能力，可独立编写渗透测试报告与修复建议</li>
+<li><strong>中间件安全</strong>：熟悉主流中间件漏洞原理：Apache、Nginx、Tomcat、WebLogic、JBoss 等组件的常见安全风险与利用方式</li>
+<li><strong>数据库安全</strong>：熟练掌握常用数据库安全操作，能执行增删改查、权限分析与数据审计</li>
+<li><strong>系统安全</strong>：熟悉 Windows &#x2F; Linux 操作系统安全，能够进行应急响应、日志分析、WEBshell 排查、恶意进程定位等基础入侵检测工作</li>
+<li><strong>安全防护</strong>：了解 IPS &#x2F; IDS &#x2F; WAF 等主流安全防护设备的原理及基本策略配置</li>
+<li><strong>安全脚本</strong>：熟悉 Python、Shell 等脚本语言，能编写自动化扫描、批量验证、信息收集等安全脚本，提高渗透效率</li>
+</ul>
+<h3 id="🌐-前端开发"><a href="#🌐-前端开发" class="headerlink" title="🌐 前端开发"></a>🌐 前端开发</h3><ul>
+<li><strong>基础技术</strong>：HTML &#x2F; CSS &#x2F; JavaScript 熟练，能构建响应式页面与交互功能</li>
+<li><strong>前端框架</strong>：Vue &#x2F; React 基础开发能力，熟悉组件化开发</li>
+<li><strong>前后端交互</strong>：熟悉 Axios &#x2F; Fetch、前后端联调、Session &#x2F; JWT 用户态管理</li>
+</ul>
+<h3 id="🧩-后端开发"><a href="#🧩-后端开发" class="headerlink" title="🧩 后端开发"></a>🧩 后端开发</h3><ul>
+<li><strong>后端框架</strong>：Node.js（Express&#x2F;Koa）、Python（Flask&#x2F;FastAPI）开发能力</li>
+<li><strong>API 开发</strong>：RESTful API、用户系统、权限验证、文件上传、数据处理等模块开发</li>
+<li><strong>数据库</strong>：MySQL &#x2F; SQLite &#x2F; MongoDB 操作能力，熟悉常用 SQL 与数据结构设计</li>
+</ul>
+<h3 id="🐧-Linux-网络"><a href="#🐧-Linux-网络" class="headerlink" title="🐧 Linux &amp; 网络"></a>🐧 Linux &amp; 网络</h3><ul>
+<li><strong>Linux 系统</strong>：Linux 常用命令、权限管理、服务管理、系统配置熟练</li>
+<li><strong>Shell 脚本</strong>：Shell 脚本编写，用于自动化、安全检测、系统维护</li>
+<li><strong>网络基础</strong>：TCP&#x2F;IP、端口、路由、NAT、DNS 等网络基础熟悉</li>
+<li><strong>服务器部署</strong>：服务器部署经验（Nginx &#x2F; Docker）</li>
+</ul>
+<h3 id="⚙️-单片机-嵌入式"><a href="#⚙️-单片机-嵌入式" class="headerlink" title="⚙️ 单片机 &#x2F; 嵌入式"></a>⚙️ 单片机 &#x2F; 嵌入式</h3><ul>
+<li><strong>开发平台</strong>：STM32 &#x2F; Arduino &#x2F; ESP32 开发能力，掌握 C&#x2F;C++</li>
+<li><strong>外设驱动</strong>：GPIO、UART、PWM、ADC、IIC、SPI 等常用外设驱动经验</li>
+<li><strong>模块开发</strong>：OLED 显示、传感器采集、无线通信（WiFi&#x2F;BLE）模块开发经验</li>
+<li><strong>项目经验</strong>：能独立完成嵌入式项目从硬件、驱动到程序调试</li>
+</ul>
+<hr>
+<h2 id="✨-个人优势-Highlights"><a href="#✨-个人优势-Highlights" class="headerlink" title="✨ 个人优势 Highlights"></a>✨ 个人优势 Highlights</h2><div class="resume-highlights">
+
+<ul>
+<li><strong>🎯 技术全面</strong>：网络安全 + 全栈开发 + 单片机，多领域能力互补</li>
+<li><strong>💪 动手能力强</strong>：能独立实现从应用到底层的完整方案</li>
+<li><strong>🚀 学习能力快</strong>：新技术快速上手并形成产出</li>
+<li><strong>🔥 实战经验丰富</strong>：靶场训练 + 实操项目，渗透思路成熟</li>
+<li><strong>⚡ 执行力高</strong>：能将方案快速落地为实际可用系统或工具</li>
+</ul>
+</div>
+
+<hr>
+<div align="center">
+
+<hr>
+<p><strong>感谢您的关注！如有合作意向，欢迎通过邮箱或电话联系我。</strong></p>
+<p><em>最后更新：2025-11-20</em></p>
+</div>
+
+<style>
+.resume-info {
+    margin: 20px 0;
+}
+
+.resume-info table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+.resume-info table td {
+    padding: 10px 15px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.resume-info table td:first-child {
+    font-weight: 600;
+    background: rgba(102, 126, 234, 0.1);
+    width: 30%;
+}
+
+.resume-highlights {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border-left: 4px solid #667eea;
+}
+
+.resume-highlights li {
+    margin: 10px 0;
+    line-height: 1.8;
+}
+
+[data-theme="dark"] .resume-info table td {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .resume-info table td:first-child {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+[data-theme="dark"] .resume-highlights {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+}
+</style>
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/loading.gif" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/ loading='lazy'></div><div class="author-info-name">Mr.wolf</div><div class="author-info-description">遗憾是常态</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Wolf66660724"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Wolf66660724/" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="https://github.com/" target="_blank" title="QQ"><i class="fab fa-qq"></i></a><a class="social-icon" href="mailto:2646209087@qq.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">welcome to my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/20/xiaohongmao-de-lu/" title="这是小红帽说不清第几次踏上这条路了">这是小红帽说不清第几次踏上这条路了</a><time datetime="2025-11-20T04:30:00.000Z" title="发表于 2025-11-20 12:30:00">2025-11-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/13/%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C/" title="记录生活的开始">记录生活的开始</a><time datetime="2025-08-13T13:35:00.000Z" title="发表于 2025-08-13 21:35:00">2025-08-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/08/hello-world/" title="欢迎来到我的博客世界">欢迎来到我的博客世界</a><time datetime="2025-08-08T13:30:19.372Z" title="发表于 2025-08-08 21:30:19">2025-08-08</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%85%E4%BA%8B%E9%9B%86/"><span class="card-category-list-name">故事集</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%94%9F%E6%B4%BB/"><span class="card-category-list-name">生活</span><span class="card-category-list-count">1</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E6%83%85%E6%84%9F/" style="font-size: 1.1em; color: #999">情感</a> <a href="/tags/%E5%BF%83%E6%83%85%E9%9A%8F%E7%AC%94/" style="font-size: 1.1em; color: #999">心情随笔</a> <a href="/tags/%E6%95%85%E4%BA%8B/" style="font-size: 1.1em; color: #999">故事</a> <a href="/tags/%E7%AB%A5%E8%AF%9D/" style="font-size: 1.1em; color: #999">童话</a> <a href="/tags/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/" style="font-size: 1.1em; color: #999">生活记录</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/11/">
+            <span class="card-archive-list-date">
+              十一月 2025
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/08/">
+            <span class="card-archive-list-date">
+              八月 2025
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">3</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">1.3k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-11-20T14:19:30.928Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Mr.wolf</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.3</a></span></div><div id="footer-wrap"></div></div><div class="copyright"><span>&copy;2025</span><svg style="width:1.5em; height:1.5em" aria-hidden="true"><use xlink:href="#icon-hudie"></use></svg><span>Mr.wolf</span></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="简繁转换">繁</button><a class="icon-V hidden" onclick="switchNightMode()" title="日间和夜间模式切换"><svg width="25" height="25" viewBox="0 0 1024 1024"><use id="modeicon" xlink:href="#icon-moon"></use></svg></a><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><div class="js-pjax"></div><script async src="//at.alicdn.com/t/c/font_4997605_3vn5rrlxb2a.js"></script><script src="/js/sun_moon.js" async></script><script src="/js/music-player.js" async></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="世界和平,LOVE,peace,清茶,Mr.wolf" data-fontsize="15px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><div class="persistent-music-player minimized" id="persistent-music-player" data-pjax-ignore="true"><div class="music-controls"><button class="music-toggle-btn" onclick="toggleMusicPlayer()" title="点击切换播放器显示/隐藏
+桌面端右键开启/关闭旋转
+手机端长按1秒开启/关闭旋转" data-events-bound="true">♪</button><button class="music-minimize-btn" onclick="minimizeMusicPlayer()" title="最小化">−</button></div><div class="music-iframe-container"><div class="music-player-content"><div class="music-list"><div class="music-item" data-src="/music/songs/周杰伦 - 发如雪.mp3" data-title="发如雪" data-artist="周杰伦"><div class="music-info"><div class="music-title">发如雪</div><div class="music-artist">周杰伦</div></div><button class="music-play-btn" onclick="playMusic(this)">▶</button></div><div class="music-item" data-src="/music/songs/粥粥和小伙 _ 粥粥 - 就这样爱着你.ogg" data-title="就这样爱着你" data-artist="粥粥和小伙 _ 粥粥"><div class="music-info"><div class="music-title">就这样爱着你</div><div class="music-artist">粥粥和小伙 _ 粥粥</div></div><button class="music-play-btn" onclick="playMusic(this)">▶</button></div><div class="music-item" data-src="/music/songs/许嵩 - 有何不可.mp3" data-title="有何不可" data-artist="许嵩"><div class="music-info"><div class="music-title">有何不可</div><div class="music-artist">许嵩</div></div><button class="music-play-btn" onclick="playMusic(this)">▶</button></div></div><div class="music-player-controls"><audio id="music-audio" controls style="width: 100%; display: none;">你的浏览器不支持 audio 标签。</audio><div class="music-now-playing"><div class="now-playing-title">未播放</div><div class="now-playing-artist">--</div></div></div></div></div></div>
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>(r=>{r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,o=r.imageLazyLoadSetting.preloadRatio||1,d=i();function i(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=i());for(var e,n=0;n<d.length;n++)0<=(e=(e=d[n]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*o||document.documentElement.clientHeight*o)&&(()=>{var t,e,a,o,i=d[n];e=function(){d=d.filter(function(t){return i!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(i)},(t=i).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,o=t.getAttribute("data-original"),a.onload=function(){t.src=o,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=o},t.src!==o&&(a.src=o)))})()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)})(this);</script></body></html>
