@@ -11,14 +11,15 @@ function switchNightMode() {
         }, 2e3)
     })
   const nowMode = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+  const themeStore = window.btf && window.btf.saveToLocal ? window.btf.saveToLocal : null
   if (nowMode === 'light') {
     btf.activateDarkMode()
-    saveToLocal.set('theme', 'dark', 2)
+    themeStore && themeStore.set('theme', 'dark', 2)
     GLOBAL_CONFIG.Snackbar !== undefined && btf.snackbarShow(GLOBAL_CONFIG.Snackbar.day_to_night)
     document.getElementById('modeicon').setAttribute('xlink:href', '#icon-sun')
   } else {
     btf.activateLightMode()
-    saveToLocal.set('theme', 'light', 2)
+    themeStore && themeStore.set('theme', 'light', 2)
     document.querySelector('body').classList.add('DarkMode'), document.getElementById('modeicon').setAttribute('xlink:href', '#icon-moon')
   }
   // handle some cases
