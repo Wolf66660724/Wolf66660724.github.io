@@ -1,25 +1,120 @@
-/* 自定义样式 */
+/* 自定义样式 - 模块美化 */
 
-/* 修复公告框 - 使用更高优先级 */
-#aside-content .card-announcement {
+/* ==================== 白天模式 ==================== */
+
+/* 个人信息模块 - 淡蓝色基底 */
+.card-info {
+    background: linear-gradient(135deg, rgba(219,234,254,0.9), rgba(239,246,255,0.9)) !important;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(59,130,246,0.08);
+}
+
+/* 公告模块 - 淡粉色基底 */
+.card-announcement {
+    background: linear-gradient(135deg, rgba(252,231,243,0.9), rgba(255,241,247,0.9)) !important;
     overflow: visible !important;
 }
 
-#aside-content .card-announcement .announcement_content {
+.card-announcement .announcement_content {
     overflow: visible !important;
     height: auto !important;
-    max-height: none !important;
+    color: #1e293b;
+    font-family: 'STKaiti', 'KaiTi', '楷体', serif;
 }
 
-/* 卡片容器修复 */
-#aside-content .card-widget {
+/* 地图模块 - 淡青色基底 */
+.card-map {
+    background: linear-gradient(135deg, rgba(207,250,254,0.9), rgba(240,253,250,0.9));
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(6,182,212,0.08);
+}
+
+.card-map:hover {
+    box-shadow: 0 4px 20px rgba(6,182,212,0.12);
+}
+
+/* 最新文章模块 - 淡橙色基底 */
+.card-recent-post {
+    background: linear-gradient(135deg, rgba(255,237,213,0.9), rgba(255,247,237,0.9)) !important;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(249,115,22,0.08);
+}
+
+/* 网站信息模块 - 淡绿色基底 */
+.card-webinfo {
+    background: linear-gradient(135deg, rgba(220,252,231,0.9), rgba(240,253,244,0.9)) !important;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(34,197,94,0.08);
+}
+
+/* 文章列表模块 - 保持默认 */
+
+.recent-post-item:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+
+/* 卡片容器 */
+.card-widget {
+    border-radius: 12px;
     overflow: visible !important;
 }
 
-/* 地图立体感效果 */
-.expanded-map-card {
-    box-shadow:
-        0 4px 6px rgba(0, 0, 0, 0.1),
-        0 10px 20px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+/* ==================== 夜晚模式 ==================== */
+
+[data-theme="dark"] .card-info {
+    background: linear-gradient(135deg, rgba(30,58,95,0.9), rgba(25,50,85,0.9)) !important;
+}
+
+[data-theme="dark"] .card-announcement {
+    background: linear-gradient(135deg, rgba(80,40,60,0.9), rgba(70,35,55,0.9)) !important;
+}
+
+[data-theme="dark"] .card-announcement .announcement_content {
+    color: #f8fafc;
+    font-family: 'STKaiti', 'KaiTi', '楷体', serif;
+}
+
+[data-theme="dark"] .card-map {
+    background: linear-gradient(135deg, rgba(20,60,65,0.9), rgba(15,55,60,0.9));
+}
+
+[data-theme="dark"] .card-recent-post {
+    background: linear-gradient(135deg, rgba(80,45,20,0.9), rgba(70,40,18,0.9)) !important;
+}
+
+[data-theme="dark"] .card-webinfo {
+    background: linear-gradient(135deg, rgba(20,60,35,0.9), rgba(18,55,30,0.9)) !important;
+}
+
+/* 暗黑模式下文章列表保持默认 */
+[data-theme="dark"] .recent-post-item {
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] #player {
+    background: rgba(28,28,35,0.97);
+}
+
+[data-theme="dark"] #song { color: #f0f0f0; }
+[data-theme="dark"] #artist { color: #999; }
+
+/* 通用卡片样式 */
+.card-widget {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.card-widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] .card-widget:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* 确保SVG图标颜色正确 */
+svg use {
+    fill: inherit;
 }
