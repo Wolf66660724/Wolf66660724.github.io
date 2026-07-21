@@ -285,10 +285,28 @@ noticeOutdate:
 # --------------------------------------
 footer:
   nav:
-    Home: /
-    关于: /about/
-    友链: /links/
-    留言板: /comments/
+    - content:
+        - title: 快速导航
+          item:
+            - title: 首页
+              url: /
+            - title: 关于
+              url: /about/
+            - title: 友链
+              url: /links/
+            - title: 留言板
+              url: /comments/
+    - content:
+        - title: 内容
+          item:
+            - title: 分类
+              url: /categories/
+            - title: 标签
+              url: /tags/
+            - title: 归档
+              url: /archives/
+            - title: RSS
+              url: /atom.xml
   owner:
     enable: true
     since: 2025
@@ -296,7 +314,7 @@ footer:
   copyright:
     enable: true
     version: true
-  custom_text: 💻 用键盘书写，用代码生活 | 本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+  custom_text: 💻 用键盘书写，用代码生活 | 本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 | <span id="busuanzi_value_site_uv"></span> 位访客
 
 # --------------------------------------
 # Aside Settings
