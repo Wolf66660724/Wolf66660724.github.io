@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://worldpeace.top/photos/index.html</loc>
+    <loc>http://worldpeace.top/2026/07/21/%E5%AE%89%E5%85%A8%E4%BB%8E%E4%B8%9A%E4%B8%80%E4%B8%AA%E6%9C%88%E8%AE%B0%E5%BD%95/</loc>
     
     <lastmod>2026-07-21</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>http://worldpeace.top/resources/index.html</loc>
+    <loc>http://worldpeace.top/tags/index.html</loc>
     
     <lastmod>2026-07-21</lastmod>
     
@@ -20,7 +20,25 @@
   </url>
   
   <url>
-    <loc>http://worldpeace.top/shares/index.html</loc>
+    <loc>http://worldpeace.top/categories/index.html</loc>
+    
+    <lastmod>2026-07-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://worldpeace.top/archives/index.html</loc>
+    
+    <lastmod>2026-07-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://worldpeace.top/resume/index.html</loc>
     
     <lastmod>2026-07-21</lastmod>
     
@@ -38,7 +56,43 @@
   </url>
   
   <url>
-    <loc>http://worldpeace.top/music/index.html</loc>
+    <loc>http://worldpeace.top/shares/index.html</loc>
+    
+    <lastmod>2026-07-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://worldpeace.top/links/index.html</loc>
+    
+    <lastmod>2026-07-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://worldpeace.top/photos/index.html</loc>
+    
+    <lastmod>2026-07-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://worldpeace.top/comments/index.html</loc>
+    
+    <lastmod>2026-07-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://worldpeace.top/about/index.html</loc>
     
     <lastmod>2026-07-21</lastmod>
     
@@ -50,33 +104,6 @@
     <loc>http://worldpeace.top/2026/05/25/%E4%B8%80%E4%B8%AA%E4%BA%BA%E7%9E%8E%E6%8A%98%E8%85%BE/</loc>
     
     <lastmod>2026-05-25</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://worldpeace.top/archives/index.html</loc>
-    
-    <lastmod>2025-11-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://worldpeace.top/categories/index.html</loc>
-    
-    <lastmod>2025-11-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://worldpeace.top/tags/index.html</loc>
-    
-    <lastmod>2025-11-28</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -110,60 +137,6 @@
   </url>
   
   <url>
-    <loc>http://worldpeace.top/about/index.html</loc>
-    
-    <lastmod>2025-11-27</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://worldpeace.top/resume/index.html</loc>
-    
-    <lastmod>2025-11-27</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://worldpeace.top/comments/index.html</loc>
-    
-    <lastmod>2025-11-27</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://worldpeace.top/links/index.html</loc>
-    
-    <lastmod>2025-11-27</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://worldpeace.top/music/songs/README.html</loc>
-    
-    <lastmod>2025-11-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://worldpeace.top/music/README.html</loc>
-    
-    <lastmod>2025-11-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://worldpeace.top/movies/videos/README.html</loc>
     
     <lastmod>2025-11-20</lastmod>
@@ -174,15 +147,6 @@
   
   <url>
     <loc>http://worldpeace.top/movies/thumbnails/README.html</loc>
-    
-    <lastmod>2025-11-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://worldpeace.top/music/covers/README.html</loc>
     
     <lastmod>2025-11-20</lastmod>
     
@@ -245,6 +209,13 @@
   
   <url>
     <loc>http://worldpeace.top/categories/%E6%95%85%E4%BA%8B%E9%9B%86/</loc>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://worldpeace.top/categories/%E7%94%9F%E6%B4%BB/%E6%95%85%E4%BA%8B%E9%9B%86/</loc>
     <lastmod>2026-07-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
