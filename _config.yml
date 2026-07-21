@@ -126,3 +126,13 @@ lazyload:
   loadingImg: 
 
 
+
+# Sitemap
+sitemap:
+  path: sitemap.xml
+
+# Nofollow
+nofollow:
+  enable: true
+  exclude:
+    - worldpeace.top

@@ -58,10 +58,11 @@ code_blocks:
 # Formal:
 #   icon: link || the description || color
 social:
-  fab fa-github: https://github.com/Wolf66660724/ || Github
-  fa fa-book-open: https://blog.csdn.net/|| CSDN
-  fab fa-qq: https://github.com/|| QQ
-  fas fa-envelope-open-text: mailto:2646209087@qq.com || Email
+ fab fa-github: https://github.com/Wolf66660724/ || Github
+ fa fa-book-open: https://blog.csdn.net/|| CSDN
+ fab fa-qq: https://wpa.qq.com/msgrd?v=3&uin=2646209087&site=qq&menu=yes || QQ || '#12B7F5'
+ fas fa-envelope-open-text: mailto:2646209087@qq.com || Email
+ fas fa-rss: /atom.xml || RSS || '#ff8c00'
 
   # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
   # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
@@ -132,8 +133,8 @@ error_img:
 
 # A simple 404 page
 error_404:
-  enable: false
-  subtitle: 'Page Not Found'
+  enable: true
+  subtitle: '这里什么都没有... 回首页看看？'
   background: /img/error-page.png
 
 post_meta:
@@ -284,6 +285,10 @@ noticeOutdate:
 # --------------------------------------
 footer:
   nav:
+    Home: /
+    关于: /about/
+    友链: /links/
+    留言板: /comments/
   owner:
     enable: true
     since: 2025
@@ -291,7 +296,7 @@ footer:
   copyright:
     enable: true
     version: true
-  custom_text:
+  custom_text: 💻 用键盘书写，用代码生活 | 本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
 
 # --------------------------------------
 # Aside Settings
