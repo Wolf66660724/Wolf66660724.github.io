@@ -97,15 +97,15 @@ hexo deploy
 `ash
 git add -A
 git commit -m "feat: 新增文章《xxx》"
-git tag v1.2
-git push origin source --tags
+git tag v1.2      # 打标签
+git push origin main:source --tags  # 推送源码+标签
 `
 
 ### 回档
 
 `ash
 git log --oneline --decorate --tags      # 查看历史
-git checkout v1.0                        # 回到初始版本
+git checkout tags/v1.2  # 切换到指定版本                        # 回到初始版本
 git checkout -b hotfix v1.0              # 从旧版本创建分支修改
 `
 
