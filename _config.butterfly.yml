@@ -23,14 +23,15 @@ menu:
     分类: /categories/ || fa fa-archive
     标签: /tags/ || fa fa-tags
     归档: /archives/ || fa fa-folder-open
-  生活 || fas fa-list:
-    分享: /shares/ || fa fa-share-alt
-    相册: /photos/ || fa fa-camera-retro
-    影视: /movies/ || fas fa-video
-  友链: /links/ || fa fa-link
-  留言板: /comments/ || fa fa-paper-plane
-  关于笔者: /about/ || fas fa-heart  
-  简历: /resume/ || fas fa-id-card
+  行迹: /resume/ || fas fa-id-card
+  自述: /about/ || fas fa-heart
+  拾光集: /photos/ || fa fa-camera-retro
+  灵感集: /shares/ || fa fa-lightbulb
+  帧藏: /movies/ || fas fa-video
+  听风: /music/ || fa fa-music
+  百宝箱: /resources/ || fa fa-archive
+  友邻: /links/ || fa fa-link
+  回响: /comments/ || fa fa-paper-plane
 
     
 
@@ -290,11 +291,11 @@ footer:
           item:
             - title: 首页
               url: /
-            - title: 关于
+            - title: 自述
               url: /about/
-            - title: 友链
+            - title: 友邻
               url: /links/
-            - title: 留言板
+            - title: 回响
               url: /comments/
     - content:
         - title: 内容

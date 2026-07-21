@@ -1,5 +1,5 @@
-﻿---
-title: 美好瞬间
+---
+title: 拾光集
 date: 2025-11-20 12:00:00
 type: "photos"
 comments: false
@@ -8,9 +8,9 @@ top_img: /img/pages/photos-bg.jpg
 
 <div align="center">
 
-# 📸 美好瞬间
+# 📸 拾光集
 
-> "拍照是凝固时光的艺术，每一帧都值得被珍藏。"
+> "拍照是凝固时光的艺术，每一帧都值得被收藏。"
 
 </div>
 

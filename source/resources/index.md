@@ -1,5 +1,5 @@
-﻿---
-title: 资源收藏
+---
+title: 百宝箱
 date: 2025-08-09 18:22:27
 type: "resources"
 comments: false
@@ -8,9 +8,9 @@ top_img: /img/pages/home-bg.jpg
 
 <div align="center">
 
-# 📚 资源收藏
+# 📚 百宝箱
 
-> 精选工具、博客与学习资源，方便随时查阅。
+> 精选工具、博客与学习资源，方便随时取用。
 
 </div>
 
@@ -43,7 +43,7 @@ table td, table th {
     border: 1px solid rgba(0,0,0,0.08);
 }
 table tr:hover {
-    background: rgba(102,126,234,0.06);
+    background: rgba(102, 126, 234, 0.06);
 }
 table a {
     color: var(--theme-color, #667eea);

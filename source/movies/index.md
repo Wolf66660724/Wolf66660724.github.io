@@ -1,5 +1,5 @@
-﻿---
-title: 记忆片段
+---
+title: 帧藏
 date: 2025-11-20 12:00:00
 type: "movies"
 comments: false
@@ -8,25 +8,21 @@ top_img: /img/pages/movies-bg.jpg
 
 <div align="center">
 
-# 🎬 记忆片段
+# 🎬 帧藏
 
-> 这里记录着那些珍贵的时光片段，每一个视频都是值得珍藏的回忆。
+> 每一帧都是时光的标本，每一段视频都是记忆的琥珀。
 
 </div>
 
 ---
 
-## 📹 视频列表
-
 <div class="video-gallery-wrapper">
 
 <div class="video-intro">
-<p>记忆像一部老电影，偶尔翻出来看看，仍然能感受到当时的心情。</p>
+<p>把珍贵的瞬间装进影像里，偶尔翻出来看看，仍然能感受到当时的心跳。</p>
 </div>
 
 <div class="video-grid">
-
-<!-- 视频卡片模板（将视频文件放到 source/movies/videos/ 目录并取消注释即可使用）-->
 
 <div class="video-item video-placeholder-card">
   <div class="video-thumbnail">
@@ -37,7 +33,7 @@ top_img: /img/pages/movies-bg.jpg
   </div>
   <div class="video-info">
     <h4 class="video-title">4K 演示视频</h4>
-    <p class="video-description">Sony Bravia OLED 4K 演示视频，感受色彩与细节的魅力。</p>
+    <p class="video-description">感受色彩与细节的魅力。</p>
     <div class="video-meta">
       <span class="video-date">待上传</span>
       <span class="video-tags">

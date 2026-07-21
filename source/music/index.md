@@ -1,5 +1,5 @@
-﻿---
-title: 音乐
+---
+title: 听风
 date: 2025-11-20 12:00:00
 type: "music"
 comments: true
@@ -8,33 +8,28 @@ layout: false
 
 <div align="center">
 
-# 🎵 音乐小站
+# 🎵 听风
 
 > "音乐是灵魂在寂静中独自奏响的声音。"
+> <p style="font-size:0.85em;color:#999;">—— 沃尔特·佩特</p>
 
 </div>
 
 ---
 
-## 🎧 我的音乐列表
-
 <div class="music-showcase">
 
 <div class="music-intro">
-<p>右下角藏着一个悬浮音乐播放器 🎶，随时可以点开听歌。当前收录了 3 首歌，后续会慢慢充实曲库。</p>
+<p>右下角藏着一个悬浮音乐播放器 🎶，随时可以点开听歌。目前收录了 3 首歌，后续慢慢充实曲库。</p>
 </div>
-
-<div class="music-track-list">
 
 ### 🎼 当前歌单
 
-| # | 歌曲 | 歌手 | 格式 |
-|:-:|------|------|:----:|
-| 1 | 发如雪 | 周杰伦 | MP3 |
-| 2 | 就这样爱着你 | 粘苞米和小伙 | OGG |
-| 3 | 有何不可 | 许嵩 | MP3 |
-
-</div>
+| # | 歌曲 | 歌手 |
+|:-:|------|------|
+| 1 | 发如雪 | 周杰伦 |
+| 2 | 就这样爱着你 | 粘苞米和小伙 |
+| 3 | 有何不可 | 许嵩 |
 
 <div class="music-note">
 
@@ -56,17 +51,17 @@ layout: false
     margin-bottom: 30px;
     text-align: center;
 }
-.music-track-list table {
+.music-showcase table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
 }
-.music-track-list table td, 
-.music-track-list table th {
+.music-showcase table td, 
+.music-showcase table th {
     padding: 10px 15px;
     border: 1px solid rgba(0,0,0,0.08);
 }
-.music-track-list table tr:hover {
+.music-showcase table tr:hover {
     background: rgba(102,126,234,0.06);
 }
 .music-note {

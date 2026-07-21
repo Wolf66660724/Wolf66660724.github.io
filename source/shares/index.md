@@ -1,5 +1,5 @@
-﻿---
-title: 灵感分享
+---
+title: 灵感集
 date: 2025-11-27 12:00:00
 type: "shares"
 comments: true
@@ -8,7 +8,7 @@ top_img: /img/pages/share-bg.jpg
 
 <div align="center">
 
-# ✨ 精选分享 | Inspiring Reads
+# ✨ 灵感集 | Inspiring Reads
 
 > 记录那些值得被一读再读的好文章、好工具、好设计，帮你快速定位灵感与方法论。
 
@@ -27,7 +27,7 @@ top_img: /img/pages/share-bg.jpg
   </div>
   <h3>情绪色彩在界面中的应用</h3>
   <p>来自 UJungle 的深度案例，拆解了 8 种高频场景的配色策略，附上实用的渐变调色板。</p>
-  <a href="https://example.com/ui-color" target="_blank" rel="noopener">阅读全文 →</a>
+  <a href="#" target="_blank" rel="noopener">阅读全文 →</a>
 </article>
 
 <article class="share-card">
