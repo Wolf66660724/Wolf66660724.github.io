@@ -1,5 +1,6 @@
 ---
 title: 灵感集
+subtitle: "记录灵感，发现美好"
 date: 2025-11-27 12:00:00
 type: "shares"
 comments: true

@@ -1,5 +1,6 @@
 ---
 title: 写在前面
+subtitle: "行至水穷处，坐看云起时"
 date: 2025-08-09 18:22:17
 type: "about"
 comments: true

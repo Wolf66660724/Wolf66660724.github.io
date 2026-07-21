@@ -48,5 +48,5 @@ header#page-header(class=`${headerClassName + isFixedClass}` style=bg_img)
         h1#site-title=page.title || page.tag || page.category
   else
     //- improve seo
-    if globalPageType !== 'post'
+     if globalPageType !== 'post'
       h1.title-seo=page.title || page.tag || page.category || config.title

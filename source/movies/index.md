@@ -1,5 +1,6 @@
 ---
 title: 帧藏
+subtitle: "每一帧都是时光的标本"
 date: 2025-11-20 12:00:00
 type: "movies"
 comments: false

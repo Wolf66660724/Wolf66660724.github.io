@@ -1,5 +1,6 @@
 ---
 title: 回响
+subtitle: "愿每句话都带着善意，落在世界的另一端"
 top_img: /img/pages/comments-bg.jpg
 type: 'envelope'
 comments: true

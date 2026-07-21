@@ -1,5 +1,6 @@
 ---
 title: 友邻
+subtitle: "茫茫网海，相逢即是缘"
 date: 2025-11-21 12:00:00
 type: "link"
 comments: true

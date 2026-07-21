@@ -1,4 +1,4 @@
-footer:
+﻿footer:
   framework: 框架
   theme: 主题
 
@@ -9,9 +9,9 @@ copy:
 
 page:
   articles: 全部文章
-  tag: 标签
-  category: 分类
-  archives: 归档
+  tag: 标签集
+  category: 门类
+  archives: 时光轴
   comments: 留言板
 
 card_post_count: 条评论

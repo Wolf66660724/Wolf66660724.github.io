@@ -1,5 +1,6 @@
 ---
-title: 行迹
+title: 关于我
+subtitle: "全栈开发 · 渗透测试 · 安全服务"
 date: 2025-11-20 12:00:00
 type: "resume"
 comments: false

@@ -1,4 +1,4 @@
-# --------------------------------------
+﻿# --------------------------------------
 # Hexo Butterfly Theme Configuration
 # If you have any questions, please refer to the documentation
 # Chinese: https://butterfly.js.org/
@@ -20,18 +20,18 @@ nav:
 menu:
   home: / || fas fa-home
   博文 || fa fa-graduation-cap:
-    分类: /categories/ || fa fa-archive
-    标签: /tags/ || fa fa-tags
-    归档: /archives/ || fa fa-folder-open
-  行迹: /resume/ || fas fa-id-card
-  自述: /about/ || fas fa-heart
+    门类: /categories/ || fa fa-archive
+    标签集: /tags/ || fa fa-tags
+    时光轴: /archives/ || fa fa-folder-open
+  友联 || fa fa-link:
+    友链: /links/ || fa fa-link
+    AI渗透: http://8.148.28.150:9137/ || fas fa-shield-halved
   拾光集: /photos/ || fa fa-camera-retro
   灵感集: /shares/ || fa fa-lightbulb
   帧藏: /movies/ || fas fa-video
-  听风: /music/ || fa fa-music
-  百宝箱: /resources/ || fa fa-archive
-  友邻: /links/ || fa fa-link
   回响: /comments/ || fa fa-paper-plane
+  自述: /about/ || fas fa-heart
+  关于我: /resume/ || fas fa-id-card
 
     
 
@@ -300,11 +300,11 @@ footer:
     - content:
         - title: 内容
           item:
-            - title: 分类
+            - title: 门类
               url: /categories/
-            - title: 标签
+            - title: 标签集
               url: /tags/
-            - title: 归档
+            - title: 时光轴
               url: /archives/
             - title: RSS
               url: /atom.xml
@@ -413,8 +413,7 @@ aside:
 # --------------------------------------
 
 # The distance between the bottom right button and the bottom (default unit: px)
-rightside_bottom:
-
+rightside_bottom: 40px
 # Conversion between Traditional and Simplified Chinese
 translate:
   enable: true
@@ -1198,6 +1197,7 @@ inject:
     - <script async src="//at.alicdn.com/t/c/font_4997605_3vn5rrlxb2a.js"></script>
     - <script src="/js/sun_moon.js" async></script>
     - <script src="/js/music-player.js" async></script>
+    - <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     - <script src="/js/matrix-rain.js"></script>
     - <script src="/js/visitor-map.js"></script>
     - <script src="/js/daily-quote.js"></script>
@@ -1308,3 +1308,5 @@ envelope_comment:
     - 哪怕是有什么想吃的，都可以告诉我哦~
   bottom: 自动小清茶人偶竭诚为您服务！ #信笺结束语，只能单行
   height: #调整信笺划出高度，默认1050px
+
+
