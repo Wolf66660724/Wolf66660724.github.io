@@ -1,0 +1,26 @@
+//- 全局音乐播放器
+#persistent-music-player.persistent-music-player.minimized(data-pjax-ignore="true")
+  .music-controls
+    button.music-toggle-btn(type="button" onclick="toggleMusicPlayer()" title="点击切换播放器显示/隐藏&#10;桌面端右键开启/关闭旋转&#10;手机端长按1秒开启/关闭旋转" data-events-bound="true") ♪
+    button.music-minimize-btn(type="button" onclick="minimizeMusicPlayer()" title="最小化") −
+  .music-iframe-container
+    .music-visual
+      svg.music-progress(viewBox="0 0 220 220")
+        circle.music-progress-track(cx="110" cy="110" r="100")
+        circle.music-progress-path(cx="110" cy="110" r="100")
+      .music-visual-core
+        .music-cd-disc
+          .music-cd-center
+        .music-visual-meta
+          span.music-visual-artist 未知歌手
+          span.music-visual-title 待播放
+      .music-player-controls
+        .music-now-playing
+          .now-playing-title 未播放
+          .now-playing-artist --
+      .music-control-buttons
+        button.music-prev-btn(type="button" onclick="playPreviousTrack()" title="上一首") ⏮
+        button.music-play-pause-btn(type="button" onclick="togglePlayPause()" title="播放/暂停") ▶
+        button.music-next-btn(type="button" onclick="playNextTrack()" title="下一首") ⏭
+      audio#music-audio(controls style="width: 100%; display: none;")
+        | 你的浏览器不支持 audio 标签。

@@ -1,0 +1,22 @@
+/* 留言板顶部背景美化 */
+#page-header {
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.4),   /* 上部深色蒙版 */
+      rgba(0, 0, 0, 0.4)    /* 下部深色蒙版 */
+    ),
+    url("/img/comment_bg.png") center/cover no-repeat; /* 你的背景图路径 */
+}
+
+/* 调整标题样式 */
+#page-header h1 {
+  color: #fff;  /* 白色标题 */
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.5); /* 文字阴影防止背景干扰 */
+  font-weight: 700;
+  font-size: 2.6rem;
+}
+
+/* 副标题（如果有） */
+#page-header .post-meta {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+}

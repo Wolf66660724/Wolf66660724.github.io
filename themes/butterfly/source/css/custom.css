@@ -1,0 +1,91 @@
+#web_bg {
+    background: -webkit-linear-gradient(
+            0deg,
+            rgba(247, 149, 51, 0.1) 0,
+            rgba(243, 112, 85, 0.1) 15%,
+            rgba(239, 78, 123, 0.1) 30%,
+            rgba(161, 102, 171, 0.1) 44%,
+            rgba(80, 115, 184, 0.1) 58%,
+            rgba(16, 152, 173, 0.1) 72%,
+            rgba(7, 179, 155, 0.1) 86%,
+            rgba(109, 186, 130, 0.1) 100%
+    );
+    background: -moz-linear-gradient(
+            0deg,
+            rgba(247, 149, 51, 0.1) 0,
+            rgba(243, 112, 85, 0.1) 15%,
+            rgba(239, 78, 123, 0.1) 30%,
+            rgba(161, 102, 171, 0.1) 44%,
+            rgba(80, 115, 184, 0.1) 58%,
+            rgba(16, 152, 173, 0.1) 72%,
+            rgba(7, 179, 155, 0.1) 86%,
+            rgba(109, 186, 130, 0.1) 100%
+    );
+    background: -o-linear-gradient(
+            0deg,
+            rgba(247, 149, 51, 0.1) 0,
+            rgba(243, 112, 85, 0.1) 15%,
+            rgba(239, 78, 123, 0.1) 30%,
+            rgba(161, 102, 171, 0.1) 44%,
+            rgba(80, 115, 184, 0.1) 58%,
+            rgba(16, 152, 173, 0.1) 72%,
+            rgba(7, 179, 155, 0.1) 86%,
+            rgba(109, 186, 130, 0.1) 100%
+    );
+    background: -ms-linear-gradient(
+            0deg,
+            rgba(247, 149, 51, 0.1) 0,
+            rgba(243, 112, 85, 0.1) 15%,
+            rgba(239, 78, 123, 0.1) 30%,
+            rgba(161, 102, 171, 0.1) 44%,
+            rgba(80, 115, 184, 0.1) 58%,
+            rgba(16, 152, 173, 0.1) 72%,
+            rgba(7, 179, 155, 0.1) 86%,
+            rgba(109, 186, 130, 0.1) 100%
+    );
+    background: linear-gradient(
+            90deg,
+            rgba(247, 149, 51, 0.1) 0,
+            rgba(243, 112, 85, 0.1) 15%,
+            rgba(239, 78, 123, 0.1) 30%,
+            rgba(161, 102, 171, 0.1) 44%,
+            rgba(80, 115, 184, 0.1) 58%,
+            rgba(16, 152, 173, 0.1) 72%,
+            rgba(7, 179, 155, 0.1) 86%,
+            rgba(109, 186, 130, 0.1) 100%
+    );
+}
+svg.icon {
+   width: 1em; height: 1em;
+   /* width和height定义图标的默认宽度和高度*/
+   vertical-align: -0.15em;
+   fill: currentColor;
+   overflow: hidden;
+}
+/*iconfont默认样式*/
+.icon {
+  width: 1em; height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  }
+/* 页脚蝴蝶振翅动画 */
+.copyright svg{
+  margin-left: 5px; /* 可以根据需要调整蝴蝶与文字的间距 */
+  animation:butterfly 1s linear infinite alternate;
+}
+@keyframes butterfly {
+  from {
+    transform:rotateY(70deg);
+  }
+  to {
+    transform:rotateY(0deg);
+  }
+}
+/* 使版权信息和蝴蝶图标垂直居中 */
+.copyright {
+  display: flex;
+  align-items: center;  /* 垂直居中 */
+  justify-content: center;  /* 水平居中（如果需要） */
+}
+

@@ -1,0 +1,148 @@
+- class_name: 学习平台
+  class_desc: 在线学习和教育平台
+  link_list:
+    - name: 哔哩哔哩
+      link: https://www.bilibili.com/
+      avatar: https://www.bilibili.com/favicon.ico
+      descr: 哔哩哔哩 (゜-゜)つロ 干杯~-bilibili
+    - name: 智慧树
+      link: https://www.zhihuishu.com/
+      avatar: https://www.zhihuishu.com/favicon.ico
+      descr: 智慧树网
+    - name: 超星学习通
+      link: https://onlineweb.zhihuishu.com/onlinestuh5
+      avatar: https://www.zhihuishu.com/favicon.ico
+      descr: 学生首页_在线学堂_智慧树
+    - name: 知乎
+      link: https://www.zhihu.com/
+      avatar: https://www.zhihu.com/favicon.ico
+      descr: 知乎 - 有问题，就会有答案
+
+- class_name: AI工具
+  class_desc: 人工智能和AI助手工具
+  link_list:
+    - name: ChatGPT
+      link: https://chat.openai.com/
+      avatar: https://chat.openai.com/favicon.ico
+      descr: OpenAI ChatGPT
+    - name: DeepSeek
+      link: https://chat.deepseek.com/
+      avatar: https://chat.deepseek.com/favicon.ico
+      descr: DeepSeek - 探索未至之境
+    - name: Chatbox
+      link: https://web.chatboxai.app/
+      avatar: https://web.chatboxai.app/favicon.ico
+      descr: Chatbox AI助手
+
+- class_name: 视频平台
+  class_desc: 视频观看和分享平台
+  link_list:
+    - name: YouTube
+      link: https://youtube.com/
+      avatar: https://www.youtube.com/favicon.ico
+      descr: YouTube
+    - name: 腾讯视频
+      link: https://v.qq.com/
+      avatar: https://v.qq.com/favicon.ico
+      descr: 腾讯视频 - 中国领先的在线视频媒体平台
+    - name: 电影天堂
+      link: https://www.dytt89.com/
+      avatar: https://www.dytt89.com/favicon.ico
+      descr: 电影天堂_电影下载_高清首发
+
+- class_name: 开发工具
+  class_desc: 编程开发和工具网站
+  link_list:
+    - name: GitHub
+      link: https://github.com/
+      avatar: https://github.com/favicon.ico
+      descr: GitHub - 代码托管平台
+    - name: GitCode
+      link: https://gitcode.com/
+      avatar: https://gitcode.com/favicon.ico
+      descr: GitCode - 全球开发者的开源社区
+    - name: Docker Docs
+      link: https://docs.docker.com/
+      avatar: https://docs.docker.com/favicon.ico
+      descr: Docker 官方文档
+    - name: 菜鸟教程
+      link: https://www.runoob.com/
+      avatar: https://www.runoob.com/favicon.ico
+      descr: 菜鸟教程 - 学的不仅是技术，更是梦想
+
+- class_name: 设计资源
+  class_desc: 图标、图片和设计素材
+  link_list:
+    - name: iconfont
+      link: https://www.iconfont.cn/
+      avatar: https://www.iconfont.cn/favicon.ico
+      descr: iconfont-阿里巴巴矢量图标库
+    - name: 摄图网
+      link: https://699pic.com/
+      avatar: https://699pic.com/favicon.ico
+      descr: 摄图网 - 正版摄影图片免费下载
+
+- class_name: 安全工具
+  class_desc: 网络安全和渗透测试工具
+  link_list:
+    - name: ZoomEye
+      link: https://www.zoomeye.org/
+      avatar: https://www.zoomeye.org/favicon.ico
+      descr: ZoomEye - 网络空间搜索引擎
+    - name: FOFA
+      link: https://fofa.info/
+      avatar: https://fofa.info/favicon.ico
+      descr: FOFA - 网络空间资产搜索引擎
+    - name: Seebug
+      link: https://www.seebug.org/
+      avatar: https://www.seebug.org/favicon.ico
+      descr: Seebug 漏洞平台
+
+- class_name: 实用工具
+  class_desc: 日常使用的实用工具网站
+  link_list:
+    - name: Google
+      link: https://www.google.com/
+      avatar: https://www.google.com/favicon.ico
+      descr: Google 搜索引擎
+    - name: Gmail
+      link: https://mail.google.com/
+      avatar: https://mail.google.com/favicon.ico
+      descr: Gmail 邮箱
+    - name: Google Maps
+      link: https://maps.google.com/
+      avatar: https://maps.google.com/favicon.ico
+      descr: Google 地图
+    - name: 1.1.1.1
+      link: https://1.1.1.1/
+      avatar: https://1.1.1.1/favicon.ico
+      descr: 1.1.1.1 — 让您的互联网更快的免费应用程序
+
+- class_name: 博客主题
+  class_desc: Hexo博客主题相关
+  link_list:
+    - name: Butterfly
+      link: https://butterfly.js.org/
+      avatar: https://butterfly.js.org/favicon.ico
+      descr: Butterfly - A Simple and Card UI Design theme for Hexo
+    - name: Butterfly美化教程
+      link: https://butterfly.zhheo.com/
+      avatar: https://butterfly.zhheo.com/favicon.ico
+      descr: Butterfly主题美化教程
+
+- class_name: 其他资源
+  class_desc: 其他有用的网站资源
+  link_list:
+    - name: 在线音乐
+      link: https://tool.liumingye.cn/music/
+      avatar: https://tool.liumingye.cn/favicon.ico
+      descr: 在线音乐播放器
+    - name: 淘宝
+      link: https://www.taobao.com/
+      avatar: https://www.taobao.com/favicon.ico
+      descr: 淘宝网 - 淘！我喜欢
+    - name: 小红书
+      link: https://www.xiaohongshu.com/explore
+      avatar: https://www.xiaohongshu.com/favicon.ico
+      descr: 小红书_标记我的生活
+
