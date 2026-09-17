@@ -13,7 +13,7 @@ timezone: Asia/Shanghai
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://worldpeace.top
+url: https://worldpeace.top
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -102,11 +102,16 @@ theme: butterfly
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
+# 部署方式：已从 GitHub Pages 迁移到自建服务器（worldpeace.top）
+# 一键构建并发布：  powershell -ExecutionPolicy Bypass -File .\deploy.ps1
+# 查看/恢复历史版本：powershell -ExecutionPolicy Bypass -File .\rollback.ps1 -List
+# 如需恢复 GitHub Pages，取消下面三行注释即可
 deploy:
-  type: 'git'
-  repository:  git@github.com:Wolf66660724/Wolf66660724.github.io.git #你的仓库地址
-  branch: main
- 
+  type: ''
+  # type: 'git'
+  # repository: git@github.com:Wolf66660724/Wolf66660724.github.io.git
+  # branch: main
+
 symbols_count_time:
 symbols: true                # 文章字数统计
 time: true                   # 文章阅读时长

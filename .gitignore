@@ -17,3 +17,10 @@ source/movies/videos/*.ts
  *.swp
  *.swo
  *~
+
+# 3D resume site (portfolio-itom)
+/portfolio-itom/
+/.npm-cache/
+
+# AWS 密钥（勿提交）
+/wolf-key.pem

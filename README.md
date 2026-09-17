@@ -1,12 +1,12 @@
-﻿# 🐺 Mr.wolf\'s Blog
+# 🐺 Mr.wolf\'s Blog
 
 > 记录安全学习的点滴，从学习者到从业者的成长之路。
 
-![Blog Screenshot](https://wolf66660724.github.io/img/pages/home-bg.jpg)
+![Blog Screenshot](https://worldpeace.top/img/pages/home-bg.jpg)
 
-一个基于 **Hexo** 与 **Butterfly 主题** 搭建的个人技术博客，托管于 GitHub Pages。
+一个基于 **Hexo** 与 **Butterfly 主题** 搭建的个人技术博客，部署于腾讯云服务器（Docker + Nginx）。
 
-🌐 **在线地址：** [https://wolf66660724.github.io](https://wolf66660724.github.io)
+🌐 **在线地址：** [https://worldpeace.top](https://worldpeace.top)
 
 ---
 
@@ -46,7 +46,7 @@
 | [Hexo](https://hexo.io/) | 静态博客框架 v7.3.0 |
 | [Butterfly](https://github.com/jerryc127/hexo-theme-butterfly) | 主题 v5.4.3 |
 | Node.js | 运行环境 |
-| GitHub Pages | 托管部署 |
+| 腾讯云 + Docker Nginx | 托管部署 |
 | Pug | 模板引擎 |
 | Stylus | CSS 预处理器 |
 
@@ -68,8 +68,8 @@ hexo server
 # 构建静态文件
 hexo generate
 
-# 部署到 GitHub Pages
-hexo deploy
+# 部署到自建服务器（构建 -> 上传 -> 发布）
+powershell -ExecutionPolicy Bypass -File .\deploy.ps1
 ```
 
 访问 `http://localhost:4000` 即可预览。
@@ -111,7 +111,7 @@ source/
 
 ## 🔗 相关链接
 
-- 📖 **在线博客：** [https://wolf66660724.github.io](https://wolf66660724.github.io)
+- 📖 **在线博客：** [https://worldpeace.top](https://worldpeace.top)
 - 💻 **GitHub 仓库：** [https://github.com/Wolf66660724/Wolf66660724.github.io](https://github.com/Wolf66660724/Wolf66660724.github.io)
 - 🤖 **AI 渗透平台：** [http://8.148.28.150:9137](http://8.148.28.150:9137)
 
@@ -120,3 +120,21 @@ source/
 ## 📄 许可证
 
 本项目采用 MIT 许可证。
+
+
+---
+
+## 部署与回滚
+
+站点现已部署在自建服务器（Docker + Nginx），不再使用 GitHub Pages。
+
+```powershell
+# 一键构建并发布
+powershell -ExecutionPolicy Bypass -File .\deploy.ps1
+
+# 查看服务器上的历史版本
+powershell -ExecutionPolicy Bypass -File .\rollback.ps1 -List
+
+# 回滚到指定版本（回滚前会自动备份当前线上版本）
+powershell -ExecutionPolicy Bypass -File .\rollback.ps1 -Restore blog-2026-09-17-213000.tar.gz
+```

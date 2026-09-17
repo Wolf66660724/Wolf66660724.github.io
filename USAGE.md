@@ -1,4 +1,4 @@
-﻿---
+---
 title: 博客使用指南
 ---
 
@@ -58,7 +58,7 @@ cover: /img/posts/文章目录/cover.jpg
 |:----:|:----:|------|
 | 	itle | 是 | 文章标题 |
 | date | 是 | 发布日期 |
-| 	ags | 否 | 标签列表 |
+| tags | 否 | 标签列表 |
 | categories | 否 | 分类 |
 | cover | 否 | 封面图路径 |
 
@@ -72,51 +72,85 @@ cover: /img/posts/文章目录/cover.jpg
 
 ### 本地预览
 
-`ash
+```bash
 hexo clean       # 清理缓存
 hexo generate    # 生成静态文件
 hexo server      # 启动本地服务，访问 http://localhost:4000
-`
+```
 
 ### 部署到线上
 
-`ash
-hexo deploy
-`
+站点部署在自建服务器（腾讯云 43.153.19.168，Docker + Nginx），**不再使用 GitHub Pages**。
 
-推送到 Wolf66660724.github.io 的 main 分支，更新网站 worldpeace.top。
+```powershell
+# 一键构建 + 上传 + 发布（推荐）
+powershell -ExecutionPolicy Bypass -File .\deploy.ps1
+
+# 跳过构建，直接发布现有 public 目录
+powershell -ExecutionPolicy Bypass -File .\deploy.ps1 -SkipBuild
+```
+
+部署流程：
+
+1. 本地执行 hexo generate，生成静态文件到 public/
+2. 打包并上传到服务器 /tmp/
+3. 服务器端先把当前线上版本备份到 /opt/security-platform/backups/
+4. 清空静态目录（保留 .well-known）并解压新版本
+5. 校验 https://worldpeace.top/ 返回状态
+
+> hexo deploy 已停用（_config.yml 中 deploy.type 为空）。
+
+### 服务器端结构
+
+| 路径 | 说明 |
+|------|------|
+| /opt/security-platform/blog-public | nginx 静态根目录（容器挂载，只读） |
+| /opt/security-platform/blog-source | 服务器上的源码克隆 |
+| /opt/security-platform/backups | 每次部署前的自动备份 |
+| /opt/security-platform/nginx/conf.d/blog.conf | nginx 站点配置 |
 
 ---
 
 ## 🔄 版本控制（回档）
 
-> 源码用 Git 管理在 source 分支，部署文件在 main 分支。
+> 源码用 Git 管理并推送到 GitHub 的 source 分支；线上静态文件由部署脚本管理，每次部署前自动备份。
 
 ### 日常提交
 
-`ash
+```bash
 git add -A
 git commit -m "feat: 新增文章《xxx》"
-git tag v1.2      # 打标签
-git push origin main:source --tags  # 推送源码+标签
-`
+git tag v1.3                          # 打标签
+git push origin main:source --tags    # 推送源码 + 标签到 GitHub
+```
 
-### 回档
+### 回档方式一：源码版本（Git）
 
-`ash
-git log --oneline --decorate --tags      # 查看历史
-git checkout tags/v1.2  # 切换到指定版本                        # 回到初始版本
-git checkout -b hotfix v1.0              # 从旧版本创建分支修改
-`
+```bash
+git log --oneline --decorate --tags                     # 查看历史
+git checkout tags/v1.3                                  # 切换到指定版本
+powershell -ExecutionPolicy Bypass -File .\deploy.ps1   # 重新发布该版本
+```
+
+### 回档方式二：线上静态文件（服务器备份）
+
+```powershell
+# 查看服务器上的历史备份
+powershell -ExecutionPolicy Bypass -File .\rollback.ps1 -List
+
+# 回滚到指定备份（回滚前会自动备份当前线上版本）
+powershell -ExecutionPolicy Bypass -File .\rollback.ps1 -Restore blog-2026-09-17-213000.tar.gz
+```
 
 ### 标签一览
 
 | 标签 | 说明 |
 |:----:|------|
-| 1.0 | 初始版本，博客基础框架 |
-| 1.1 | 功能补全：内容填充、视觉增强、版本控制、SEO |
-| 1.1.1 | 新增 USAGE.md 使用文档 |
-
+| v1.0 | 初始版本，博客基础框架 |
+| v1.1 | 功能补全：内容填充、视觉增强、版本控制、SEO |
+| v1.1.1 | 新增 USAGE.md 使用文档 |
+| v1.2 | 页面标题左对齐楷体、修复明暗切换动画、新博文与排版美化 |
+| v1.3 | 部署迁移到自建服务器，新增 deploy.ps1 / rollback.ps1 |
 ---
 
 ## ⚙️ 常用配置修改
