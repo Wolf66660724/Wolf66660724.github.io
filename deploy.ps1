@@ -4,8 +4,8 @@
 
   用法：
     powershell -ExecutionPolicy Bypass -File .\deploy.ps1
-    powershell -ExecutionPolicy Bypass -File .\deploy.ps1 -SkipBuild   # 跳过构建，直接发布现有 public
-    powershell -ExecutionPolicy Bypass -File .\deploy.ps1 -NoBackup    # 不生成服务器端备份
+    powershell -ExecutionPolicy Bypass -File .\deploy.ps1 -SkipBuild
+    powershell -ExecutionPolicy Bypass -File .\deploy.ps1 -NoBackup
 #>
 [CmdletBinding()]
 param(
@@ -40,11 +40,10 @@ function Invoke-Remote([string]$Command) {
 
 # ---------- 1. 构建 ----------
 if (-not $SkipBuild) {
-    Write-Host '[1/4] 构建站点 ...' -ForegroundColor Cyan
+    Write-Host '[1/5] 构建站点 ...' -ForegroundColor Cyan
     if (-not (Test-Path $hexo)) { throw "未找到 Hexo：$hexo，请先执行 npm install" }
 
     if (Test-Path $publicDir) {
-        # public 可能被本地预览服务占用，重试几次
         for ($i = 1; $i -le 3; $i++) {
             try { Remove-Item $publicDir -Recurse -Force -ErrorAction Stop; break }
             catch { Start-Sleep -Seconds 2 }
@@ -55,25 +54,41 @@ if (-not $SkipBuild) {
     if ($LASTEXITCODE -ne 0) { throw 'Hexo 构建失败' }
     if (-not (Test-Path (Join-Path $publicDir 'index.html'))) { throw '构建产物缺少 index.html' }
 } else {
-    Write-Host '[1/4] 跳过构建（-SkipBuild）' -ForegroundColor Yellow
+    Write-Host '[1/5] 跳过构建（-SkipBuild）' -ForegroundColor Yellow
 }
 
 if (-not (Test-Path $publicDir)) { throw "未找到构建产物目录：$publicDir" }
 
-# ---------- 2. 打包 ----------
-Write-Host '[2/4] 打包构建产物 ...' -ForegroundColor Cyan
+# ---------- 2. 静态资源加版本号（绕开 CDN 长效缓存）----------
+Write-Host '[2/5] 为 CSS/JS 加版本号 ...' -ForegroundColor Cyan
+$ver = Get-Date -Format 'yyyyMMddHHmmss'
+$pattern = '(/css/[A-Za-z0-9._-]+\.css|/js/[A-Za-z0-9._/-]+\.js)(["''])'
+$htmlFiles = Get-ChildItem $publicDir -Recurse -File -Filter *.html
+$touched = 0
+foreach ($hf in $htmlFiles) {
+    $txt = [System.IO.File]::ReadAllText($hf.FullName, [System.Text.Encoding]::UTF8)
+    $new = [regex]::Replace($txt, $pattern, { param($m) $m.Groups[1].Value + '?v=' + $ver + $m.Groups[2].Value })
+    if ($new -ne $txt) {
+        [System.IO.File]::WriteAllText($hf.FullName, $new, (New-Object System.Text.UTF8Encoding($false)))
+        $touched++
+    }
+}
+Write-Host "      已处理 $touched 个页面，版本号 $ver"
+
+# ---------- 3. 打包 ----------
+Write-Host '[3/5] 打包构建产物 ...' -ForegroundColor Cyan
 if (Test-Path $tarPath) { Remove-Item $tarPath -Force }
 & tar -czf $tarPath -C $publicDir .
 if ($LASTEXITCODE -ne 0) { throw '打包失败' }
 Write-Host ("      大小 {0} MB" -f [math]::Round((Get-Item $tarPath).Length / 1MB, 2))
 
-# ---------- 3. 上传 ----------
-Write-Host '[3/4] 上传到服务器 ...' -ForegroundColor Cyan
+# ---------- 4. 上传 ----------
+Write-Host '[4/5] 上传到服务器 ...' -ForegroundColor Cyan
 & scp @SshOpts $tarPath "${Target}:/tmp/$tarName"
 if ($LASTEXITCODE -ne 0) { throw '上传失败' }
 
-# ---------- 4. 备份 + 发布 ----------
-Write-Host '[4/4] 备份线上版本并发布 ...' -ForegroundColor Cyan
+# ---------- 5. 备份 + 发布 ----------
+Write-Host '[5/5] 备份线上版本并发布 ...' -ForegroundColor Cyan
 $stamp = Get-Date -Format 'yyyy-MM-dd-HHmmss'
 $lines = @('set -e')
 if (-not $NoBackup) {
