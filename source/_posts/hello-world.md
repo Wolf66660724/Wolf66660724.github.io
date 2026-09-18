@@ -1,5 +1,6 @@
 ---
 title: 欢迎来到我的博客世界
+date: 2025-08-08 21:30:19
 cover: /img/posts/欢迎来到我的博客世界/cover.jpg
 ---
 

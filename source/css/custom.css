@@ -165,25 +165,7 @@ svg use {
     color: inherit;
 }
 
-/* 文章内容样式增强 */
-.article-content h2::before {
-    content: "#";
-    position: absolute;
-    left: -1.2em;
-    color: var(--theme-color, #667eea);
-    font-weight: 700;
-    opacity: 0.6;
-}
-.article-content h3::before {
-    content: "##";
-    position: absolute;
-    left: -1.8em;
-    color: var(--theme-color, #667eea);
-    font-weight: 700;
-    opacity: 0.4;
-    font-size: 0.85em;
-}
-.article-content blockquote {
+#article-container blockquote {
     border-left: 3px solid var(--theme-color, #667eea) !important;
     background: rgba(102, 126, 234, 0.04);
     padding: 12px 16px;
@@ -201,16 +183,6 @@ code:not(.highlight code):not(code[class*="language-"]) {
 [data-theme="dark"] code:not(.highlight code):not(code[class*="language-"]) {
     background: rgba(251, 113, 133, 0.12);
     color: #fb7185;
-}
-
-/* 图片增强效果 */
-.article-content img {
-    border-radius: 8px;
-    transition: all 0.4s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-.article-content img:hover {
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
 }
 
 /* 页脚增强 */
@@ -326,4 +298,446 @@ html.is-loading::-webkit-scrollbar {
     background: none !important;
     text-shadow: 0 2px 10px rgba(0,0,0,0.12) !important;
     text-align: left !important;
+}
+
+/* ==================== 文章版式 · 深夜手记 ==================== */
+
+/* 收窄行宽、放大行距，让正文读起来更像散文 */
+#article-container {
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN", "Songti SC", STSong, SimSun, serif;
+    max-width: 27em;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.9;
+    letter-spacing: .02em;
+}
+
+#article-container > p {
+    margin: .45em 0;
+}
+
+/* 开篇第一句：略大略深，当引子用 */
+#article-container > p:first-of-type {
+    line-height: 1.9;
+    color: var(--text-highlight-color);
+}
+
+/* 分隔线：两端淡出的细线，中间一颗小菱形 */
+#article-container {
+}
+
+/* 章节分隔：中文数字编号 + 两侧淡化细线 */
+#article-container hr {
+    clear: both;
+    position: relative;
+    height: 1px;
+    margin: 4.2rem auto;
+    border: 0;
+    background: linear-gradient(90deg,
+        transparent 0,
+        rgba(140, 140, 140, .4) 14%,
+        rgba(140, 140, 140, .4) 86%,
+        transparent 100%);
+    overflow: visible;
+}
+
+#article-container hr::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0 1.1rem;
+    background: var(--card-bg, #fff);
+    font-family: "STKaiti", "KaiTi", "楷体", serif;
+    font-size: 1.05rem;
+    line-height: 1;
+    letter-spacing: .1em;
+    color: rgba(140, 140, 140, .95);
+}
+
+
+
+/* 金句：居中楷体，上下各一条细线 */
+#article-container p.pull-quote {
+    max-width: 94%;
+    margin: 3.2rem auto;
+    padding: 1.3rem 0;
+    border-top: 1px solid rgba(140, 140, 140, .25);
+    border-bottom: 1px solid rgba(140, 140, 140, .25);
+    text-align: center;
+    font-family: "STKaiti", "KaiTi", "楷体", serif;
+    font-size: 1.28em;
+    line-height: 1.9;
+    letter-spacing: .04em;
+    color: var(--text-highlight-color);
+}
+
+/* 引用块 */
+#article-container blockquote {
+    margin: 2rem auto;
+    padding: .2rem 1.4rem;
+    border-left: 2px solid rgba(140, 140, 140, .35);
+    background: transparent;
+    color: var(--text-highlight-color);
+}
+
+/* 插图：小尺寸点缀，柔和阴影 */
+#article-container img {
+    max-width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .1);
+}
+
+#article-container img.img-side-r {
+    float: right;
+    width: 30%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    margin: .5rem 0 1.2rem 1.8rem;
+}
+
+#article-container img.img-side-l {
+    float: left;
+    width: 30%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    margin: .5rem 1.8rem 1.2rem 0;
+}
+
+#article-container img.img-band {
+    display: block;
+    width: 62%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    margin: 3rem auto;
+}
+
+/* 分隔线、小标题、引用块前清除浮动 */
+#article-container hr,
+#article-container h2,
+#article-container h3,
+#article-container blockquote {
+    clear: both;
+}
+
+/* 结尾署名 */
+#article-container p.sign-off {
+    margin-top: 2.6rem;
+    text-align: right;
+    font-family: "STKaiti", "KaiTi", "楷体", serif;
+    font-size: 1.05em;
+    color: #9a9a9a;
+}
+
+[data-theme="dark"] #article-container p.sign-off {
+    color: #7f7f7f;
+}
+
+/* 手机端：取消浮动，恢复整宽 */
+@media (max-width: 768px) {
+    #article-container img.img-side-r,
+    #article-container img.img-side-l {
+        float: none;
+        width: 100%;
+        margin: 2rem auto;
+    }
+
+    #article-container img.img-band {
+        width: 100%;
+    }
+}
+
+/* ==================== 版式节奏 ==================== */
+
+/* 内心独白：缩进 + 左侧细线，像脑子里飘过的几句话 */
+#article-container .dialogue {
+    margin: 2.4rem 0 2.4rem 2.4rem;
+    padding-left: 1.6rem;
+    border-left: 2px solid rgba(140, 140, 140, .28);
+}
+
+#article-container .dialogue p {
+    margin: .5rem 0;
+    color: var(--card-meta, #8a8a8a);
+    font-size: .98em;
+    letter-spacing: .02em;
+}
+
+/* 「算了」递降：一级一级往下沉 */
+#article-container .cascade {
+    margin: 2.6rem 0 2.6rem 1.2rem;
+}
+
+#article-container .cascade p {
+    position: relative;
+    margin: .55rem 0;
+    padding-left: 1.2rem;
+    color: var(--text-highlight-color);
+}
+
+#article-container .cascade p::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .95em;
+    width: 5px;
+    height: 1px;
+    background: rgba(140, 140, 140, .6);
+}
+
+/* 关键词：一口气冒出来的念头，横向排开 */
+#article-container p.keywords {
+    margin: 2.6rem auto;
+    max-width: 94%;
+    text-align: center;
+    font-family: "STKaiti", "KaiTi", "楷体", serif;
+    font-size: 1.08em;
+    letter-spacing: .16em;
+    line-height: 2.2;
+    color: var(--text-highlight-color);
+}
+
+/* 中图：不浮动，安在栏内 */
+#article-container img.img-center {
+    display: block;
+    width: 74%;
+    margin: 3rem auto;
+}
+
+/* 出血图：突破 40em 栏宽，铺到卡片两侧 */
+#article-container img.img-bleed {
+    display: block;
+    width: calc(100% + 8rem);
+    max-width: none;
+    margin: 3.2rem -4rem;
+    border-radius: 4px;
+}
+
+@media (max-width: 1100px) {
+    #article-container img.img-bleed {
+        width: 100%;
+        margin: 2.6rem 0;
+    }
+}
+
+@media (max-width: 768px) {
+    #article-container img.img-center {
+        width: 100%;
+    }
+
+    #article-container .dialogue {
+        margin-left: .8rem;
+    }
+}
+
+/* ==================== 图片呈现方式 ==================== */
+
+/* ① 手账照片：留白边、轻微倾斜、柔和投影，像夹在书页里的一张相纸 */
+#article-container img.img-print {
+    float: right;
+    width: 42%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    padding: 8px;
+    background: var(--card-bg, #fff);
+    border-radius: 2px;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .15), 0 2px 6px rgba(0, 0, 0, .07);
+    transform: rotate(1.4deg);
+    margin: .7rem 0 1.5rem 2.1rem;
+    transition: transform .5s cubic-bezier(.2, .8, .3, 1);
+}
+
+#article-container img.img-print:hover {
+    transform: rotate(0deg) translateY(-3px);
+}
+
+/* ② 装裱画框：四周留出卡纸般的白边，中央一幅作品 */
+#article-container figure.img-frame {
+    display: block;
+    width: 92%;
+    margin: 3.6rem auto;
+    padding: 1.1rem;
+    background: var(--card-bg, #fff);
+    border: 1px solid rgba(140, 140, 140, .22);
+    border-radius: 2px;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .11);
+}
+
+#article-container figure.img-frame img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1080 / 1455;
+    object-fit: cover;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* ③ 出血渐隐：铺满卡片宽度，上下边缘化开，不再是一块硬邦邦的矩形 */
+#article-container img.img-fade {
+    display: block;
+    width: calc(100% + 8rem);
+    max-width: none;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    margin: 3.8rem -4rem;
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+
+/* 开篇：一条短横线，像手记起笔 */
+#article-container > p:first-of-type::before {
+    content: "";
+    display: block;
+    width: 2.4rem;
+    height: 1px;
+    margin-bottom: 1.1rem;
+    background: rgba(140, 140, 140, .5);
+}
+
+/* 浮动图与照片卡的行内边距修正（避免全局圆角/阴影叠加） */
+#article-container img.img-print,
+#article-container img.img-fade {
+    box-sizing: border-box;
+}
+
+@media (max-width: 1100px) {
+    #article-container img.img-fade {
+        width: 100%;
+        margin: 3rem 0;
+    }
+}
+
+@media (max-width: 768px) {
+    #article-container img.img-print {
+        float: none;
+        width: 78%;
+        margin: 2.4rem auto;
+        transform: rotate(.8deg);
+    }
+
+    #article-container figure.img-frame {
+        width: 100%;
+    }
+}
+
+/* 章节分隔：两侧细线 + 居中的中文序号 */
+#article-container p.divider {
+    display: flex;
+    align-items: center;
+    gap: 1.15rem;
+    margin: 4.2rem auto;
+    color: rgba(140, 140, 140, .95);
+    font-family: "STKaiti", "KaiTi", "楷体", serif;
+    font-size: 1.15rem;
+    line-height: 1;
+    letter-spacing: .12em;
+    text-indent: .12em;
+    text-align: center;
+}
+
+#article-container p.divider::before,
+#article-container p.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+}
+
+#article-container p.divider::before {
+    background: linear-gradient(90deg, transparent, rgba(140, 140, 140, .45));
+}
+
+#article-container p.divider::after {
+    background: linear-gradient(90deg, rgba(140, 140, 140, .45), transparent);
+}
+
+@media (max-width: 768px) {
+    #article-container p.divider {
+        margin: 3.4rem auto;
+    }
+}
+
+/* ==================== 情绪版式 ==================== */
+
+/* 章节起首：大号序号 + 右侧延长线 */
+#article-container p.divider {
+    display: flex;
+    align-items: center;
+    gap: 1.3rem;
+    margin: 4.8rem 0 3.4rem;
+    color: rgba(140, 140, 140, .92);
+    font-family: "STKaiti", "KaiTi", "楷体", serif;
+    font-size: 2.2rem;
+    line-height: 1;
+    letter-spacing: 0;
+    text-indent: 0;
+    text-align: left;
+}
+
+#article-container p.divider::before {
+    content: none;
+}
+
+#article-container p.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(140, 140, 140, .45), rgba(140, 140, 140, .04));
+}
+
+/* 内心独白：右对齐，逐行后退，像念头一点点散掉 */
+#article-container .dialogue {
+    margin: 2.8rem 0;
+    padding-left: 0;
+    border-left: 0;
+    text-align: right;
+}
+
+#article-container .dialogue p {
+    margin: .3rem 0;
+    color: var(--card-meta, #8a8a8a);
+}
+
+#article-container .dialogue p:nth-child(1) { padding-right: 0; }
+#article-container .dialogue p:nth-child(2) { padding-right: 1.5rem; }
+#article-container .dialogue p:nth-child(3) { padding-right: 3rem; }
+
+/* 「算了」阶梯：一级一级往右下沉 */
+#article-container .cascade {
+    margin: 3rem 0;
+}
+
+#article-container .cascade p:nth-child(1) { margin-left: 0; }
+#article-container .cascade p:nth-child(2) { margin-left: 1.4rem; }
+#article-container .cascade p:nth-child(3) { margin-left: 2.8rem; }
+#article-container .cascade p:nth-child(4) { margin-left: 4.2rem; }
+
+/* 竖排题句：右对齐，像卷轴上的落笔 */
+#article-container p.pull-quote.pq-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    margin: 3.4rem 0 3.4rem auto;
+    padding: 1.4rem .9rem;
+    max-width: none;
+    width: auto;
+    border: 0;
+    border-right: 1px solid rgba(140, 140, 140, .3);
+    font-size: 1.25rem;
+    line-height: 1.1;
+    letter-spacing: .2em;
+    text-align: start;
+}
+
+@media (max-width: 768px) {
+    #article-container p.divider {
+        margin: 3.6rem 0 2.6rem;
+        font-size: 1.8rem;
+    }
+
+    #article-container .cascade p:nth-child(2) { margin-left: .9rem; }
+    #article-container .cascade p:nth-child(3) { margin-left: 1.8rem; }
+    #article-container .cascade p:nth-child(4) { margin-left: 2.7rem; }
 }
