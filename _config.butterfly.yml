@@ -308,6 +308,13 @@ footer:
               url: /archives/
             - title: RSS
               url: /rss2.xml
+    - content:
+        - title: 管理
+          item:
+            - title: 评论后台
+              url: /comment/ui
+            - title: AI 安全平台
+              url: https://ai.worldpeace.top/
   owner:
     enable: true
     since: 2025
