@@ -2,46 +2,145 @@
 (function() {
     var visitorData = null;
 
+    // 国家代码 -> 中文名（ipinfo.io 只返回 CN 这样的国家代码）
+    var COUNTRY_NAMES = {
+        CN: '中国', HK: '中国香港', MO: '中国澳门', TW: '中国台湾',
+        US: '美国', JP: '日本', KR: '韩国', SG: '新加坡', MY: '马来西亚',
+        TH: '泰国', VN: '越南', PH: '菲律宾', ID: '印度尼西亚', IN: '印度',
+        GB: '英国', DE: '德国', FR: '法国', NL: '荷兰', RU: '俄罗斯',
+        CA: '加拿大', AU: '澳大利亚', BR: '巴西'
+    };
+
+    // 有些接口返回的是国名（China）而非国码（CN），统一归一化
+    var NAME_TO_CODE = {
+        'CHINA': 'CN', 'UNITED STATES': 'US', 'JAPAN': 'JP', 'SINGAPORE': 'SG',
+        'SOUTH KOREA': 'KR', 'KOREA': 'KR', 'UNITED KINGDOM': 'GB', 'GERMANY': 'DE',
+        'FRANCE': 'FR', 'CANADA': 'CA', 'AUSTRALIA': 'AU', 'RUSSIA': 'RU',
+        'INDIA': 'IN', 'BRAZIL': 'BR', 'NETHERLANDS': 'NL', 'THAILAND': 'TH',
+        'VIETNAM': 'VN', 'MALAYSIA': 'MY', 'INDONESIA': 'ID', 'PHILIPPINES': 'PH'
+    };
+
+    // 城市坐标校正表：备用接口（ip.sb 等）有「城市名对、坐标错」的情况，
+    // 命中时用本表坐标覆盖，保证地图标记落在正确城市。
+    var CITY_COORDS = {
+        'Beijing': [39.90, 116.41],      'Shanghai': [31.23, 121.47],
+        'Tianjin': [39.13, 117.20],      'Chongqing': [29.56, 106.55],
+        'Shijiazhuang': [38.04, 114.51], 'Taiyuan': [37.87, 112.55],
+        'Hohhot': [40.84, 111.75],       'Shenyang': [41.81, 123.43],
+        'Changchun': [43.82, 125.32],    'Harbin': [45.80, 126.53],
+        'Nanjing': [32.06, 118.80],      'Hangzhou': [30.27, 120.16],
+        'Hefei': [31.86, 117.28],        'Fuzhou': [26.07, 119.30],
+        'Nanchang': [28.68, 115.86],     'Jinan': [36.65, 117.12],
+        'Zhengzhou': [34.75, 113.63],    'Wuhan': [30.59, 114.31],
+        'Changsha': [28.23, 112.94],     'Guangzhou': [23.13, 113.26],
+        'Nanning': [22.82, 108.32],      'Haikou': [20.04, 110.32],
+        'Chengdu': [30.57, 104.07],      'Guiyang': [26.65, 106.63],
+        'Kunming': [25.04, 102.71],      'Lhasa': [29.65, 91.14],
+        "Xi'an": [34.34, 108.94],        'Lanzhou': [36.06, 103.83],
+        'Xining': [36.62, 101.78],       'Yinchuan': [38.49, 106.23],
+        'Urumqi': [43.83, 87.62],        'Shenzhen': [22.54, 114.06],
+        'Suzhou': [31.30, 120.58],       'Qingdao': [36.07, 120.38],
+        'Dalian': [38.91, 121.61],       'Xiamen': [24.48, 118.09]
+    };
+
+    // 从城市名里取坐标（兼容 'Hefei' / '合肥' / '安徽, 合肥' 之类的写法）
+    function lookupCityCoords(name) {
+        if (!name) return null;
+        var key = String(name).trim();
+        if (CITY_COORDS[key]) return CITY_COORDS[key];
+        // 模糊匹配：城市名可能带后缀或前后缀
+        for (var k in CITY_COORDS) {
+            if (key.indexOf(k) >= 0) return CITY_COORDS[k];
+        }
+        return null;
+    }
+
     function getVisitorLocation() {
-        fetch('https://ipwho.is/?fields=ip,city,region,country,latitude,longitude,connection')
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (!data || data.success === false) throw new Error('geolocation unavailable');
-                data.country_name = data.country;
-                data.org = (data.connection && data.connection.org) || '';
-                return data;
-            })
-            .then(function(data) {
-                if (data && data.city) {
-                    var now = new Date();
-                    var timeStr = now.getFullYear() + '-' +
-                        String(now.getMonth() + 1).padStart(2, '0') + '-' +
-                        String(now.getDate()).padStart(2, '0') + ' ' +
-                        String(now.getHours()).padStart(2, '0') + ':' +
-                        String(now.getMinutes()).padStart(2, '0');
-
-                    visitorData = {
-                        ip: data.ip || 'Unknown',
-                        city: data.city,
-                        region: data.region || '',
-                        country: data.country_name || '',
-                        lat: data.latitude,
-                        lon: data.longitude,
-                        isp: data.org || '',
-                        time: timeStr
+        // 主力 ipinfo.io：实测对中国 IP 城市与经纬度都准确
+        //（ipwho.is 会把合肥的 IP 标成北京，故降级为备用）
+        var sources = [
+            {
+                url: 'https://ipinfo.io/json',
+                map: function (d) {
+                    var loc = String(d.loc || '').split(',');
+                    return {
+                        ip: d.ip, city: d.city, region: d.region,
+                        country: d.country, org: d.org,
+                        lat: parseFloat(loc[0]), lon: parseFloat(loc[1])
                     };
-
-                    renderAnnouncement();
-                    renderMapCard();
-                    loadMap();
-                } else {
-                    renderAnnouncement();
                 }
-            })
-            .catch(function(err) {
-                console.log('获取位置信息失败:', err);
+            },
+            {
+                url: 'https://api.ip.sb/geoip',
+                map: function (d) {
+                    return {
+                        ip: d.ip, city: d.city, region: d.region, country: d.country,
+                        org: d.isp || d.organization,
+                        lat: d.latitude, lon: d.longitude
+                    };
+                }
+            },
+            {
+                url: 'https://ipwho.is/',
+                map: function (d) {
+                    return {
+                        ip: d.ip, city: d.city, region: d.region, country: d.country,
+                        org: d.connection && d.connection.org,
+                        lat: d.latitude, lon: d.longitude
+                    };
+                }
+            }
+        ];
+
+        function useGeo(d) {
+            var now = new Date();
+            var pad = function (n) { return String(n).padStart(2, '0'); };
+            var timeStr = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' +
+                pad(now.getDate()) + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
+
+            var rawCountry = String(d.country || '').trim().toUpperCase();
+            var code = NAME_TO_CODE[rawCountry] || rawCountry;
+            // 命中校正表时以表内坐标为准（备用接口的经纬度可能不准）
+            var fixed = lookupCityCoords(d.city);
+            visitorData = {
+                ip: d.ip || 'Unknown',
+                city: d.city || '',
+                region: d.region || '',
+                country: COUNTRY_NAMES[code] || (rawCountry.length > 3 ? d.country : code) || '',
+                lat: fixed ? fixed[0] : d.lat,
+                lon: fixed ? fixed[1] : d.lon,
+                isp: d.org || '',
+                time: timeStr
+            };
+
+            renderAnnouncement();
+            renderMapCard();
+            loadMap();
+        }
+
+        function trySource(i) {
+            if (i >= sources.length) {
+                console.log('获取位置信息失败：所有地理接口都不可用');
                 renderAnnouncement();
-            });
+                return;
+            }
+            var s = sources[i];
+            fetch(s.url)
+                .then(function (r) { return r.json(); })
+                .then(function (raw) {
+                    var d = s.map(raw);
+                    if (!d || !d.city || isNaN(d.lat) || isNaN(d.lon)) {
+                        throw new Error('数据不完整');
+                    }
+                    useGeo(d);
+                })
+                .catch(function (err) {
+                    console.log('地理接口失败，换下一个:', s.url, err && err.message);
+                    trySource(i + 1);
+                });
+        }
+
+        trySource(0);
     }
 
     // 渲染公告模块（welcome + 创意内容）
