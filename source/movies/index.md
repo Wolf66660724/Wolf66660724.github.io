@@ -23,75 +23,13 @@ top_img: /img/pages/movies-bg.jpg
 <p>把珍贵的瞬间装进影像里，偶尔翻出来看看，仍然能感受到当时的心跳。</p>
 </div>
 
-<div class="video-grid">
-
-<div class="video-item video-placeholder-card">
-  <div class="video-thumbnail">
-    <div class="video-placeholder-content">
-      <span class="video-placeholder-icon">🎥</span>
-      <span class="video-placeholder-text">将视频文件放入 source/movies/videos/</span>
-    </div>
-  </div>
-  <div class="video-info">
-    <h4 class="video-title">4K 演示视频</h4>
-    <p class="video-description">感受色彩与细节的魅力。</p>
-    <div class="video-meta">
-      <span class="video-date">待上传</span>
-      <span class="video-tags">
-        <span class="tag">4K</span>
-        <span class="tag">演示</span>
-      </span>
-    </div>
-  </div>
-</div>
-
-<div class="video-item video-placeholder-card">
-  <div class="video-thumbnail">
-    <div class="video-placeholder-content">
-      <span class="video-placeholder-icon">📸</span>
-      <span class="video-placeholder-text">等待精彩瞬间</span>
-    </div>
-  </div>
-  <div class="video-info">
-    <h4 class="video-title">旅行记录</h4>
-    <p class="video-description">走过的路，看过的风景，都在镜头里凝固成永恒。</p>
-    <div class="video-meta">
-      <span class="video-date">待上传</span>
-      <span class="video-tags">
-        <span class="tag">旅行</span>
-        <span class="tag">日常</span>
-      </span>
-    </div>
-  </div>
-</div>
-
-<div class="video-item video-placeholder-card">
-  <div class="video-thumbnail">
-    <div class="video-placeholder-content">
-      <span class="video-placeholder-icon">🎮</span>
-      <span class="video-placeholder-text">游戏高光时刻</span>
-    </div>
-  </div>
-  <div class="video-info">
-    <h4 class="video-title">游戏实录</h4>
-    <p class="video-description">那些精彩的游戏瞬间，值得被记录下来。</p>
-    <div class="video-meta">
-      <span class="video-date">待上传</span>
-      <span class="video-tags">
-        <span class="tag">游戏</span>
-        <span class="tag">剪辑</span>
-      </span>
-    </div>
-  </div>
-</div>
-
-</div>
+<div class="video-grid" id="video-grid"></div>
 
 </div>
 
 <style>
 .video-gallery-wrapper {
-    max-width: 960px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 .video-intro {
@@ -103,7 +41,7 @@ top_img: /img/pages/movies-bg.jpg
 }
 .video-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
 }
 .video-item {
@@ -118,10 +56,45 @@ top_img: /img/pages/movies-bg.jpg
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 .video-thumbnail {
+    position: relative;
     width: 100%;
     height: 200px;
     overflow: hidden;
     background: #000;
+}
+.video-thumbnail video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    background: #000;
+}
+.video-thumbnail.video-has-cover {
+    background-size: cover;
+    background-position: center;
+}
+.video-play-badge {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.28);
+    transition: background 0.25s ease;
+}
+.video-item:hover .video-play-badge { background: rgba(0,0,0,0.42); }
+.video-play-badge span {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    padding-left: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 .video-placeholder-content {
     width: 100%;
@@ -158,6 +131,8 @@ top_img: /img/pages/movies-bg.jpg
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 .video-date {
     color: #999;
@@ -171,5 +146,12 @@ top_img: /img/pages/movies-bg.jpg
     background: rgba(102,126,234,0.1);
     color: var(--theme-color, #667eea);
     margin-right: 4px;
+}
+.collection-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 0;
+    color: var(--secondtext, #666);
+    font-size: 0.95em;
 }
 </style>

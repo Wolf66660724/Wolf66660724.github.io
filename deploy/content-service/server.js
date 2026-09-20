@@ -202,6 +202,25 @@ function safeImagePath (v) {
   s = s.replace(/^\/uploads\//, '/content-img/')
   return /^\/content-img\/[A-Za-z0-9._-]+$/.test(s) ? s : ''
 }
+// 视频封面：允许上传的图片路径，或站内 /img/... 路径
+function safeMediaPath (v) {
+  const s = str(v, 300)
+  if (!s) return ''
+  if (/^\/content-img\/[A-Za-z0-9._-]+$/.test(s)) return s
+  if (/^\/img\/[A-Za-z0-9._\-\/]+$/.test(s)) return s
+  if (/^https?:\/\//i.test(s)) return s
+  return ''
+}
+
+// 视频地址：站内视频文件 或 站外链接（B站/YouTube 等）
+function safeMediaUrl (v) {
+  const s = str(v, 800)
+  if (!s) return ''
+  if (/^\/movies\/videos\/[A-Za-z0-9._%\-\/]+$/.test(s)) return s
+  if (/^https?:\/\//i.test(s)) return s
+  return ''
+}
+
 function safeUrl (v) {
   const s = str(v, 800)
   if (!s || s === '#') return '#'
@@ -216,6 +235,17 @@ function normalize (type, body, base) {
       date: /^\d{4}-\d{2}-\d{2}$/.test(body.date) ? body.date : '',
       image: safeImagePath(body.image),
       icon: str(body.icon, 8) || '🖼️'
+    })
+  }
+  if (type === 'movies') {
+    return Object.assign(base || {}, {
+      title: str(body.title, 120),
+      desc: str(body.desc, 300),
+      date: /^\d{4}-\d{2}-\d{2}$/.test(body.date) ? body.date : '',
+      tags: str(body.tags, 200),
+      cover: safeMediaPath(body.cover),
+      url: safeMediaUrl(body.url),
+      icon: str(body.icon, 8) || '🎬'
     })
   }
   if (type === 'drafts') {
@@ -381,7 +411,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     // 公开读取
-    const pub = p.match(/^\/api\/public\/(photos|shares)$/)
+    const pub = p.match(/^\/api\/public\/(photos|shares|movies)$/)
     if (method === 'GET' && pub) {
       const items = readItems(pub[1])
       // 只读接口放开 CORS，方便本地预览（localhost:4000）直接读线上数据；
@@ -428,6 +458,7 @@ const server = http.createServer(async (req, res) => {
       if (method === 'GET' && p === '/api/stats') {
         const photos = readItems('photos')
         const shares = readItems('shares')
+        const movies = readItems('movies')
         const drafts = readItems('drafts')
         const img = imageStats()
         const [visits, comments, articles] = await Promise.all([busuanziStats(), commentCount(), articleCount()])
@@ -438,6 +469,7 @@ const server = http.createServer(async (req, res) => {
           content: {
             photos: photos.length,
             shares: shares.length,
+            movies: movies.length,
             drafts: drafts.filter(function (d) { return d.status !== 'published' }).length,
             published: drafts.filter(function (d) { return d.status === 'published' }).length
           },
@@ -496,7 +528,7 @@ const server = http.createServer(async (req, res) => {
         return send(res, 200, { url: saveImage(body.filename, body.data) })
       }
 
-      const item = p.match(/^\/api\/items\/(photos|shares|drafts)(?:\/([A-Za-z0-9_]+))?$/)
+      const item = p.match(/^\/api\/items\/(photos|shares|movies|drafts)(?:\/([A-Za-z0-9_]+))?$/)
       if (item) {
         const type = item[1]
         const id = item[2]
@@ -506,7 +538,7 @@ const server = http.createServer(async (req, res) => {
 
         if (method === 'POST' && !id) {
           const body = await jsonBody(req)
-          const rec = normalize(type, body, { id: newId(type === 'photos' ? 'p' : type === 'drafts' ? 'd' : 's'), created: new Date().toISOString() })
+          const rec = normalize(type, body, { id: newId({ photos: 'p', shares: 's', movies: 'm', drafts: 'd' }[type] || 'x'), created: new Date().toISOString() })
           if (!rec.title) return send(res, 400, { error: '标题不能为空' })
           list.unshift(rec)
           writeItems(type, list)

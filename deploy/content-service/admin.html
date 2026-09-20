@@ -227,7 +227,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
       <svg class="ico ico-lg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     </div>
     <h1>内容后台</h1>
-    <p class="sub">管理拾光集、灵感集，以及站点评论</p>
+    <p class="sub">管理拾光集、灵感集、帧藏，以及站点评论</p>
     <label for="pw">密码</label>
     <input id="pw" type="password" autocomplete="current-password" placeholder="请输入管理密码">
     <button class="btn primary" id="doLogin" style="width:100%;justify-content:center;margin-top:18px;height:40px">
@@ -273,6 +273,10 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
         <button data-tab="shares">
           <svg class="ico" viewBox="0 0 24 24"><path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9Z"/></svg>
           灵感集
+        </button>
+        <button data-tab="movies">
+          <svg class="ico" viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>
+          帧藏
         </button>
         <button data-view="comment" id="commentTab">
           <svg class="ico" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
@@ -321,6 +325,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
         <div class="stat"><span class="stat-k">待审核评论</span><b id="stWaiting">—</b></div>
         <div class="stat"><span class="stat-k">照片</span><b id="stPhotos">—</b></div>
         <div class="stat"><span class="stat-k">灵感</span><b id="stShares">—</b></div>
+        <div class="stat"><span class="stat-k">帧藏</span><b id="stMovies">—</b></div>
         <div class="stat"><span class="stat-k">待发布草稿</span><b id="stDrafts">—</b></div>
         <div class="stat"><span class="stat-k">已发布（后台）</span><b id="stPublished">—</b></div>
         <div class="stat"><span class="stat-k">上传图片</span><b id="stImages">—</b></div>
@@ -364,7 +369,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
 
       <div class="panel">
         <h3>数据说明</h3>
-        <div class="kv"><span>拾光集 / 灵感集</span><b>存在服务器 /opt/security-platform/content-data/</b></div>
+        <div class="kv"><span>拾光集 / 灵感集 / 帧藏</span><b>存在服务器 /opt/security-platform/content-data/</b></div>
         <div class="kv"><span>上传的图片</span><b>存在同一目录的 uploads/，按内容哈希命名</b></div>
         <p class="hint">内容改动即时生效，无需重新构建或部署站点。</p>
       </div>
@@ -434,6 +439,28 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
       <div class="drop" id="drop">点击选择，或把图片拖到这里<br>jpg / png / webp / gif / avif，单张 ≤ 8MB</div>
       <input id="p_file" type="file" accept="image/*" style="display:none">
       <img id="p_preview" class="preview" style="display:none" alt="">
+    </div>
+
+    <div id="fieldsMovies" style="display:none">
+      <label for="m_title">标题 <span style="color:var(--danger)">*</span></label>
+      <input id="m_title" maxlength="120" placeholder="旅行记录">
+      <label for="m_desc">描述</label>
+      <textarea id="m_desc" rows="2" maxlength="300" placeholder="走过的路，看过的风景，都在镜头里凝固成永恒。"></textarea>
+      <div class="row2">
+        <div><label for="m_date">日期</label><input id="m_date" type="date"></div>
+        <div><label for="m_icon">图标（无封面时显示）</label><input id="m_icon" maxlength="4" placeholder="🎬"></div>
+      </div>
+      <label for="m_tags">标签（逗号分隔）</label>
+      <input id="m_tags" maxlength="200" placeholder="旅行,日常">
+
+      <label for="m_url">视频地址</label>
+      <input id="m_url" maxlength="800" placeholder="/movies/videos/xxx.mp4 或 B站链接">
+      <p class="hint">填站内 mp4/webm 可以直接在卡片里播放；填 B站/YouTube 这类外链则点击跳转。</p>
+
+      <label>封面图（可留空）</label>
+      <div class="drop" id="m_drop">点击选择，或把图片拖到这里<br>jpg / png / webp / gif / avif，单张 ≤ 8MB</div>
+      <input id="m_file" type="file" accept="image/*" style="display:none">
+      <img id="m_preview" class="preview" style="display:none" alt="">
     </div>
 
     <div id="fieldsShares" style="display:none">
@@ -540,6 +567,15 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
         });
         if (it.date) chips += '<span class="chip">' + esc(String(it.date).slice(0, 16)) + '</span>';
         if (it.content) chips += '<span class="chip">' + it.content.length + ' 字</span>';
+      } else if (tab === 'movies') {
+        thumb = it.cover
+          ? '<img src="' + esc(it.cover) + '" alt="" loading="lazy">'
+          : esc(it.icon || '🎬');
+        (it.tags || '').split(',').filter(Boolean).slice(0, 2).forEach(function(x){
+          chips += '<span class="chip cat">' + esc(x.trim()) + '</span>';
+        });
+        if (it.date) chips += '<span class="chip">' + esc(it.date) + '</span>';
+        chips += '<span class="chip">' + (it.url ? (/\.(mp4|webm|mov)$/i.test(it.url) ? '本地视频' : '外链视频') : '还没填视频') + '</span>';
       } else {
         thumb = it.image
           ? '<img src="' + esc(it.image) + '" alt="" loading="lazy">'
@@ -710,6 +746,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
     $('#fieldsPhotos').style.display = tab === 'photos' ? '' : 'none';
     $('#fieldsShares').style.display = tab === 'shares' ? '' : 'none';
     $('#fieldsDrafts').style.display = tab === 'drafts' ? '' : 'none';
+    $('#fieldsMovies').style.display = tab === 'movies' ? '' : 'none';
     $('#editor').classList.toggle('wide', tab === 'drafts');
     var today = new Date().toISOString().slice(0, 10);
     if (tab === 'drafts') {
@@ -726,6 +763,14 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
       $('#mdPreview').style.display = 'none';
       $('#mdPreviewBtn').classList.remove('on');
       $('#d_content').style.display = '';
+    } else if (tab === 'movies') {
+      $('#m_title').value = it ? it.title : '';
+      $('#m_desc').value = it ? (it.desc || '') : '';
+      $('#m_date').value = (it && it.date) ? it.date : today;
+      $('#m_icon').value = it ? (it.icon || '🎬') : '🎬';
+      $('#m_tags').value = it ? (it.tags || '') : '';
+      $('#m_url').value = it ? (it.url || '') : '';
+      setCover(it ? it.cover : '');
     } else if (tab === 'photos') {
       $('#p_title').value = it ? it.title : '';
       $('#p_desc').value = it ? (it.desc || '') : '';
@@ -739,7 +784,10 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
       $('#s_desc').value = it ? (it.desc || '') : '';
       $('#s_url').value = it ? (it.url === '#' ? '' : it.url) : '';
     }
-    setTimeout(function(){ (tab === 'drafts' ? $('#d_title') : tab === 'photos' ? $('#p_title') : $('#s_title')).focus() }, 320);
+    setTimeout(function(){
+      var el = tab === 'drafts' ? $('#d_title') : tab === 'photos' ? $('#p_title') : tab === 'movies' ? $('#m_title') : $('#s_title');
+      el.focus();
+    }, 320);
   }
   function closeEditor(){
     $('#editor').classList.remove('on'); $('#scrim').classList.remove('on'); editing = null;
@@ -767,7 +815,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
   ['dragleave','drop'].forEach(function(t){ $('#drop').addEventListener(t, function(e){ e.preventDefault(); $('#drop').classList.remove('over') }) });
   $('#drop').addEventListener('drop', function(e){ var f = e.dataTransfer.files[0]; if (f) upload(f) });
 
-  function upload(file){
+  function upload(file, target){
     if (uploading) return;
     if (!/^image\//.test(file.type)) return toast('请选择图片文件');
     if (file.size > 8 * 1024 * 1024) return toast('图片超过 8MB');
@@ -775,12 +823,31 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
     var fr = new FileReader();
     fr.onload = function(){
       api('api/upload', { method:'POST', body: JSON.stringify({ filename: file.name, data: fr.result }) })
-        .then(function(r){ setPreview(r.url); toast('图片已上传') })
+        .then(function(r){
+          if (target === 'movies') setCover(r.url); else setPreview(r.url);
+          toast('图片已上传');
+        })
         .catch(function(e){ toast(e.message) })
         .then(function(){ uploading = false });
     };
     fr.readAsDataURL(file);
   }
+
+  // 帧藏封面（和照片共用同一套上传接口）
+  function setCover(url){
+    var img = $('#m_preview');
+    if (url) {
+      img.src = url + (url.indexOf('?') < 0 ? '?v=' + Date.now() : '');
+      img.style.display = ''; img._path = url;
+    } else {
+      img.removeAttribute('src'); img.style.display = 'none'; img._path = '';
+    }
+  }
+  $('#m_drop').onclick = function(){ $('#m_file').click() };
+  $('#m_file').onchange = function(){ if (this.files[0]) upload(this.files[0], 'movies') };
+  ['dragenter','dragover'].forEach(function(t){ $('#m_drop').addEventListener(t, function(e){ e.preventDefault(); $('#m_drop').classList.add('over') }) });
+  ['dragleave','drop'].forEach(function(t){ $('#m_drop').addEventListener(t, function(e){ e.preventDefault(); $('#m_drop').classList.remove('over') }) });
+  $('#m_drop').addEventListener('drop', function(e){ var f = e.dataTransfer.files[0]; if (f) upload(f, 'movies') });
 
   // ---------- 保存 ----------
   $('#saveBtn').onclick = function(){
@@ -793,6 +860,10 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
                content: $('#d_content').value,
                status: editing ? editing.status : 'draft',
                publishedAt: editing ? editing.publishedAt : '' };
+    } else if (tab === 'movies') {
+      body = { title: $('#m_title').value, desc: $('#m_desc').value, date: $('#m_date').value,
+               icon: $('#m_icon').value, tags: $('#m_tags').value, url: $('#m_url').value,
+               cover: $('#m_preview')._path || '' };
     } else if (tab === 'photos') {
       body = { title: $('#p_title').value, desc: $('#p_desc').value, date: $('#p_date').value,
                icon: $('#p_icon').value, image: $('#p_preview')._path || '' };
@@ -819,7 +890,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
   var setTxt = function(id, v){ var e = document.getElementById(id); if (e) e.textContent = v };
 
   function loadStats(){
-    ['stPv','stUv','stArticles','stComments','stWaiting','stPhotos','stShares','stDrafts','stPublished','stImages','stImgSize'].forEach(function(id){ setTxt(id, '…') });
+    ['stPv','stUv','stArticles','stComments','stWaiting','stPhotos','stShares','stMovies','stDrafts','stPublished','stImages','stImgSize'].forEach(function(id){ setTxt(id, '…') });
     api('api/stats').then(function(s){
       setTxt('stPv', s.visits ? fmtNum(s.visits.sitePv) : '—');
       setTxt('stUv', s.visits ? fmtNum(s.visits.siteUv) : '—');
@@ -828,6 +899,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
       setTxt('stWaiting', s.comments ? fmtNum(s.comments.waiting) : '—');
       setTxt('stPhotos', fmtNum(s.content.photos));
       setTxt('stShares', fmtNum(s.content.shares));
+      setTxt('stMovies', fmtNum(s.content.movies));
       setTxt('stDrafts', fmtNum(s.content.drafts));
       setTxt('stPublished', fmtNum(s.content.published));
       setTxt('stImages', fmtNum(s.images.count));

@@ -15,7 +15,8 @@
     var BASE = IS_LOCAL ? 'https://worldpeace.top/content-api/' : '/content-api/';
     var API = {
         photos: BASE + 'photos',
-        shares: BASE + 'shares'
+        shares: BASE + 'shares',
+        movies: BASE + 'movies'
     };
 
     // 分类 -> 标签配色（沿用原来的四个颜色，未知分类按名字散列选一个）
@@ -92,9 +93,60 @@
         }).join('');
     }
 
+    // ---------- 帧藏 ----------
+    function isLocalVideo(url) {
+        return /\.(mp4|webm|mov|m4v)(\?|$)/i.test(url || '');
+    }
+
+    function renderMovies(items) {
+        var grid = document.getElementById('video-grid');
+        if (!grid) return;
+        if (!items.length) return state(grid, '还没有视频，去 /manage/ 添加第一条吧');
+
+        grid.innerHTML = items.map(function (it) {
+            var tags = (it.tags || '').split(',').map(function (x) { return x.trim() })
+                .filter(Boolean).map(function (x) { return '<span class="tag">' + esc(x) + '</span>' }).join('');
+
+            var info = '<div class="video-info"><h4>' + esc(it.title) + '</h4>' +
+                (it.desc ? '<p>' + esc(it.desc) + '</p>' : '') +
+                '<div class="video-meta">' +
+                    (it.date ? '<span class="video-date">' + esc(fmtDate(it.date)) + '</span>' : '<span></span>') +
+                    '<span class="video-tags">' + tags + '</span>' +
+                '</div></div>';
+
+            var inner;
+            if (isLocalVideo(it.url)) {
+                // 站内视频：直接在卡片里播
+                inner = '<video controls preload="metadata"' +
+                    (it.cover ? ' poster="' + esc(it.cover) + '"' : '') +
+                    ' src="' + esc(it.url) + '"></video>';
+                return '<div class="video-item"><div class="video-thumbnail">' + inner + '</div>' + info + '</div>';
+            }
+
+            if (it.cover) {
+                inner = '<div style="width:100%;height:100%;background-size:cover;background-position:center;' +
+                    'background-image:url(\'' + esc(it.cover) + '\')"></div>' +
+                    (it.url ? '<div class="video-play-badge"><span>▶</span></div>' : '');
+            } else {
+                inner = '<div class="video-placeholder-content">' +
+                    '<span class="video-placeholder-icon">' + esc(it.icon || '🎬') + '</span>' +
+                    '<span class="video-placeholder-text">' + (it.url ? '点击查看' : '还没有视频地址') + '</span></div>';
+            }
+
+            // 有外链就整块可点，没有就只是展示
+            var thumb = it.url
+                ? '<a class="video-thumbnail" href="' + esc(it.url) + '" target="_blank" rel="noopener">' + inner + '</a>'
+                : '<div class="video-thumbnail">' + inner + '</div>';
+
+            return '<div class="video-item">' + thumb + info + '</div>';
+        }).join('');
+    }
+
     // ---------- 拉取 ----------
+    var BOX = { photos: 'photo-grid', shares: 'share-root', movies: 'video-grid' };
+
     function load(kind, render) {
-        var box = document.getElementById(kind === 'photos' ? 'photo-grid' : 'share-root');
+        var box = document.getElementById(BOX[kind]);
         if (!box) return;
         state(box, '加载中…', 'is-loading');
 
@@ -112,6 +164,7 @@
     function init() {
         if (document.getElementById('photo-grid')) load('photos', renderPhotos);
         if (document.getElementById('share-root')) load('shares', renderShares);
+        if (document.getElementById('video-grid')) load('movies', renderMovies);
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

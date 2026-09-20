@@ -1,14 +1,14 @@
-# 内容服务（拾光集 / 灵感集 后台）
+# 内容服务（拾光集 / 灵感集 / 帧藏 后台）
 
-给博客加的一个轻量内容后台。在网页上填表就能增删「拾光集」的照片和「灵感集」的条目，
-不用改代码、不用重新构建部署。
+给博客加的一个轻量内容后台。在网页上填表就能增删「拾光集」的照片、「灵感集」的条目
+和「帧藏」的视频，不用改代码、不用重新构建部署。
 
 ## 用起来是怎样的
 
 1. 打开 https://worldpeace.top/manage/
 2. 输入管理密码登录
-3. 选「📸 拾光集」或「✨ 灵感集」→ 点「+ 新增」→ 填表 → 保存
-4. 刷新 https://worldpeace.top/photos/ 或 /shares/ 就能看到
+3. 选「📸 拾光集」「✨ 灵感集」或「🎬 帧藏」→ 点「+ 新增」→ 填表 → 保存
+4. 刷新 https://worldpeace.top/photos/ 、/shares/ 或 /movies/ 就能看到
 
 照片支持拖拽上传图片（jpg / png / webp / gif / avif，单张 ≤ 8MB）。
 灵感集支持填分类、日期、标题、描述、外链。
@@ -29,6 +29,7 @@
 ```
 photos.json     拾光集数据
 shares.json     灵感集数据
+movies.json     帧藏数据
 uploads/        上传的图片（按内容哈希命名，同图不会重复占空间）
 ```
 
@@ -41,6 +42,7 @@ uploads/        上传的图片（按内容哈希命名，同图不会重复占�
 ```
 GET /content-api/photos       # nginx → /api/public/photos
 GET /content-api/shares
+GET /content-api/movies
 GET /content-img/<file>       # nginx → /uploads/<file>
 ```
 
@@ -48,10 +50,10 @@ GET /content-img/<file>       # nginx → /uploads/<file>
 
 ```
 POST   /manage/api/login                  {"password":"..."} → {token}
-GET    /manage/api/items/photos|shares
-POST   /manage/api/items/photos|shares
-PUT    /manage/api/items/photos|shares/<id>
-DELETE /manage/api/items/photos|shares/<id>
+GET    /manage/api/items/photos|shares|movies
+POST   /manage/api/items/photos|shares|movies
+PUT    /manage/api/items/photos|shares|movies/<id>
+DELETE /manage/api/items/photos|shares|movies/<id>
 POST   /manage/api/upload                 {"filename":"x.jpg","data":"data:image/jpeg;base64,..."}
 ```
 
@@ -97,6 +99,22 @@ sudo tar czf ~/content-data-$(date +%F).tar.gz -C /opt/security-platform content
 ```
 
 ---
+
+## 帧藏（视频）
+
+字段：标题、描述、日期、图标、标签、视频地址、封面图。
+
+- **视频地址**填站内 mp4/webm（如 `/movies/videos/xxx.mp4`）时，卡片里直接内嵌播放；
+  填 B站 / YouTube 这类外链时，整块封面可点击跳转，并显示 ▶ 角标。
+- **封面图**可留空。留空时卡片显示图标占位；本地视频用封面当 `poster`。
+- 视频文件放在 `source/movies/videos/`，`*.mp4` / `*.ts` 已在 `.gitignore` 里，
+  不会进公开仓库，但构建时会上传到服务器。
+- 页面靠 `source/js/collection.js` 读 `GET /content-api/movies` 渲染，
+  容器是 `source/movies/index.md` 里的 `<div class="video-grid" id="video-grid">`。
+
+> 封面字段走的是和照片同一套上传接口（`/manage/api/upload`），服务端只接受
+> `/content-img/...`、`/img/...` 或 `http(s)://` 三种形式；视频地址只接受
+> `/movies/videos/...` 或 `http(s)://`，避免被塞进 `javascript:` 之类的协议。
 
 ## 后记：文章管理（方案 C）与统计
 
