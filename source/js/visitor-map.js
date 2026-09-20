@@ -3,15 +3,13 @@
     var visitorData = null;
 
     function getVisitorLocation() {
-        fetch('https://api.ipify.org?format=json')
+        fetch('https://ipwho.is/?fields=ip,city,region,country,latitude,longitude,connection')
             .then(function(r) { return r.json(); })
-            .then(function(ipData) {
-                return fetch('https://ipapi.co/' + ipData.ip + '/json/')
-                    .then(function(r) { return r.json(); })
-                    .then(function(data) {
-                        data.ip = ipData.ip;
-                        return data;
-                    });
+            .then(function(data) {
+                if (!data || data.success === false) throw new Error('geolocation unavailable');
+                data.country_name = data.country;
+                data.org = (data.connection && data.connection.org) || '';
+                return data;
             })
             .then(function(data) {
                 if (data && data.city) {
@@ -114,8 +112,13 @@
     }
 
     function loadMap() {
-        fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
-            .then(function(r) { return r.json(); })
+        var cached = null;
+        try { cached = localStorage.getItem('world-map-v1'); } catch (e) {}
+        var getGeo = cached ? Promise.resolve(JSON.parse(cached))
+            : fetch('/js/world-map.json')
+                .then(function(r) { return r.json(); })
+                .then(function(g) { try { localStorage.setItem('world-map-v1', JSON.stringify(g)); } catch (e) {} return g; });
+        getGeo
             .then(function(geojson) {
                 window._mapGeoJSON = geojson;
                 var loading = document.getElementById('mini-map-loading');
