@@ -77,6 +77,44 @@ function writeItems (type, items) {
   fs.renameSync(tmp, dataFile(type))
 }
 
+// ---------- 管理密码 ----------
+// 初始密码来自环境变量；一旦在后台改过，就写到数据目录的 auth.json（scrypt 加盐哈希），
+// 以后以文件里的为准，改密码不用动 compose、不用重启。
+function authFile () {
+  return path.join(DATA_DIR, 'auth.json')
+}
+
+function readAuth () {
+  try { return JSON.parse(fs.readFileSync(authFile(), 'utf8')) } catch (e) { return null }
+}
+
+function writeAuth (passwordHash, by) {
+  const tmp = authFile() + '.tmp'
+  fs.writeFileSync(tmp, JSON.stringify({ passwordHash, changedAt: new Date().toISOString(), changedBy: by || '' }, null, 2), 'utf8')
+  fs.renameSync(tmp, authFile())
+}
+
+function hashPassword (pw) {
+  const salt = crypto.randomBytes(16).toString('hex')
+  const key = crypto.scryptSync(pw, salt, 32).toString('hex')
+  return 'scrypt:' + salt + ':' + key
+}
+
+function verifyPassword (pw, stored) {
+  if (!stored) return !!ADMIN_PASSWORD && pw === ADMIN_PASSWORD   // 还没改过，用环境变量里的初始密码
+  const parts = String(stored).split(':')
+  if (parts.length !== 3 || parts[0] !== 'scrypt') return false
+  const test = crypto.scryptSync(pw, parts[1], 32).toString('hex')
+  const a = Buffer.from(test, 'utf8')
+  const b = Buffer.from(parts[2], 'utf8')
+  return a.length === b.length && crypto.timingSafeEqual(a, b)
+}
+
+function currentAuth () {
+  const a = readAuth()
+  return a && a.passwordHash ? a : null
+}
+
 function newId (prefix) {
   return prefix + '_' + Date.now().toString(36) + crypto.randomBytes(3).toString('hex')
 }
@@ -273,7 +311,8 @@ const server = http.createServer(async (req, res) => {
       const ip = clientIp(req)
       if (tooManyFails(ip)) return send(res, 429, { error: '尝试次数过多，请 10 分钟后再试' })
       const body = await jsonBody(req)
-      if (!ADMIN_PASSWORD || body.password !== ADMIN_PASSWORD) {
+      const authNow = currentAuth()
+      if (!verifyPassword(body.password, authNow && authNow.passwordHash)) {
         noteFail(ip)
         return send(res, 401, { error: '密码不对' })
       }
@@ -287,6 +326,31 @@ const server = http.createServer(async (req, res) => {
     // 以下都需要鉴权
     if (p.startsWith('/api/')) {
       if (!authed(req)) return send(res, 401, { error: '未登录或登录已过期' })
+
+      // 当前账号信息
+      if (method === 'GET' && p === '/api/account') {
+        const a = currentAuth()
+        return send(res, 200, {
+          usesEnvPassword: !a,
+          passwordChangedAt: a ? a.changedAt : null,
+          walineEmail: WALINE_EMAIL || '',
+          waline: !!WALINE_API
+        })
+      }
+
+      // 改密码
+      if (method === 'POST' && p === '/api/password') {
+        const body = await jsonBody(req)
+        const a = currentAuth()
+        if (!verifyPassword(body.oldPassword, a && a.passwordHash)) {
+          return send(res, 400, { error: '原密码不对' })
+        }
+        const np = String(body.newPassword || '')
+        if (np.length < 8) return send(res, 400, { error: '新密码至少 8 位' })
+        if (np === body.oldPassword) return send(res, 400, { error: '新密码不能和原密码相同' })
+        writeAuth(hashPassword(np), clientIp(req))
+        return send(res, 200, { ok: true })
+      }
 
       if (method === 'POST' && p === '/api/upload') {
         const body = await jsonBody(req)
