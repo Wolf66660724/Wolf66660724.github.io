@@ -225,6 +225,40 @@ code:not(.highlight code):not(code[class*="language-"]) {
     font-size: 0.9em;
 }
 
+/* 页脚蝴蝶振翅动画
+   注意：站点这份 source/css/custom.css 会整体覆盖主题目录里的同名文件
+   （themes/butterfly/source/css/custom.css），主题里原本的蝴蝶动画因此失效，
+   这里补回来。只作用于 footer 直属的 .copyright，不影响 .footer-copyright 里那个。 */
+.copyright svg {
+    margin-left: 5px;
+    transform-origin: center;
+    animation: butterfly 1s linear infinite alternate;
+}
+@keyframes butterfly {
+    from { transform: rotateY(70deg); }
+    to   { transform: rotateY(0deg); }
+}
+#footer > .copyright {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* 作者卡片的社交图标：
+   默认是 inline-block，元素之间的换行空格会额外占宽，导致 5 个图标里
+   最后一个（RSS）被挤到第二行单独一行。改成 flex 去掉空隙并收紧间距。 */
+.card-info-social-icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 6px 0;
+    margin: 6px 0 -6px;
+}
+.card-info-social-icons .social-icon {
+    margin: 0 6px;
+    line-height: 1;
+}
+
 /* 社交图标悬停效果 */
 #social .social-icon {
     display: inline-block;
@@ -313,9 +347,37 @@ html.is-loading::-webkit-scrollbar {
 
 /* ==================== 文章版式 · 书页 ==================== */
 
+/* 友链卡片头像：主题默认 60×60，在 240px 宽的卡片里占掉一大半，
+   缩到 44×44 并把上下边距改成居中，给名称和描述多留一点宽度。 */
+#article-container .flink-item-icon {
+    width: 44px;
+    height: 44px;
+    margin: 23px 10px;
+}
+/* 友链卡片的名字：主题默认 1.43em（约 24px），在 240px 宽的卡片里
+   只有 160px 可用，Sword-Riding / Docker Docs / Google Maps 这类英文名会被截断，
+   收到 1.15em 后全部放得下。 */
+#article-container .flink-item-name {
+    font-size: 1.15em;
+}
+/* 归档页（时光轴）被主题的 hide-aside 压到 1000px，跟其它页面拉齐 */
+.page:has(#archive) #content-inner {
+    max-width: 1200px;
+}
+/* 布局类页面放开阅读宽度（正文页 .post 不受影响） */
+.page.type-link #article-container,
+.page.type-photos #article-container,
+.page.type-movies #article-container,
+.page.type-shares #article-container,
+.page.type-resume #article-container {
+    max-width: none;
+}
 /* 版心：宋体、宽松行距；全篇统一以左边缘为基准 */
 #article-container {
     font-family: "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN", "Songti SC", STSong, SimSun, serif;
+    /* 这条只适合正文阅读。友邻 / 拾光集 / 帧藏 / 灵感集 / 关于我 都是布局页面，
+       被压在 487px 会挤成一团（友链卡片一度只剩 141px、名字截成 "N…"），
+       所以下面按页面类型放开宽度。 */
     max-width: 29em;
     margin: 0 auto;
     font-size: 1.05rem;

@@ -24,6 +24,7 @@ menu:
   友联 || fa fa-link:
     友链: /links/ || fa fa-link
     AI渗透: https://ai.worldpeace.top/ || fas fa-shield-halved
+    中转站: https://api.worldpeace.top/ || fas fa-right-left
   拾光集: /photos/ || fa fa-camera-retro
   灵感集: /shares/ || fa fa-lightbulb
   帧藏: /movies/ || fas fa-video
@@ -298,12 +299,10 @@ footer:
     - content:
         - title: 内容
           item:
-            - title: 门类
-              url: /categories/
-            - title: 标签集
-              url: /tags/
-            - title: 时光轴
-              url: /archives/
+            - title: 博文
+              url: /blog/
+            - title: 日历
+              url: /calendar/
             - title: RSS
               url: /rss2.xml
     - content:
@@ -313,6 +312,8 @@ footer:
               url: /comment/ui
             - title: AI 安全平台
               url: https://ai.worldpeace.top/
+            - title: AI 接口网关
+              url: https://api.worldpeace.top/
   owner:
     enable: true
     since: 2025
@@ -1121,6 +1122,7 @@ css_prefix: true
 # 插入代码到头部 </head> 之前 和 底部 </body> 之前
 inject:
   head:
+    - <link rel="alternate" type="application/rss+xml" title="Mr.wolf" href="/rss2.xml">
     - <link rel="stylesheet" href="/css/background.css">
     - <link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'">
     - <link rel="stylesheet" href="/css/music-player.css">

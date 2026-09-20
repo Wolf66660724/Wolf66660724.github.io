@@ -1,3 +1,14 @@
+- class_name: 我的项目
+  class_desc: 自己搭的服务，欢迎试用
+  link_list:
+    - name: New API
+      link: https://api.worldpeace.top/
+      avatar: https://api.worldpeace.top/logo.png
+      descr: AI 接口网关
+    - name: Sword-Riding
+      link: https://ai.worldpeace.top/
+      avatar: https://ai.worldpeace.top/logo.png
+      descr: AI 安全扫描平台
 - class_name: 学习平台
   class_desc: 在线学习和教育平台
   link_list:
@@ -125,7 +136,7 @@
       link: https://butterfly.js.org/
       avatar: https://butterfly.js.org/favicon.ico
       descr: Butterfly - A Simple and Card UI Design theme for Hexo
-    - name: Butterfly美化教程
+    - name: Butterfly 教程
       link: https://butterfly.zhheo.com/
       avatar: https://butterfly.zhheo.com/favicon.ico
       descr: Butterfly主题美化教程
