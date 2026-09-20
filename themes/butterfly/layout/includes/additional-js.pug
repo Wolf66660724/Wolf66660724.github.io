@@ -52,7 +52,18 @@ div
     != partial("includes/third-party/umami_analytics", {}, { cache: true })
 
   if theme.busuanzi.site_uv || theme.busuanzi.site_pv || theme.busuanzi.page_pv
-    script(async data-pjax src= theme.asset.busuanzi || '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js')
+    script.
+      (function () {
+        var url = "#{theme.asset.busuanzi || '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js'}";
+        var load = function () {
+          var s = document.createElement('script');
+          s.src = url;
+          s.async = true;
+          document.body.appendChild(s);
+        };
+        if (document.readyState === 'complete') { load(); }
+        else { window.addEventListener('load', load); }
+      })();
 
   != partial('includes/third-party/search/index', {}, { cache: true })
 

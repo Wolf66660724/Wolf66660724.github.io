@@ -1,4 +1,4 @@
-﻿# --------------------------------------
+# --------------------------------------
 # Hexo Butterfly Theme Configuration
 # If you have any questions, please refer to the documentation
 # Chinese: https://butterfly.js.org/
@@ -25,7 +25,7 @@ menu:
     时光轴: /archives/ || fa fa-folder-open
   友联 || fa fa-link:
     友链: /links/ || fa fa-link
-    AI渗透: http://8.148.28.150:9137/ || fas fa-shield-halved
+    AI渗透: https://ai.worldpeace.top/ || fas fa-shield-halved
   拾光集: /photos/ || fa fa-camera-retro
   灵感集: /shares/ || fa fa-lightbulb
   帧藏: /movies/ || fas fa-video
@@ -63,7 +63,7 @@ social:
  fa fa-book-open: https://blog.csdn.net/|| CSDN
  fab fa-qq: https://wpa.qq.com/msgrd?v=3&uin=2646209087&site=qq&menu=yes || QQ || '#12B7F5'
  fas fa-envelope-open-text: mailto:2646209087@qq.com || Email
- fas fa-rss: /atom.xml || RSS || '#ff8c00'
+ fas fa-rss: /rss2.xml || RSS || '#ff8c00'
 
   # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
   # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
@@ -307,7 +307,7 @@ footer:
             - title: 时光轴
               url: /archives/
             - title: RSS
-              url: /atom.xml
+              url: /rss2.xml
   owner:
     enable: true
     since: 2025
@@ -1197,7 +1197,7 @@ inject:
     - <script async src="//at.alicdn.com/t/c/font_4997605_3vn5rrlxb2a.js"></script>
     - <script src="/js/sun_moon.js" async></script>
     - <script src="/js/music-player.js" async></script>
-    - <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
     - <script src="/js/matrix-rain.js"></script>
     - <script src="/js/visitor-map.js"></script>
     - <script src="/js/daily-quote.js"></script>

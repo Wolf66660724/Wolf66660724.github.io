@@ -113,7 +113,7 @@ source/
 
 - 📖 **在线博客：** [https://worldpeace.top](https://worldpeace.top)
 - 💻 **GitHub 仓库：** [https://github.com/Wolf66660724/Wolf66660724.github.io](https://github.com/Wolf66660724/Wolf66660724.github.io)
-- 🤖 **AI 渗透平台：** [http://8.148.28.150:9137](http://8.148.28.150:9137)
+- 🤖 **AI 渗透平台：** [https://ai.worldpeace.top](https://ai.worldpeace.top)
 
 ---
 

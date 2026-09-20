@@ -59,22 +59,74 @@ if (-not $SkipBuild) {
 
 if (-not (Test-Path $publicDir)) { throw "未找到构建产物目录：$publicDir" }
 
-# ---------- 2. 静态资源加版本号（绕开 CDN 长效缓存）----------
-Write-Host '[2/5] 为 CSS/JS 加版本号 ...' -ForegroundColor Cyan
-$ver = Get-Date -Format 'yyyyMMddHHmmss'
-$pattern = '(/css/[A-Za-z0-9._-]+\.css|/js/[A-Za-z0-9._/-]+\.js)(["''])'
-$htmlFiles = Get-ChildItem $publicDir -Recurse -File -Filter *.html
-$touched = 0
-foreach ($hf in $htmlFiles) {
-    $txt = [System.IO.File]::ReadAllText($hf.FullName, [System.Text.Encoding]::UTF8)
-    $new = [regex]::Replace($txt, $pattern, { param($m) $m.Groups[1].Value + '?v=' + $ver + $m.Groups[2].Value })
-    if ($new -ne $txt) {
-        [System.IO.File]::WriteAllText($hf.FullName, $new, (New-Object System.Text.UTF8Encoding($false)))
-        $touched++
-    }
-}
-Write-Host "      已处理 $touched 个页面，版本号 $ver"
+# ---------- 2. 静态资源按内容哈希加版本号（绕开 CDN 长效缓存）----------
+Write-Host '[2/5] 为静态资源加版本号 ...' -ForegroundColor Cyan
 
+$imgPattern  = '(/img/[A-Za-z0-9._%/-]+\.(?:png|jpe?g|gif|svg|webp|ico))(["''])'
+$allPattern  = '(/img/[A-Za-z0-9._%/-]+\.(?:png|jpe?g|gif|svg|webp|ico)|/css/[A-Za-z0-9._-]+\.css|/js/[A-Za-z0-9._/-]+\.js)(["''])'
+
+function Get-AssetHash([string]$urlPath) {
+    $rel = $urlPath.TrimStart('/').Replace('/', '\')
+    $file = Join-Path $publicDir $rel
+    if (Test-Path -LiteralPath $file) { return (Get-FileHash -LiteralPath $file -Algorithm MD5).Hash.Substring(0, 8).ToLower() }
+    return $null
+}
+
+function Invoke-VersionReplace([string]$text, [string]$pattern, [hashtable]$map) {
+    $sb = New-Object System.Text.StringBuilder
+    $last = 0
+    foreach ($m in [regex]::Matches($text, $pattern)) {
+        $p = $m.Groups[1].Value
+        $v = $map[$p]
+        if ($v) {
+            [void]$sb.Append($text.Substring($last, $m.Index - $last))
+            [void]$sb.Append($p).Append('?v=').Append($v).Append($m.Groups[2].Value)
+            $last = $m.Index + $m.Length
+        }
+    }
+    if ($last -eq 0) { return $null }
+    [void]$sb.Append($text.Substring($last))
+    return $sb.ToString()
+}
+
+# 第一趟：先给 CSS 里引用的图片加版本号（让 CSS 内容定型）
+$imgPaths = @()
+foreach ($f in (Get-ChildItem $publicDir -Recurse -File -Include *.css, *.html)) {
+    $t = [System.IO.File]::ReadAllText($f.FullName, [System.Text.Encoding]::UTF8)
+    foreach ($m in [regex]::Matches($t, $imgPattern)) { $imgPaths += $m.Groups[1].Value }
+}
+$imgMap = @{}
+foreach ($p in ($imgPaths | Sort-Object -Unique)) {
+    $h = Get-AssetHash $p
+    if ($h) { $imgMap[$p] = $h }
+}
+$cssTouched = 0
+foreach ($f in (Get-ChildItem $publicDir -Recurse -File -Filter *.css)) {
+    $t = [System.IO.File]::ReadAllText($f.FullName, [System.Text.Encoding]::UTF8)
+    $out = Invoke-VersionReplace -text $t -pattern $imgPattern -map $imgMap
+    if ($out) { [System.IO.File]::WriteAllText($f.FullName, $out, (New-Object System.Text.UTF8Encoding($false))); $cssTouched++ }
+}
+
+# 第二趟：此时所有文件内容已定型，统一算哈希
+$allPaths = @()
+foreach ($f in (Get-ChildItem $publicDir -Recurse -File -Include *.html)) {
+    $t = [System.IO.File]::ReadAllText($f.FullName, [System.Text.Encoding]::UTF8)
+    foreach ($m in [regex]::Matches($t, $allPattern)) { $allPaths += $m.Groups[1].Value }
+}
+$verMap = @{}
+foreach ($p in ($allPaths | Sort-Object -Unique)) {
+    $h = Get-AssetHash $p
+    if ($h) { $verMap[$p] = $h }
+}
+
+# 第三趟：给 HTML 里的资源加版本号
+$htmlTouched = 0
+foreach ($f in (Get-ChildItem $publicDir -Recurse -File -Include *.html)) {
+    $t = [System.IO.File]::ReadAllText($f.FullName, [System.Text.Encoding]::UTF8)
+    $out = Invoke-VersionReplace -text $t -pattern $allPattern -map $verMap
+    if ($out) { [System.IO.File]::WriteAllText($f.FullName, $out, (New-Object System.Text.UTF8Encoding($false))); $htmlTouched++ }
+}
+Write-Host "      CSS $cssTouched 个 / HTML $htmlTouched 个，资源 $($verMap.Count) 项"
 # ---------- 3. 打包 ----------
 Write-Host '[3/5] 打包构建产物 ...' -ForegroundColor Cyan
 if (Test-Path $tarPath) { Remove-Item $tarPath -Force }

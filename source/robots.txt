@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# 软 404 页面不希望被收录
+Disallow: /404.html
+
+Sitemap: https://worldpeace.top/sitemap.xml
