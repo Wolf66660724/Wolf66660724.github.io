@@ -158,8 +158,10 @@ function str (v, max) {
   return String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, max)
 }
 function safeImagePath (v) {
-  const s = str(v, 300)
-  return /^\/uploads\/[A-Za-z0-9._-]+$/.test(s) ? s : ''
+  let s = str(v, 300)
+  // 兼容历史数据里写的 /uploads/xxx（那是服务内部路径，公网访问不到）
+  s = s.replace(/^\/uploads\//, '/content-img/')
+  return /^\/content-img\/[A-Za-z0-9._-]+$/.test(s) ? s : ''
 }
 function safeUrl (v) {
   const s = str(v, 800)
@@ -210,7 +212,8 @@ function saveImage (filename, dataUrl) {
   const hash = crypto.createHash('sha1').update(buf).digest('hex').slice(0, 16)
   const name = hash + '.' + ext
   fs.writeFileSync(path.join(UPLOAD_DIR, name), buf)
-  return '/uploads/' + name
+  // 返回公网路径：/uploads/ 是服务内部路径，外部要走 nginx 的 /content-img/
+  return '/content-img/' + name
 }
 
 // ---------- Waline 联动 ----------
