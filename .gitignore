@@ -24,3 +24,8 @@ source/movies/videos/*.ts
 
 # AWS 密钥（勿提交）
 /wolf-key.pem
+
+# QQ 音乐相关：下载脚本、cookie、音频都只留本地，不进公开仓库
+# （部署是从本地目录构建的，所以不进仓库也照样会上传上线）
+/tools/
+source/music/songs/

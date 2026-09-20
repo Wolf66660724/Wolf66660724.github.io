@@ -1,409 +1,349 @@
-// 音乐播放器控制脚本
-(function() {
+// 音乐播放器：APlayer 提供播放能力，外面保留自研的悬浮拖拽 / 收起 / 旋转唱片
+(function () {
+    'use strict';
+
+    // ============ 配置 ============
+    // 音源：netease = 网易云，tencent = QQ 音乐
+    var SERVER = 'netease';
+    // 歌单 ID（想换歌单改这一行即可）
+    //   网易云：歌单链接里的那串数字，如 https://music.163.com/#/playlist?id=2619366284
+    //   QQ 音乐：歌单链接里的 dissid，如 https://y.qq.com/n/ryqq/playlist/7707261125
+    var PLAYLIST_ID = '2619366284';
+    // 是否额外加载在线歌单（540 首那个）。
+    // 现在是「只放自己的歌」，想开回来把 false 改成 true 即可。
+    var ENABLE_ONLINE_PLAYLIST = false;
+    // Meting 接口，按顺序尝试（公共接口不稳定，多备几个）
+    var METING_APIS = [
+        'https://api.injahow.cn/meting/',
+        'https://api.i-meto.com/meting/api'
+    ];
+    // 自己的歌单（在线歌单关闭时，这就是播放器的全部曲目）
+    var LOCAL_TRACKS = [
+        { name: '私奔 (Live)', artist: '郑钧 / 耿斯汉', url: '/music/songs/郑钧 _ 耿斯汉 - 私奔.mp3', cover: '/music/covers/私奔-郑钧 _ 耿斯汉.jpg', lrc: '/music/lrc/私奔-郑钧 _ 耿斯汉.lrc' },
+        { name: '恋爱的犀牛', artist: '黄雨篱', url: '/music/songs/黄雨篱 - 恋爱的犀牛.mp3', cover: '/music/covers/恋爱的犀牛-黄雨篱.jpg', lrc: '/music/lrc/恋爱的犀牛-黄雨篱.lrc' },
+        { name: '发如雪', artist: '周杰伦', url: '/music/songs/周杰伦 - 发如雪.mp3', cover: '/music/covers/faxue.jpg', lrc: '/music/lrc/faxue.lrc' },
+        { name: '就这样爱着你', artist: '粥粥和小伙', url: '/music/songs/粥粥和小伙 _ 粥粥 - 就这样爱着你.ogg', cover: '/music/covers/aizheni.jpg', lrc: '/music/lrc/aizheni.lrc' },
+        { name: '有何不可', artist: '许嵩', url: '/music/songs/许嵩 - 有何不可.mp3', cover: '/music/covers/youhebuk.webp', lrc: '/music/lrc/youhebuk.lrc' },
+        { name: '别怕有我在', artist: '李怡然同学', url: '/music/songs/李怡然同学 - 别怕有我在.mp3', cover: '/music/covers/别怕有我在-李怡然同学.jpg', lrc: '/music/lrc/别怕有我在-李怡然同学.lrc' }
+    ];
+    // 缓存按「音源 + 歌单 ID」分开存，换歌单不会读到旧数据
+    var CACHE_KEY = 'music-playlist-v1-' + SERVER + '-' + PLAYLIST_ID;
+    var CACHE_TTL = 6 * 60 * 60 * 1000;   // 歌单缓存 6 小时
+    var DRAG_THRESHOLD = 5;
+    // APlayer 的主题色：白天薄荷蓝，夜里粉色
+    var THEME_COLOR_LIGHT = '#5aa9e6';
+    var THEME_COLOR_DARK = '#ff7ab8';
+    // ================================
+
+    var ap = null;
     var isDragging = false;
     var hasDragged = false;
+    var listObserver = null;
     var dragOffset = { x: 0, y: 0 };
-    var progressPath = null;
-    var progressLength = 0;
-    var currentPlayingSrc = null;
-    var currentTrackIndex = -1;
 
-    // 歌曲列表
-    var musicPlaylist = [
-        { src: '/music/songs/周杰伦 - 发如雪.mp3', title: '发如雪', artist: '周杰伦' },
-        { src: '/music/songs/粥粥和小伙 _ 粥粥 - 就这样爱着你.ogg', title: '就这样爱着你', artist: '粥粥和小伙 _ 粥粥' },
-        { src: '/music/songs/许嵩 - 有何不可.mp3', title: '有何不可', artist: '许嵩' }
-    ];
+    function panel() { return document.getElementById('persistent-music-player'); }
 
-    // 切换播放器显示/隐藏
-    function toggleMusicPlayer() {
-        if (hasDragged) return;
-        var player = document.getElementById('persistent-music-player');
-        if (player) {
-            player.classList.toggle('minimized');
-            if (!player.classList.contains('minimized')) {
-                player.style.transform = '';
-            }
-        }
-    }
-
-    // 最小化播放器
-    function minimizeMusicPlayer() {
-        var player = document.getElementById('persistent-music-player');
-        if (player) {
-            player.classList.add('minimized');
-        }
-    }
-
-    function setVisualMeta(title, artist) {
-        var songEl = document.getElementById('song');
-        var artistEl = document.getElementById('artist');
-        if (songEl) songEl.textContent = title || '待播放';
-        if (artistEl) artistEl.textContent = artist || '未知歌手';
-    }
-
-    function initProgressRing() {
-        progressPath = document.getElementById('song-time');
-        if (!progressPath) return;
-        progressLength = 1500;
-        progressPath.style.strokeDasharray = progressLength;
-        progressPath.style.strokeDashoffset = progressLength;
-    }
-
-    function updateProgressRing(current, duration) {
-        if (!progressPath || !duration || duration === Infinity) return;
-        var progress = Math.min(Math.max(current / duration, 0), 1);
-        var offset = progressLength - progressLength * progress;
-        progressPath.style.strokeDashoffset = offset;
-    }
-
-    function resetProgressRing() {
-        if (!progressPath) return;
-        progressPath.style.strokeDashoffset = progressLength;
-    }
-
-    // 切换当前播放/暂停
-    function toggleCurrentTrack() {
-        var audio = document.getElementById('music-audio');
-        if (!audio) return;
-
-        if (!audio.src || audio.src.length === 0 || currentTrackIndex === -1) {
-            if (musicPlaylist.length > 0) {
-                playTrackByIndex(0);
-            }
-            return;
-        }
-
-        if (audio.paused) {
-            audio.play().catch(function(err) { console.warn('播放失败', err); });
-        } else {
-            audio.pause();
-        }
-    }
-
-    // 播放指定索引的歌曲
-    function playTrackByIndex(index) {
-        if (index < 0 || index >= musicPlaylist.length) return;
-
-        var track = musicPlaylist[index];
-        currentTrackIndex = index;
-        currentPlayingSrc = track.src;
-
-        var audio = document.getElementById('music-audio');
-        if (!audio) return;
-
-        audio.pause();
-        audio.currentTime = 0;
-        resetProgressRing();
-
-        setVisualMeta(track.title, track.artist);
-        updateActiveTrack();
-
-        function tryPlayAudio(audioSrc, attempt) {
-            audio.src = audioSrc;
-            audio.load();
-
-            var playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(function() {
-                        console.log('播放成功:', audioSrc);
-                        updatePlayPauseIcon(false);
-                    })
-                    .catch(function(err) {
-                        console.error('播放失败 (方式' + attempt + '):', err, audioSrc);
-
-                        if (attempt === 1) {
-                            var pathParts = track.src.split('/');
-                            var fileName = pathParts.pop();
-                            var basePath = pathParts.join('/');
-                            var encodedFileName = encodeURIComponent(fileName);
-                            tryPlayAudio(basePath + '/' + encodedFileName, 2);
-                        } else if (attempt === 2) {
-                            tryPlayAudio(encodeURI(track.src), 3);
-                        } else if (attempt === 3) {
-                            tryPlayAudio(track.src, 4);
-                        } else {
-                            updatePlayPauseIcon(true);
-                            console.error('所有播放方式都失败');
-                        }
-                    });
-            }
-        }
-
-        var pathParts = track.src.split('/');
-        var fileName = pathParts.pop();
-        var basePath = pathParts.join('/');
-        var encodedFileName = encodeURIComponent(fileName);
-        tryPlayAudio(basePath + '/' + encodedFileName, 1);
-    }
-
-    // 播放上一首
-    function playPreviousTrack() {
-        if (musicPlaylist.length === 0) return;
-
-        var prevIndex;
-        if (currentTrackIndex <= 0) {
-            prevIndex = musicPlaylist.length - 1;
-        } else {
-            prevIndex = currentTrackIndex - 1;
-        }
-
-        playTrackByIndex(prevIndex);
-    }
-
-    // 播放下一首
-    function playNextTrack() {
-        if (musicPlaylist.length === 0) return;
-
-        var nextIndex;
-        if (currentTrackIndex >= musicPlaylist.length - 1) {
-            nextIndex = 0;
-        } else {
-            nextIndex = currentTrackIndex + 1;
-        }
-
-        playTrackByIndex(nextIndex);
-    }
-
-    // 更新播放/暂停图标和状态文字
-    function updatePlayPauseIcon(isPaused) {
-        // 更新控制按钮图标
-        var playBtn = document.querySelector('.ctrl-play');
-        if (playBtn) {
-            playBtn.innerHTML = isPaused
-                ? '<i class="fas fa-play" style="margin-left: 3px;"></i>'
-                : '<i class="fas fa-pause"></i>';
-        }
-
-        // 更新圆形中心的播放/暂停按钮
-        var circlePlay = document.getElementById('play');
-        var circlePause = document.getElementById('pause');
-        if (circlePlay) circlePlay.style.display = isPaused ? 'flex' : 'none';
-        if (circlePause) circlePause.style.display = isPaused ? 'none' : 'flex';
-
-        // 更新状态文字
-        var statusEl = document.querySelector('.player-header-title');
-        if (!statusEl) {
-            // 创建状态文字元素（如果不存在）
-            var player = document.getElementById('player');
-            if (player) {
-                var header = document.createElement('div');
-                header.className = 'player-header';
-                header.innerHTML = '<span class="player-header-title">🎵 待播放</span>';
-                player.insertBefore(header, player.firstChild);
-                statusEl = header.querySelector('.player-header-title');
-            }
-        }
-        if (statusEl) {
-            if (currentTrackIndex === -1) {
-                statusEl.textContent = '🎵 待播放';
-            } else if (isPaused) {
-                statusEl.textContent = '⏸ 已暂停';
-            } else {
-                statusEl.textContent = '🎵 正在播放';
-            }
-        }
-    }
-
-    // 更新当前播放高亮
-    function updateActiveTrack() {
-        var items = document.querySelectorAll('.music-item');
-        items.forEach(function(item, i) {
-            item.classList.toggle('active', i === currentTrackIndex);
+    // ---------- 歌单数据 ----------
+    function normalize(list) {
+        if (!Array.isArray(list)) return [];
+        return list.filter(function (t) { return t && t.name && t.url; }).map(function (t) {
+            return {
+                name: t.name,
+                artist: t.artist || '未知歌手',
+                url: t.url,
+                cover: t.pic || t.cover || '',
+                lrc: t.lrc || ''
+            };
         });
     }
 
-    // 初始化拖拽
+    function readCache() {
+        try {
+            var raw = localStorage.getItem(CACHE_KEY);
+            if (!raw) return null;
+            var obj = JSON.parse(raw);
+            if (!obj || !obj.t || Date.now() - obj.t > CACHE_TTL) return null;
+            return obj.list && obj.list.length ? obj.list : null;
+        } catch (e) { return null; }
+    }
+
+    function writeCache(list) {
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), list: list })); } catch (e) {}
+    }
+
+    function loadOnlinePlaylist(done) {
+        var cached = readCache();
+        if (cached) { done(null, cached); return; }
+        (function tryApi(i) {
+            if (i >= METING_APIS.length) { done(new Error('所有 Meting 接口都不可用')); return; }
+            var url = METING_APIS[i] + '?server=' + SERVER + '&type=playlist&id=' + PLAYLIST_ID;
+            fetch(url, { credentials: 'omit' })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var list = normalize(data);
+                    if (!list.length) throw new Error('歌单为空');
+                    writeCache(list);
+                    done(null, list);
+                })
+                .catch(function () { tryApi(i + 1); });
+        })(0);
+    }
+
+    // ---------- 明暗主题联动 ----------
+    function isDarkMode() {
+        return document.documentElement.getAttribute('data-theme') === 'dark'
+            || (document.body && document.body.classList.contains('DarkMode'));
+    }
+
+    function applyPlayerTheme() {
+        if (!ap || typeof ap.theme !== 'function') return;
+        try { ap.theme(isDarkMode() ? THEME_COLOR_DARK : THEME_COLOR_LIGHT); } catch (e) {}
+    }
+
+    var themeObserver = null;
+    function watchTheme() {
+        if (themeObserver || !window.MutationObserver) return;
+        themeObserver = new MutationObserver(function () { applyPlayerTheme(); });
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        if (document.body) {
+            themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        }
+    }
+
+    // ---------- 顶栏“正在播放” ----------
+    function setHeaderTitle(text) {
+        var el = document.querySelector('#persistent-music-player .player-header-title');
+        if (!el) return;
+        el.textContent = text;
+        el.title = text;
+    }
+
+    function currentText() {
+        if (!ap || !ap.list || !ap.list.audios.length) return '音乐';
+        var i = typeof ap.list.index === 'number' ? ap.list.index : 0;
+        var t = ap.list.audios[i];
+        return t ? t.name + (t.artist ? ' · ' + t.artist : '') : '音乐';
+    }
+
+    // ---------- 歌单封面：给每一行配一张小封面 ----------
+    function decorateList() {
+        var ol = document.querySelector('#aplayer-slot .aplayer-list ol');
+        if (!ol || !ap || !ap.list) return;
+        var audios = ap.list.audios;
+        if (listObserver) listObserver.disconnect();
+        for (var i = 0; i < ol.children.length; i++) {
+            var li = ol.children[i];
+            if (li.dataset.coverDone === 'true') continue;
+            var t = audios[i];
+            if (!t || !t.cover) continue;
+            var img = document.createElement('img');
+            img.className = 'mp-li-cover';
+            img.alt = '';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.addEventListener('error', function () { this.classList.add('is-broken'); });
+            img.src = t.cover;
+            li.insertBefore(img, li.firstChild);
+            li.classList.add('mp-has-cover');
+            li.dataset.coverDone = 'true';
+        }
+        if (listObserver) listObserver.observe(ol, { childList: true });
+    }
+
+    function watchList() {
+        var ol = document.querySelector('#aplayer-slot .aplayer-list ol');
+        if (!ol || !window.MutationObserver) { decorateList(); return; }
+        if (!listObserver) {
+            listObserver = new MutationObserver(function () { decorateList(); });
+        } else {
+            listObserver.disconnect();
+        }
+        listObserver.observe(ol, { childList: true });
+        decorateList();
+    }
+
+    // ---------- APlayer ----------
+    function createPlayer(audioList) {
+        var slot = document.getElementById('aplayer-slot');
+        if (!slot || typeof APlayer !== 'function') return;
+        if (ap) { try { ap.destroy(); } catch (e) {} ap = null; }
+
+        // APlayer 会把 .aplayer 类名加在传入的容器上，这里多包一层，
+        // 既让 `#aplayer-slot .aplayer` 的样式能命中，也避免污染外壳节点。
+        slot.innerHTML = '';
+        var mount = document.createElement('div');
+        mount.className = 'mp-aplayer-mount';
+        slot.appendChild(mount);
+
+        ap = new APlayer({
+            container: mount,
+            fixed: false,
+            mini: false,
+            autoplay: false,
+            theme: isDarkMode() ? THEME_COLOR_DARK : THEME_COLOR_LIGHT,
+            loop: 'all',
+            order: 'list',
+            preload: 'none',
+            lrcType: 3,
+            volume: 0.7,
+            mutex: true,
+            listFolded: false,
+            listMaxHeight: '220px',
+            audio: audioList
+        });
+
+        // 播放时让左下角唱片图标转起来（原来的小设计）
+        ap.on('play', function () {
+            var p = panel(); if (p) p.classList.add('rotating');
+            setHeaderTitle(currentText());
+        });
+        ap.on('pause', function () { var p = panel(); if (p) p.classList.remove('rotating'); });
+        ap.on('ended', function () { var p = panel(); if (p) p.classList.remove('rotating'); });
+        ap.on('listswitch', function () { setHeaderTitle(currentText()); });
+
+        window._aplayer = ap;
+        setTimeout(watchList, 60);
+    }
+
+    // ---------- 交互：展开 / 收起 ----------
+    function toggleMusicPlayer() {
+        if (hasDragged) return;
+        var p = panel();
+        if (!p) return;
+        p.classList.toggle('minimized');
+        if (!p.classList.contains('minimized')) {
+            setHeaderTitle(currentText());
+            // 等展开动画（.35s）走完再按最终宽度校正
+            setTimeout(clampIntoView, 400);
+        }
+    }
+
+    // 拖到屏幕边缘后展开，面板可能超出可视区域；这里把它拉回来
+    function clampIntoView() {
+        var p = panel();
+        if (!p) return;
+        if (!p.style.left && !p.style.top) return;   // 没被拖过就不动它
+        var r = p.getBoundingClientRect();
+        var curLeft = parseFloat(p.style.left);
+        var curTop = parseFloat(p.style.top);
+        if (isNaN(curLeft)) curLeft = r.left;
+        if (isNaN(curTop)) curTop = r.top;
+        var left = Math.max(8, Math.min(curLeft, window.innerWidth - r.width - 8));
+        var top = Math.max(8, Math.min(curTop, window.innerHeight - r.height - 8));
+        p.style.left = left + 'px';
+        p.style.top = top + 'px';
+        p.style.right = 'auto';
+        p.style.bottom = 'auto';
+    }
+
+    function minimizeMusicPlayer() {
+        var p = panel();
+        if (p) p.classList.add('minimized');
+    }
+
+    function bindControls() {
+        var p = panel();
+        if (!p) return;
+
+        var t = p.querySelector('.music-toggle-btn');
+        if (t && t.dataset.bound !== 'true') {
+            t.addEventListener('click', function (e) { e.preventDefault(); toggleMusicPlayer(); });
+            t.dataset.bound = 'true';
+        }
+
+        var m = p.querySelector('.music-minimize-btn');
+        if (m && m.dataset.bound !== 'true') {
+            m.addEventListener('click', function (e) { e.preventDefault(); minimizeMusicPlayer(); });
+            m.dataset.bound = 'true';
+        }
+    }
+
+    // ---------- 交互：拖拽（把手只放在标题栏，避免和播放器按钮冲突）----------
     function initDrag() {
-        var wrapper = document.getElementById('persistent-music-player');
-        if (!wrapper || wrapper.dataset.dragBound === 'true') return;
+        var p = panel();
+        if (!p || p.dataset.dragBound === 'true') return;
 
-        var shouldIgnore = function(target) {
-            if (!target) return true;
-            var tagName = target.tagName;
-            if (tagName === 'BUTTON' || tagName === 'A' || tagName === 'INPUT' || tagName === 'AUDIO') {
-                return true;
+        var startDrag = function (e) {
+            // 收起状态：整个圆钮都可以拖；展开状态：只有标题栏可以拖
+            if (!p.classList.contains('minimized')) {
+                var header = p.querySelector('.player-header');
+                if (!header || !header.contains(e.target)) return;
+                if (e.target.closest('button, input, a')) return;   // 标题栏上的收起按钮不触发拖拽
             }
-            if (target.closest('.music-play-btn')) return true;
-            if (target.closest('.ctrl-btn') || target.closest('.music-minimize-btn')) {
-                return true;
-            }
-            return false;
-        };
-
-        var startX, startY;
-        var DRAG_THRESHOLD = 5;
-
-        var startDrag = function(e) {
-            if (shouldIgnore(e.target)) return;
-
-            var eventPoint = e.touches ? e.touches[0] : e;
-            startX = eventPoint.clientX;
-            startY = eventPoint.clientY;
-
-            var rect = wrapper.getBoundingClientRect();
-            dragOffset.x = eventPoint.clientX - rect.left;
-            dragOffset.y = eventPoint.clientY - rect.top;
-
+            var pt = e.touches ? e.touches[0] : e;
+            var rect = p.getBoundingClientRect();
+            dragOffset.x = pt.clientX - rect.left;
+            dragOffset.y = pt.clientY - rect.top;
             isDragging = true;
             hasDragged = false;
 
-            var handleMove = function(event) {
+            var move = function (ev) {
                 if (!isDragging) return;
-
-                var point = event.touches ? event.touches[0] : event;
-                var deltaX = Math.abs(point.clientX - startX);
-                var deltaY = Math.abs(point.clientY - startY);
-
-                if (deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD) {
-                    if (!hasDragged) {
-                        hasDragged = true;
-                        wrapper.classList.add('dragging');
-                        document.body.style.userSelect = 'none';
-                    }
-
-                    event.preventDefault();
-
-                    var playerRect = wrapper.getBoundingClientRect();
-                    var left = point.clientX - dragOffset.x;
-                    var top = point.clientY - dragOffset.y;
-
-                    var maxLeft = window.innerWidth - playerRect.width - 10;
-                    var maxTop = window.innerHeight - playerRect.height - 10;
-                    left = Math.max(10, Math.min(left, maxLeft));
-                    top = Math.max(10, Math.min(top, maxTop));
-
-                    wrapper.style.left = left + 'px';
-                    wrapper.style.top = top + 'px';
-                    wrapper.style.right = 'auto';
-                    wrapper.style.bottom = 'auto';
+                var q = ev.touches ? ev.touches[0] : ev;
+                if (Math.abs(q.clientX - pt.clientX) > DRAG_THRESHOLD || Math.abs(q.clientY - pt.clientY) > DRAG_THRESHOLD) {
+                    hasDragged = true;
+                    p.classList.add('dragging');
                 }
+                if (!hasDragged) return;
+                ev.preventDefault();
+                var r = p.getBoundingClientRect();
+                var left = Math.max(8, Math.min(q.clientX - dragOffset.x, window.innerWidth - r.width - 8));
+                var top = Math.max(8, Math.min(q.clientY - dragOffset.y, window.innerHeight - r.height - 8));
+                p.style.left = left + 'px';
+                p.style.top = top + 'px';
+                p.style.right = 'auto';
+                p.style.bottom = 'auto';
             };
 
-            var handleEnd = function() {
+            var end = function () {
                 if (!isDragging) return;
                 isDragging = false;
-                wrapper.classList.remove('dragging');
+                p.classList.remove('dragging');
                 document.body.style.userSelect = '';
-
-                setTimeout(function() {
-                    hasDragged = false;
-                }, 100);
-
-                document.removeEventListener('mousemove', handleMove);
-                document.removeEventListener('touchmove', handleMove);
-                document.removeEventListener('mouseup', handleEnd);
-                document.removeEventListener('touchend', handleEnd);
-                document.removeEventListener('mouseleave', handleEnd);
+                setTimeout(function () { hasDragged = false; }, 120);
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('touchmove', move);
+                document.removeEventListener('mouseup', end);
+                document.removeEventListener('touchend', end);
             };
 
-            document.addEventListener('mousemove', handleMove, { passive: false });
-            document.addEventListener('touchmove', handleMove, { passive: false });
-            document.addEventListener('mouseup', handleEnd);
-            document.addEventListener('touchend', handleEnd);
-            document.addEventListener('mouseleave', handleEnd);
+            document.body.style.userSelect = 'none';
+            document.addEventListener('mousemove', move, { passive: false });
+            document.addEventListener('touchmove', move, { passive: false });
+            document.addEventListener('mouseup', end);
+            document.addEventListener('touchend', end);
         };
 
-        wrapper.addEventListener('mousedown', startDrag, { passive: false });
-        wrapper.addEventListener('touchstart', startDrag, { passive: false });
-
-        wrapper.dataset.dragBound = 'true';
+        p.addEventListener('mousedown', startDrag, { passive: false });
+        p.addEventListener('touchstart', startDrag, { passive: false });
+        p.dataset.dragBound = 'true';
     }
 
-    // 播放音乐（从列表点击）
-    function playMusic(btn) {
-        if (btn && btn.closest) {
-            var musicItem = btn.closest('.music-item');
-            if (musicItem) {
-                var src = musicItem.getAttribute('data-src');
-                var index = musicPlaylist.findIndex(function(track) { return track.src === src; });
-                if (index !== -1) {
-                    playTrackByIndex(index);
-                    return;
-                }
-            }
-        }
-
-        if (musicPlaylist.length > 0) {
-            playTrackByIndex(0);
-        }
-    }
-
-    // 监听音频播放状态
-    function initAudioEvents() {
-        var audio = document.getElementById('music-audio');
-        if (!audio) return;
-        if (audio.dataset.eventsBound === 'true') return;
-
-        audio.addEventListener('play', function() {
-            updatePlayPauseIcon(false);
-        });
-
-        audio.addEventListener('pause', function() {
-            updatePlayPauseIcon(true);
-        });
-
-        audio.addEventListener('ended', function() {
-            updatePlayPauseIcon(true);
-            resetProgressRing();
-            playNextTrack();
-        });
-
-        audio.addEventListener('loadedmetadata', function() {
-            updateProgressRing(audio.currentTime, audio.duration);
-        });
-
-        audio.addEventListener('timeupdate', function() {
-            updateProgressRing(audio.currentTime, audio.duration);
-        });
-
-        audio.addEventListener('error', function(e) {
-            console.error('音频加载错误:', e);
-        });
-
-        audio.dataset.eventsBound = 'true';
-    }
-
-    // 初始化
+    // ---------- 初始化 ----------
     function initMusicPlayer() {
         window.toggleMusicPlayer = toggleMusicPlayer;
         window.minimizeMusicPlayer = minimizeMusicPlayer;
-        window.playMusic = playMusic;
-        window.toggleCurrentTrack = toggleCurrentTrack;
-        window.playPreviousTrack = playPreviousTrack;
-        window.playNextTrack = playNextTrack;
+        if (!document.getElementById('aplayer-slot')) return;
 
-        initAudioEvents();
-        initProgressRing();
-        resetProgressRing();
+        // 先用本地曲目把播放器立起来（秒开，不等网络）
+        createPlayer(normalize(LOCAL_TRACKS));
+        applyPlayerTheme();
+        watchTheme();
+        bindControls();
         initDrag();
-        initCircleClick();
 
-        // 中间的圆钮点击切换播放/暂停
-        function initCircleClick() {
-            var circle = document.getElementById('circle-cont');
-            if (!circle || circle.dataset.playPauseBound === 'true') return;
-            circle.addEventListener('click', function (e) {
-                // 刚拖动过就不要误触发播放/暂停
-                if (hasDragged) return;
-                // 点到隐藏的 audio 控件时不处理
-                if (e.target && e.target.tagName === 'AUDIO') return;
-                toggleCurrentTrack();
-            });
-            circle.dataset.playPauseBound = 'true';
-        }
-        setVisualMeta('待播放', '未知歌手');
-        updatePlayPauseIcon(true);
-
-        // 确保状态文字存在
-        var player = document.getElementById('player');
-        if (player && !player.querySelector('.player-header')) {
-            var header = document.createElement('div');
-            header.className = 'player-header';
-            header.innerHTML = '<span class="player-header-title">🎵 待播放</span>';
-            player.insertBefore(header, player.firstChild);
-        }
+        // 只有开关打开时才去拉在线歌单
+        if (!ENABLE_ONLINE_PLAYLIST) return;
+        loadOnlinePlaylist(function (err, online) {
+            if (err || !online || !online.length) {
+                if (err) console.log('[music] 在线歌单不可用，仅使用本地曲目:', err.message);
+                return;
+            }
+            if (!ap) return;
+            ap.list.add(online);
+            setTimeout(watchList, 80);
+            console.log('[music] 在线歌单已加载 ' + online.length + ' 首');
+        });
     }
 
     if (document.readyState === 'loading') {
@@ -411,8 +351,6 @@
     } else {
         initMusicPlayer();
     }
-
-    if (window.pjax) {
-        document.addEventListener('pjax:complete', initMusicPlayer);
-    }
+    window.addEventListener('resize', clampIntoView);
+    document.addEventListener('pjax:complete', initMusicPlayer);
 })();

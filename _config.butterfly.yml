@@ -19,10 +19,8 @@ nav:
 
 menu:
   home: / || fas fa-home
-  博文 || fa fa-graduation-cap:
-    门类: /categories/ || fa fa-archive
-    标签集: /tags/ || fa fa-tags
-    时光轴: /archives/ || fa fa-folder-open
+  博文: /blog/ || fa fa-graduation-cap
+  日历: /calendar/ || fas fa-calendar-days
   友联 || fa fa-link:
     友链: /links/ || fa fa-link
     AI渗透: https://ai.worldpeace.top/ || fas fa-shield-halved
@@ -1060,7 +1058,7 @@ pjax:
 
 # Inject the css and script (aplayer/meting)
 aplayerInject:
-  enable: false
+  enable: true
   per_page: true
 
 # Snackbar - Toast Notification
@@ -1126,84 +1124,29 @@ inject:
     - <link rel="stylesheet" href="/css/background.css">
     - <link rel="stylesheet" href="/css/custom.css"  media="defer" onload="this.media='all'">
     - <link rel="stylesheet" href="/css/music-player.css">
+    - <link rel="stylesheet" href="/css/calendar.css">
+    - <link rel="stylesheet" href="/css/blog.css">
   bottom:
     - |
       <div id="persistent-music-player" class="persistent-music-player minimized" data-pjax-ignore="true">
-          <button class="music-toggle-btn" onclick="toggleMusicPlayer()" title="展开/收起播放器">
+          <button class="music-toggle-btn" title="点击展开，拖动可移动">
               <i class="fas fa-compact-disc"></i>
           </button>
           <div id="player">
               <div class="player-header">
-                  <span class="player-header-title">🎵 待播放</span>
-                  <button class="music-minimize-btn" onclick="minimizeMusicPlayer()" title="最小化">
+                  <span class="player-header-title">🎵 音乐</span>
+                  <button class="music-minimize-btn" title="收起">
                       <i class="fas fa-minus"></i>
                   </button>
               </div>
-              <div class="circle" id="circle-cont">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
-                      <path id="song-time" fill="none" d="M250,5c135.3,0,245,109.7,245,245S385.3,495,250,495S5,385.3,5,250C5,116.2,112.2,7.5,245.4,5 h5.3"/>
-                  </svg>
-                  <div id="song-content">
-                      <audio id="music-audio" controls style="display:none">
-                          你的浏览器不支持 audio 标签。
-                      </audio>
-                      <span id="artist">未知歌手</span>
-                      <span id="song">待播放</span>
-                  </div>
-                  <div id="pause" data-role="pause-btn"></div>
-                  <div id="play" data-role="play-btn"></div>
-              </div>
-              <div class="music-controls">
-                  <button class="ctrl-btn" onclick="playPreviousTrack()" title="上一首">
-                      <i class="fas fa-step-backward"></i>
-                  </button>
-                  <button class="ctrl-btn ctrl-play" onclick="toggleCurrentTrack()" title="播放/暂停">
-                      <i class="fas fa-play" style="margin-left: 3px;"></i>
-                  </button>
-                  <button class="ctrl-btn" onclick="playNextTrack()" title="下一首">
-                      <i class="fas fa-step-forward"></i>
-                  </button>
-              </div>
-              <div id="playlist">
-                  <div id="scrollbar">
-                      <div id="bar"></div>
-                      <div id="marker"></div>
-                  </div>
-                  <ul>
-                      <li>
-                          <div class="music-item" data-src="/music/songs/周杰伦 - 发如雪.mp3" data-title="发如雪" data-artist="周杰伦">
-                              <div class="music-info">
-                                  <span class="music-title">发如雪</span>
-                                  <span class="music-artist">周杰伦</span>
-                              </div>
-                              <button class="music-play-btn" onclick="playMusic(this)">▶</button>
-                          </div>
-                      </li>
-                      <li>
-                          <div class="music-item" data-src="/music/songs/粥粥和小伙 _ 粥粥 - 就这样爱着你.ogg" data-title="就这样爱着你" data-artist="粥粥和小伙">
-                              <div class="music-info">
-                                  <span class="music-title">就这样爱着你</span>
-                                  <span class="music-artist">粥粥和小伙</span>
-                              </div>
-                              <button class="music-play-btn" onclick="playMusic(this)">▶</button>
-                          </div>
-                      </li>
-                      <li>
-                          <div class="music-item" data-src="/music/songs/许嵩 - 有何不可.mp3" data-title="有何不可" data-artist="许嵩">
-                              <div class="music-info">
-                                  <span class="music-title">有何不可</span>
-                                  <span class="music-artist">许嵩</span>
-                              </div>
-                              <button class="music-play-btn" onclick="playMusic(this)">▶</button>
-                          </div>
-                      </li>
-                  </ul>
-              </div>
+              <div id="aplayer-slot"></div>
           </div>
       </div>
     - <script async src="//at.alicdn.com/t/c/font_4997605_3vn5rrlxb2a.js"></script>
     - <script src="/js/sun_moon.js" async></script>
     - <script src="/js/music-player.js" async></script>
+    - <script src="/js/calendar.js" async></script>
+    - <script src="/js/blog-filter.js" async></script>
 
     - <script src="/js/matrix-rain.js"></script>
     - |

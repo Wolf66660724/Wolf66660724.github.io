@@ -118,12 +118,23 @@
     background: var(--card-bg);
 }
 
-[data-theme="dark"] #player {
-    background: rgba(28,28,35,0.97);
+/* 注意：音乐播放器的夜间配色统一在 music-player.css 里维护，
+   这里不要再给 #player 设背景，否则会盖掉粉色渐变。 */
+
+/* 标签云：/tags/ 的标签色是构建时随机生成的内联深色（最低 rgb(50,50,50)），
+   在深色底上几乎看不见。用亮度滤镜整体提亮，保留原来的彩色差异。
+   最暗的 50 x 2.5 = 125，对 #121212 的对比度约 4.6:1，达 WCAG AA。 */
+[data-theme="dark"] .tag-cloud-list a {
+    filter: brightness(2.5) saturate(.85);
 }
 
-[data-theme="dark"] #song { color: #f0f0f0; }
-[data-theme="dark"] #artist { color: #999; }
+/* 评论区（Waline）：它自带样式写死了 #666，深色底上对比度只有 3.26，提亮一档 */
+[data-theme="dark"] .wl-rss a,
+[data-theme="dark"] .wl-rss a span,
+[data-theme="dark"] .wl-power,
+[data-theme="dark"] .wl-meta-foot {
+    color: #a8b6c6 !important;
+}
 
 /* 通用卡片样式 */
 .card-widget {
