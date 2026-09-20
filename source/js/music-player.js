@@ -378,6 +378,21 @@
         initProgressRing();
         resetProgressRing();
         initDrag();
+        initCircleClick();
+
+        // 中间的圆钮点击切换播放/暂停
+        function initCircleClick() {
+            var circle = document.getElementById('circle-cont');
+            if (!circle || circle.dataset.playPauseBound === 'true') return;
+            circle.addEventListener('click', function (e) {
+                // 刚拖动过就不要误触发播放/暂停
+                if (hasDragged) return;
+                // 点到隐藏的 audio 控件时不处理
+                if (e.target && e.target.tagName === 'AUDIO') return;
+                toggleCurrentTrack();
+            });
+            circle.dataset.playPauseBound = 'true';
+        }
         setVisualMeta('待播放', '未知歌手');
         updatePlayPauseIcon(true);
 
