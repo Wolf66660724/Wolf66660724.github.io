@@ -17,79 +17,9 @@ top_img: /img/pages/photos-bg.jpg
 
 ---
 
-## 🖼️ 相册
-
 <div class="photo-gallery-wrapper">
 
-<div class="photo-grid">
-
-<div class="photo-card">
-  <div class="photo-placeholder">
-    <div class="placeholder-icon">🌅</div>
-  </div>
-  <div class="photo-info">
-    <h4>旅途风景</h4>
-    <p>那些走过的路，见过的山与海</p>
-    <span class="photo-date">待添加</span>
-  </div>
-</div>
-
-<div class="photo-card">
-  <div class="photo-placeholder">
-    <div class="placeholder-icon">🍜</div>
-  </div>
-  <div class="photo-info">
-    <h4>美食记录</h4>
-    <p>人间烟火气，最抚凡人心</p>
-    <span class="photo-date">待添加</span>
-  </div>
-</div>
-
-<div class="photo-card">
-  <div class="photo-placeholder">
-    <div class="placeholder-icon">🌆</div>
-  </div>
-  <div class="photo-info">
-    <h4>城市黄昏</h4>
-    <p>日落尤其温柔，人间皆是浪漫</p>
-    <span class="photo-date">待添加</span>
-  </div>
-</div>
-
-<div class="photo-card">
-  <div class="photo-placeholder">
-    <div class="placeholder-icon">🌸</div>
-  </div>
-  <div class="photo-info">
-    <h4>花与自然</h4>
-    <p>在细节里发现世界的美好</p>
-    <span class="photo-date">待添加</span>
-  </div>
-</div>
-
-<div class="photo-card">
-  <div class="photo-placeholder">
-    <div class="placeholder-icon">🐱</div>
-  </div>
-  <div class="photo-info">
-    <h4>动物朋友</h4>
-    <p>那些可爱的小生命们</p>
-    <span class="photo-date">待添加</span>
-  </div>
-</div>
-
-<div class="photo-card">
-  <div class="photo-placeholder">
-    <div class="placeholder-icon">🏙️</div>
-  </div>
-  <div class="photo-info">
-    <h4>城市夜空</h4>
-    <p>万家灯火，总有一盏为我而亮</p>
-    <span class="photo-date">待添加</span>
-  </div>
-</div>
-
-</div>
+<div class="photo-grid" id="photo-grid"></div>
 
 </div>
 
@@ -124,8 +54,16 @@ top_img: /img/pages/photos-bg.jpg
     background: linear-gradient(135deg, #e0f2fe, #fce7f3, #fef9c3);
     font-size: 3em;
 }
+.photo-placeholder.photo-has-image {
+    background-size: cover;
+    background-position: center;
+    font-size: 0;
+}
 [data-theme="dark"] .photo-placeholder {
     background: linear-gradient(135deg, #1e293b, #312e81, #3b0764);
+}
+[data-theme="dark"] .photo-placeholder.photo-has-image {
+    background: center/cover no-repeat;
 }
 .photo-info {
     padding: 15px;
@@ -142,5 +80,12 @@ top_img: /img/pages/photos-bg.jpg
 .photo-date {
     color: var(--theme-color, #667eea);
     font-size: 0.85em;
+}
+.collection-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 0;
+    color: var(--secondtext, #666);
+    font-size: 0.95em;
 }
 </style>

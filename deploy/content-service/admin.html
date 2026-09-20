@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>内容管理 · Mr.wolf</title>
+<style>
+  :root{--bg:#f5f7fa;--card:#fff;--line:#e3e8ef;--text:#1f3a52;--muted:#7b8ea3;--accent:#2472b3;--danger:#c0392b;--ok:#2f7d4f}
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text)}
+  .wrap{max-width:920px;margin:0 auto;padding:20px 16px 60px}
+  header{display:flex;align-items:center;gap:12px;padding:14px 0 18px}
+  header h1{font-size:18px;margin:0;flex:1}
+  button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--text);padding:7px 14px;transition:.15s}
+  button:hover{border-color:#b9c6d4}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.primary:hover{background:#1e629b}
+  button.danger{color:var(--danger);border-color:#f0c9c4}
+  button.danger:hover{background:#fdf2f0}
+  button.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+  input,textarea,select{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:inherit}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
+  label{display:block;font-size:12px;color:var(--muted);margin:12px 0 4px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .tabs{display:flex;gap:8px;margin-bottom:16px}
+  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .item{display:flex;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--line)}
+  .item:last-child{border-bottom:0}
+  .thumb{width:56px;height:56px;border-radius:8px;background:#eef2f7 center/cover no-repeat;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden}
+  .thumb img{width:100%;height:100%;object-fit:cover}
+  .meta{flex:1;min-width:0}
+  .meta b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .meta span{font-size:12px;color:var(--muted)}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  .muted{color:var(--muted);font-size:12px}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#243447;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:.25s}
+  .toast.on{opacity:1}
+  .drop{border:1.5px dashed #c3cfdc;border-radius:10px;padding:16px;text-align:center;color:var(--muted);font-size:12px;cursor:pointer}
+  .drop.over{border-color:var(--accent);background:#f0f6fc}
+  .login{max-width:340px;margin:14vh auto}
+  .hide{display:none!important}
+  .preview{width:100%;max-height:220px;object-fit:contain;border-radius:8px;border:1px solid var(--line);margin-top:8px}
+  hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+  @media(max-width:600px){.wrap{padding:12px 10px 50px}header h1{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="login" class="login card">
+    <h1 style="font-size:17px;margin:0 0 4px">内容管理</h1>
+    <p class="muted" style="margin:0">输入密码进入「拾光集 / 灵感集」后台</p>
+    <label>密码</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <div style="margin-top:14px"><button class="primary" id="doLogin" style="width:100%">登录</button></div>
+    <p id="loginErr" class="muted" style="color:var(--danger);min-height:18px;margin:8px 0 0"></p>
+  </div>
+
+  <div id="app" class="hide">
+    <header>
+      <h1>内容管理</h1>
+      <a href="https://worldpeace.top/" target="_blank" style="color:var(--muted);text-decoration:none;font-size:12px">查看站点 ↗</a>
+      <button class="ghost" id="logout">退出</button>
+    </header>
+
+    <div class="tabs">
+      <button data-tab="photos" class="on">📸 拾光集</button>
+      <button data-tab="shares">✨ 灵感集</button>
+      <button data-view="comment" id="commentTab">💬 评论</button>
+      <button class="primary" id="addBtn" style="margin-left:auto">+ 新增</button>
+    </div>
+
+    <div id="editor" class="card hide">
+      <div style="display:flex;align-items:center;gap:10px">
+        <b id="editorTitle">新增</b>
+        <button class="ghost" id="cancelBtn" style="margin-left:auto">取消</button>
+      </div>
+      <hr>
+      <div id="fieldsPhotos" class="hide">
+        <label>标题 *</label><input id="p_title" maxlength="80" placeholder="旅途风景">
+        <label>描述</label><textarea id="p_desc" rows="2" maxlength="200" placeholder="那些走过的路，见过的山与海"></textarea>
+        <label>日期</label><input id="p_date" type="date">
+        <label>图片</label>
+        <div class="drop" id="drop">拖拽图片到这里，或点击选择文件（jpg / png / webp / gif / avif，≤8MB）</div>
+        <input id="p_file" type="file" accept="image/*" class="hide">
+        <img id="p_preview" class="preview hide">
+        <label>图标（没有图片时显示）</label><input id="p_icon" maxlength="4" placeholder="🌅">
+      </div>
+      <div id="fieldsShares" class="hide">
+        <label>标题 *</label><input id="s_title" maxlength="120" placeholder="情绪色彩在界面中的应用">
+        <label>分类</label><input id="s_category" maxlength="20" placeholder="设计" list="catList">
+        <datalist id="catList"></datalist>
+        <label>日期</label><input id="s_date" type="date">
+        <label>描述</label><textarea id="s_desc" rows="2" maxlength="300" placeholder="来自 UJungle 的深度案例……"></textarea>
+        <label>链接</label><input id="s_url" maxlength="800" placeholder="https://...">
+      </div>
+      <div style="margin-top:18px"><button class="primary" id="saveBtn">保存</button></div>
+    </div>
+
+    <div class="card" id="list" style="padding:0"></div>
+    <p class="muted" id="empty" style="text-align:center;padding:30px 0">还没有内容，点右上角「新增」</p>
+
+    <div id="commentPane" class="hide">
+      <div class="card" style="padding:0;overflow:hidden">
+        <iframe id="commentFrame" title="评论管理" style="width:100%;height:80vh;border:0;display:block"></iframe>
+      </div>
+      <p class="muted" style="margin-top:8px">评论后台来自 Waline，登录状态已同步，不用再输一次密码。</p>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var $ = function(s){ return document.querySelector(s) };
+  var token = localStorage.getItem('cs_token') || '';
+  var tab = 'photos';
+  var items = [];
+  var editing = null;
+  var uploading = false;
+
+  function toast(msg, ms){
+    var t = $('#toast'); t.textContent = msg; t.classList.add('on');
+    clearTimeout(t._t); t._t = setTimeout(function(){ t.classList.remove('on') }, ms || 2200);
+  }
+  function api(pathname, opts){
+    opts = opts || {};
+    opts.headers = Object.assign({ 'Content-Type': 'application/json' }, opts.headers || {});
+    if (token) opts.headers.Authorization = 'Bearer ' + token;
+    return fetch(pathname, opts).then(function(r){
+      return r.json().catch(function(){ return {} }).then(function(j){
+        if (!r.ok) throw new Error(j.error || ('请求失败 ' + r.status));
+        return j;
+      });
+    });
+  }
+  function showLogin(){ $('#login').classList.remove('hide'); $('#app').classList.add('hide') }
+  function showApp(){ $('#login').classList.add('hide'); $('#app').classList.remove('hide'); load() }
+
+  // ---- 登录 ----
+  $('#doLogin').onclick = function(){
+    var pw = $('#pw').value;
+    $('#loginErr').textContent = '';
+    api('api/login', { method:'POST', body: JSON.stringify({ password: pw }) })
+      .then(function(r){ token = r.token; localStorage.setItem('cs_token', token); if (r.waline && r.waline.token) sessionStorage.setItem('TOKEN', r.waline.token); showApp() })
+      .catch(function(e){ $('#loginErr').textContent = e.message });
+  };
+  $('#pw').addEventListener('keydown', function(e){ if (e.key === 'Enter') $('#doLogin').click() });
+  $('#logout').onclick = function(){ token=''; localStorage.removeItem('cs_token'); showLogin() };
+
+  // ---- 列表 ----
+  function load(){
+    return api('api/items/' + tab).then(function(r){ items = r.items || []; render(); showContent() })
+      .catch(function(e){ if (/未登录|过期/.test(e.message)) { showLogin() } else toast(e.message) });
+  }
+  function render(){
+    var box = $('#list'); box.innerHTML = '';
+    $('#empty').style.display = items.length ? 'none' : 'block';
+    var cats = {};
+    items.forEach(function(it){ if (it.category) cats[it.category] = 1 });
+    $('#catList').innerHTML = Object.keys(cats).map(function(c){ return '<option value="'+esc(c)+'">' }).join('');
+
+    items.forEach(function(it){
+      var row = document.createElement('div'); row.className = 'item';
+      var thumb = it.image
+        ? '<img src="' + escAttr(it.image) + '" alt="">'
+        : esc(it.icon || (tab === 'shares' ? '✨' : '🖼️'));
+      row.innerHTML =
+        '<div class="thumb">' + thumb + '</div>' +
+        '<div class="meta"><b>' + esc(it.title) + '</b>' +
+        '<span>' + esc([it.category, it.date, it.desc].filter(Boolean).join(' · ')).slice(0, 80) + '</span></div>' +
+        '<div class="row"><button data-edit="' + it.id + '">编辑</button>' +
+        '<button class="danger" data-del="' + it.id + '">删除</button></div>';
+      box.appendChild(row);
+    });
+  }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c] }) }
+  function escAttr(s){ return esc(s) }
+
+  $('#list').addEventListener('click', function(e){
+    var ed = e.target.getAttribute && e.target.getAttribute('data-edit');
+    var dl = e.target.getAttribute && e.target.getAttribute('data-del');
+    if (ed) openEditor(items.filter(function(i){ return i.id === ed })[0]);
+    if (dl) {
+      if (!confirm('确定删除这条内容？')) return;
+      api('api/items/' + tab + '/' + dl, { method:'DELETE' })
+        .then(function(){ toast('已删除'); load() }).catch(function(err){ toast(err.message) });
+    }
+  });
+
+  $('#addBtn').onclick = function(){ openEditor(null) };
+  $('#cancelBtn').onclick = function(){ $('#editor').classList.add('hide'); editing = null };
+
+  function showContent(){
+    $('#commentPane').classList.add('hide');
+    $('#list').classList.remove('hide');
+    $('#addBtn').classList.remove('hide');
+  }
+  document.querySelectorAll('.tabs [data-tab]').forEach(function(b){
+    b.onclick = function(){
+      tab = b.getAttribute('data-tab');
+      document.querySelectorAll('.tabs [data-tab]').forEach(function(x){ x.classList.toggle('on', x === b) });
+      $('#commentTab').classList.remove('on');
+      $('#editor').classList.add('hide');
+      showContent();
+      load();
+    };
+  });
+  // 评论视图：内嵌 Waline 后台，登录态已通过 sessionStorage.TOKEN 同步
+  $('#commentTab').onclick = function(){
+    document.querySelectorAll('.tabs [data-tab]').forEach(function(x){ x.classList.remove('on') });
+    $('#commentTab').classList.add('on');
+    $('#editor').classList.add('hide');
+    $('#list').classList.add('hide');
+    $('#empty').classList.add('hide');
+    $('#addBtn').classList.add('hide');
+    $('#commentPane').classList.remove('hide');
+    var f = $('#commentFrame');
+    if (!f.getAttribute('src')) f.setAttribute('src', '/comment/ui');
+  };
+
+  // ---- 编辑表单 ----
+  function openEditor(it){
+    editing = it;
+    $('#editor').classList.remove('hide');
+    $('#editorTitle').textContent = it ? '编辑' : '新增';
+    $('#fieldsPhotos').classList.toggle('hide', tab !== 'photos');
+    $('#fieldsShares').classList.toggle('hide', tab !== 'shares');
+    var today = new Date().toISOString().slice(0, 10);
+    if (tab === 'photos') {
+      $('#p_title').value = it ? it.title : '';
+      $('#p_desc').value = it ? (it.desc || '') : '';
+      $('#p_date').value = it ? (it.date || '') : today;
+      $('#p_icon').value = it ? (it.icon || '🖼️') : '🖼️';
+      setPreview(it ? it.image : '');
+    } else {
+      $('#s_title').value = it ? it.title : '';
+      $('#s_category').value = it ? (it.category || '') : '';
+      $('#s_date').value = it ? (it.date || '') : today;
+      $('#s_desc').value = it ? (it.desc || '') : '';
+      $('#s_url').value = it ? (it.url === '#' ? '' : it.url) : '';
+    }
+    $('#editor').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  function setPreview(url){
+    var img = $('#p_preview');
+    if (url) { img.src = url + (url.indexOf('?') < 0 ? '?v=' + Date.now() : ''); img.classList.remove('hide'); img._path = url }
+    else { img.removeAttribute('src'); img.classList.add('hide'); img._path = '' }
+  }
+
+  // ---- 图片上传 ----
+  $('#drop').onclick = function(){ $('#p_file').click() };
+  $('#p_file').onchange = function(){ if (this.files[0]) upload(this.files[0]) };
+  ['dragenter','dragover'].forEach(function(t){ $('#drop').addEventListener(t, function(e){ e.preventDefault(); $('#drop').classList.add('over') }) });
+  ['dragleave','drop'].forEach(function(t){ $('#drop').addEventListener(t, function(e){ e.preventDefault(); $('#drop').classList.remove('over') }) });
+  $('#drop').addEventListener('drop', function(e){ var f = e.dataTransfer.files[0]; if (f) upload(f) });
+
+  function upload(file){
+    if (uploading) return;
+    if (!/^image\//.test(file.type)) return toast('请选择图片文件');
+    if (file.size > 8 * 1024 * 1024) return toast('图片超过 8MB');
+    uploading = true; toast('图片上传中…', 1200);
+    var fr = new FileReader();
+    fr.onload = function(){
+      api('api/upload', { method:'POST', body: JSON.stringify({ filename: file.name, data: fr.result }) })
+        .then(function(r){ setPreview(r.url); toast('图片已上传') })
+        .catch(function(e){ toast(e.message) })
+        .then(function(){ uploading = false });
+    };
+    fr.readAsDataURL(file);
+  }
+
+  // ---- 保存 ----
+  $('#saveBtn').onclick = function(){
+    var body, path = 'api/items/' + tab;
+    if (tab === 'photos') {
+      body = { title: $('#p_title').value, desc: $('#p_desc').value, date: $('#p_date').value,
+               icon: $('#p_icon').value, image: $('#p_preview')._path || '' };
+    } else {
+      body = { title: $('#s_title').value, category: $('#s_category').value, date: $('#s_date').value,
+               desc: $('#s_desc').value, url: $('#s_url').value };
+    }
+    if (!body.title.trim()) return toast('标题不能为空');
+    var method = 'POST';
+    if (editing) { method = 'PUT'; path += '/' + editing.id }
+    api(path, { method: method, body: JSON.stringify(body) })
+      .then(function(){ toast('已保存'); $('#editor').classList.add('hide'); editing = null; load() })
+      .catch(function(e){ toast(e.message) });
+  };
+
+  // ---- 启动 ----
+  if (token) {
+    api('api/items/photos').then(showApp).catch(function(){ token=''; localStorage.removeItem('cs_token'); showLogin() });
+  } else showLogin();
+})();
+</script>
+</body>
+</html>

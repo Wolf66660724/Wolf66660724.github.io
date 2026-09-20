@@ -1,0 +1,22 @@
+{
+  "说明": "把这两份 JSON 传到服务器 /opt/security-platform/content-data/ 下，作为初始数据",
+  "photos": [
+    { "id": "p_seed01", "title": "旅途风景", "desc": "那些走过的路，见过的山与海", "date": "", "image": "", "icon": "🌅" },
+    { "id": "p_seed02", "title": "美食记录", "desc": "人间烟火气，最抚凡人心", "date": "", "image": "", "icon": "🍜" },
+    { "id": "p_seed03", "title": "城市黄昏", "desc": "日落尤其温柔，人间皆是浪漫", "date": "", "image": "", "icon": "🌆" },
+    { "id": "p_seed04", "title": "花与光", "desc": "随手拍下的春天", "date": "", "image": "", "icon": "🌸" },
+    { "id": "p_seed05", "title": "夜与灯", "desc": "城市睡着之后的样子", "date": "", "image": "", "icon": "🌃" },
+    { "id": "p_seed06", "title": "在路上", "desc": "记录每一次出发", "date": "", "image": "", "icon": "🚗" }
+  ],
+  "shares": [
+    { "id": "s_seed01", "title": "情绪色彩在界面中的应用", "category": "设计", "date": "2025-11-15", "desc": "来自 UJungle 的深度案例，拆解了 8 种高频场景的配色策略，附上实用的渐变调色板。", "url": "#" },
+    { "id": "s_seed02", "title": "极简主义在网页设计中的应用", "category": "设计", "date": "2025-10-20", "desc": "少即是多：如何通过留白、字体和色彩传达品牌的力量。", "url": "#" },
+    { "id": "s_seed03", "title": "Hexo Butterfly 主题美化全攻略", "category": "技术", "date": "2025-11-28", "desc": "从配置到自定义，全面解析 Butterfly 主题的美化技巧。", "url": "https://butterfly.zhheo.com/" },
+    { "id": "s_seed04", "title": "网络安全入门：OWASP Top 10 详解", "category": "技术", "date": "2025-09-15", "desc": "最全的 OWASP Top 10 漏洞解读，适合安全初学者理解 Web 安全的攻防思路。", "url": "#" },
+    { "id": "s_seed05", "title": "代码之外的软技能", "category": "技术", "date": "2025-11-10", "desc": "沟通、文档、时间管理，这些能力往往比多学一个框架更重要。", "url": "#" },
+    { "id": "s_seed06", "title": "黑客与画家：编程思维的另一种解读", "category": "阅读", "date": "2025-10-05", "desc": "Paul Graham 关于程序员创造力的经典论述。", "url": "#" },
+    { "id": "s_seed07", "title": "Git 工作流最佳实践", "category": "技术", "date": "2025-08-30", "desc": "分支策略、提交规范、代码审查，团队协作绕不开的几件事。", "url": "#" },
+    { "id": "s_seed08", "title": "开发者必备的 10 个在线工具", "category": "工具", "date": "2025-07-25", "desc": "从 JSON 格式化到正则调试，这些工具能省下不少时间。", "url": "#" },
+    { "id": "s_seed09", "title": "AI 编程助手对比：Cursor vs GitHub Copilot", "category": "工具", "date": "2025-06-18", "desc": "实际使用两周后的对比感受，以及各自的适用场景。", "url": "#" }
+  ]
+}

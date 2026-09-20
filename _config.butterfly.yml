@@ -308,8 +308,8 @@ footer:
     - content:
         - title: 管理
           item:
-            - title: 评论后台
-              url: /comment/ui
+            - title: 后台管理
+              url: /manage/
             - title: AI 安全平台
               url: https://ai.worldpeace.top/
             - title: AI 接口网关
@@ -1148,6 +1148,7 @@ inject:
     - <script src="/js/sun_moon.js" async></script>
     - <script src="/js/music-player.js" async></script>
     - <script src="/js/calendar.js" async></script>
+    - <script src="/js/collection.js" async></script>
     - <script src="/js/blog-filter.js" async></script>
 
     - <script src="/js/matrix-rain.js"></script>
