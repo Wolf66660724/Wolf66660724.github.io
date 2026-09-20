@@ -95,3 +95,50 @@ ssh -i $key ubuntu@43.153.19.168 `
 ```bash
 sudo tar czf ~/content-data-$(date +%F).tar.gz -C /opt/security-platform content-data
 ```
+
+---
+
+## 后记：文章管理（方案 C）与统计
+
+### 文章管理
+
+后台的「文章」标签用来写文章草稿，**保存后不会自动上线**——这是刻意的：
+Hexo 是静态站，文章要经过构建，而且这样文章仍然进 git、可回档。
+
+1. 在 `/manage/` → 「文章」→「新增」，填标题/日期/分类/标签/封面/摘要/正文
+   正文支持 Markdown，带工具栏和实时预览
+2. 保存后是一条草稿，存在服务器上
+3. 本地执行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\publish-drafts.ps1          # 只写文件，先本地预览
+powershell -ExecutionPolicy Bypass -File .\publish-drafts.ps1 -Deploy  # 写文件 + 部署上线
+```
+
+脚本会登录后台、把草稿写成 `source/_posts/<标题>.md`（带 front-matter），
+再把草稿标记为已发布。密码存在 `tools\.admin-password.txt`（已 gitignore）。
+
+### 统计面板
+
+「统计」标签显示：
+
+| 指标 | 来源 |
+| --- | --- |
+| 总访问量 / 总访客 | busuanzi（服务端缓存 10 分钟） |
+| 文章数 | 站点构建输出的 `/js/content-index.json` |
+| 评论 / 待审核 | Waline 管理接口（缓存 5 分钟） |
+| 照片 / 灵感 / 草稿 | 本地数据文件 |
+| 上传图片数 / 占用空间 | 扫描 uploads 目录 |
+
+两个坑：
+1. **busuanzi 必须要 Referer 头**，缺了直接 400。
+2. 它的响应是 `try{cb({"site_uv":1,...});}catch(e){}`，
+   用贪婪的 `/\{[\s\S]*\}/` 会把 `try{` 和 `catch(e){}` 一起框进去导致 JSON.parse 失败，
+   要用 `/\(\s*(\{[\s\S]*?\})\s*\)/` 精确取回调里的对象。
+
+### 改密码
+
+「设置」里有两种：
+
+- **后台登录密码**：scrypt 加盐哈希存 `content-data/auth.json`，改完立刻生效
+- **评论账号密码**：代理到 Waline 的 `PUT /api/user`，改完服务端会同步更新内存里的凭据

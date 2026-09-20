@@ -29,3 +29,5 @@ source/movies/videos/*.ts
 # （部署是从本地目录构建的，所以不进仓库也照样会上传上线）
 /tools/
 source/music/songs/
+
+tools/.admin-password.txt

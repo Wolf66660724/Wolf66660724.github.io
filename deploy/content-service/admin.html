@@ -161,6 +161,47 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
 .kv span{flex:0 0 120px;color:var(--muted)}
 .kv b{font-weight:500;word-break:break-all}
 
+/* ---------- 文章编辑器 ---------- */
+.drawer.wide{width:min(860px,100%)}
+.md-tools{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.md-tools button{height:28px;padding:0 10px;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--muted);border-radius:7px;font:inherit;font-size:12.5px;cursor:pointer;transition:.15s}
+.md-tools button:hover{color:var(--text);border-color:var(--faint)}
+.md-tools button.ml{margin-left:auto}
+.md-tools button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.md-input{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"PingFang SC",monospace;font-size:13px;line-height:1.75;
+  min-height:340px;tab-size:2}
+.md-preview{border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 18px;background:var(--surface-2);
+  font-size:14px;line-height:1.85;min-height:340px;max-height:60vh;overflow:auto}
+.md-preview h1,.md-preview h2,.md-preview h3{margin:18px 0 8px;line-height:1.35}
+.md-preview h1:first-child,.md-preview h2:first-child{margin-top:0}
+.md-preview p{margin:0 0 12px}
+.md-preview ul,.md-preview ol{margin:0 0 12px;padding-left:22px}
+.md-preview li{margin:4px 0}
+.md-preview blockquote{margin:0 0 12px;padding:6px 14px;border-left:3px solid var(--accent);background:var(--accent-soft);color:var(--muted)}
+.md-preview code{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:.9em}
+.md-preview pre{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;overflow:auto}
+.md-preview pre code{border:0;background:none;padding:0}
+.md-preview img{max-width:100%;border-radius:8px}
+.md-preview hr{border:0;border-top:1px solid var(--border);margin:18px 0}
+.md-preview a{color:var(--accent)}
+.md-preview table{border-collapse:collapse;width:100%;margin-bottom:12px}
+.md-preview th,.md-preview td{border:1px solid var(--border);padding:6px 10px;text-align:left;font-size:13px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+
+/* ---------- 统计 ---------- */
+#statsPane{display:none}
+#statsPane.on{display:block}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 16px 14px}
+.stat-k{display:block;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.stat b{font-size:24px;font-weight:600;letter-spacing:-.01em;line-height:1.1}
+.stat b small{font-size:13px;font-weight:400;color:var(--faint);margin-left:3px}
+
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--muted);background:var(--surface-2)}
+.badge.draft{color:#b45309;background:rgba(180,83,9,.1);border-color:transparent}
+.badge.pub{color:var(--ok);background:rgba(47,125,79,.1);border-color:transparent}
+
 /* ---------- toast ---------- */
 #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);background:var(--text);color:var(--bg);
   padding:10px 18px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:99;
@@ -221,6 +262,10 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
   <main>
     <div class="toolbar">
       <div class="seg">
+        <button data-tab="drafts">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+          文章
+        </button>
         <button data-tab="photos" class="on">
           <svg class="ico" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg>
           拾光集
@@ -232,6 +277,10 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
         <button data-view="comment" id="commentTab">
           <svg class="ico" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
           评论
+        </button>
+        <button data-view="stats" id="statsTab">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 3 5-7"/></svg>
+          统计
         </button>
         <button data-view="settings" id="settingsTab">
           <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
@@ -263,6 +312,23 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
       <p class="embed-tip">已自动登录 Waline，无需再次输入密码。</p>
     </div>
 
+    <div id="statsPane">
+      <div class="stat-grid">
+        <div class="stat"><span class="stat-k">总访问量</span><b id="stPv">—</b></div>
+        <div class="stat"><span class="stat-k">总访客</span><b id="stUv">—</b></div>
+        <div class="stat"><span class="stat-k">文章</span><b id="stArticles">—</b></div>
+        <div class="stat"><span class="stat-k">评论</span><b id="stComments">—</b></div>
+        <div class="stat"><span class="stat-k">待审核评论</span><b id="stWaiting">—</b></div>
+        <div class="stat"><span class="stat-k">照片</span><b id="stPhotos">—</b></div>
+        <div class="stat"><span class="stat-k">灵感</span><b id="stShares">—</b></div>
+        <div class="stat"><span class="stat-k">待发布草稿</span><b id="stDrafts">—</b></div>
+        <div class="stat"><span class="stat-k">已发布（后台）</span><b id="stPublished">—</b></div>
+        <div class="stat"><span class="stat-k">上传图片</span><b id="stImages">—</b></div>
+        <div class="stat"><span class="stat-k">图片占用</span><b id="stImgSize">—</b></div>
+      </div>
+      <p class="hint" id="stNote">访问量来自 busuanzi（缓存 10 分钟，避免后台刷新把数字刷上去）；评论数来自 Waline。</p>
+    </div>
+
     <div id="settingsPane">
       <div class="panel">
         <h3>修改登录密码</h3>
@@ -287,6 +353,16 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
       </div>
 
       <div class="panel">
+        <h3>评论账号密码</h3>
+        <p class="hint" style="margin-top:-4px">改的是 Waline 评论账号（<span id="wlEmail2">—</span>）的密码，也就是「个人资料」里那个密码。</p>
+        <div class="row2" style="margin-top:0">
+          <div><label for="wlPw">新密码（至少 8 位）</label><input id="wlPw" type="password" autocomplete="new-password"></div>
+          <div><label for="wlPw2">再输一次</label><input id="wlPw2" type="password" autocomplete="new-password"></div>
+        </div>
+        <div style="margin-top:16px"><button class="btn primary" id="saveWlPw">更新评论账号密码</button></div>
+      </div>
+
+      <div class="panel">
         <h3>数据说明</h3>
         <div class="kv"><span>拾光集 / 灵感集</span><b>存在服务器 /opt/security-platform/content-data/</b></div>
         <div class="kv"><span>上传的图片</span><b>存在同一目录的 uploads/，按内容哈希命名</b></div>
@@ -306,6 +382,39 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
     </button>
   </div>
   <div class="drawer-body">
+    <div id="fieldsDrafts" style="display:none">
+      <label for="d_title">标题 <span style="color:var(--danger)">*</span></label>
+      <input id="d_title" maxlength="120" placeholder="工作一个月记录：从安全学习者到安全从业者">
+      <div class="row2">
+        <div><label for="d_date">发布时间</label><input id="d_date" type="datetime-local"></div>
+        <div><label for="d_slug">URL 别名（可留空）</label><input id="d_slug" maxlength="80" placeholder="自动按日期生成"></div>
+      </div>
+      <div class="row2" style="margin-top:0">
+        <div><label for="d_categories">分类（逗号分隔）</label><input id="d_categories" maxlength="200" placeholder="生活,故事集"></div>
+        <div><label for="d_tags">标签（逗号分隔）</label><input id="d_tags" maxlength="200" placeholder="生活记录,心情随笔"></div>
+      </div>
+      <label for="d_cover">封面图（可留空）</label>
+      <input id="d_cover" maxlength="300" placeholder="/content-img/xxx.jpg 或 /img/posts/xxx/cover.jpg">
+      <label for="d_excerpt">摘要（可留空，列表页显示）</label>
+      <textarea id="d_excerpt" rows="2" maxlength="300"></textarea>
+
+      <label for="d_content">正文（Markdown）</label>
+      <div class="md-tools">
+        <button type="button" data-md="h2">标题</button>
+        <button type="button" data-md="bold">加粗</button>
+        <button type="button" data-md="quote">引用</button>
+        <button type="button" data-md="ul">列表</button>
+        <button type="button" data-md="code">代码</button>
+        <button type="button" data-md="link">链接</button>
+        <button type="button" data-md="image">图片</button>
+        <button type="button" data-md="hr">分割线</button>
+        <button type="button" id="mdPreviewBtn" class="ml">预览</button>
+      </div>
+      <textarea id="d_content" class="md-input" rows="18" placeholder="# 标题&#10;&#10;正文……"></textarea>
+      <div id="mdPreview" class="md-preview" style="display:none"></div>
+      <p class="hint">保存后是草稿，本地跑一次 <code>publish-drafts.ps1</code> 就会写入文章并部署上线。</p>
+    </div>
+
     <div id="fieldsPhotos" style="display:none">
       <label for="p_title">标题 <span style="color:var(--danger)">*</span></label>
       <input id="p_title" maxlength="80" placeholder="旅途风景">
@@ -421,18 +530,32 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
 
     items.forEach(function(it){
       var card = document.createElement('div'); card.className = 'card';
-      var thumb = it.image
-        ? '<img src="' + esc(it.image) + '" alt="" loading="lazy">'
-        : esc(it.icon || (tab === 'shares' ? '✨' : '🖼️'));
-      var chips = '';
-      if (it.category) chips += '<span class="chip cat">' + esc(it.category) + '</span>';
-      if (it.date) chips += '<span class="chip">' + esc(it.date) + '</span>';
-      if (it.image) chips += '<span class="chip">有图片</span>';
+      var thumb, chips = '';
+      if (tab === 'drafts') {
+        thumb = '📄';
+        chips += '<span class="badge ' + (it.status === 'published' ? 'pub' : 'draft') + '">'
+              + (it.status === 'published' ? '已发布' : '草稿') + '</span>';
+        (it.categories || '').split(',').filter(Boolean).slice(0, 2).forEach(function(c){
+          chips += '<span class="chip cat">' + esc(c.trim()) + '</span>';
+        });
+        if (it.date) chips += '<span class="chip">' + esc(String(it.date).slice(0, 16)) + '</span>';
+        if (it.content) chips += '<span class="chip">' + it.content.length + ' 字</span>';
+      } else {
+        thumb = it.image
+          ? '<img src="' + esc(it.image) + '" alt="" loading="lazy">'
+          : esc(it.icon || (tab === 'shares' ? '✨' : '🖼️'));
+        if (it.category) chips += '<span class="chip cat">' + esc(it.category) + '</span>';
+        if (it.date) chips += '<span class="chip">' + esc(it.date) + '</span>';
+        if (it.image) chips += '<span class="chip">有图片</span>';
+      }
+      var desc = tab === 'drafts'
+        ? (it.excerpt || String(it.content || '').replace(/\s+/g, ' ').slice(0, 90) || '（还没写正文）')
+        : (it.desc || '（无描述）');
 
       card.innerHTML =
         '<div class="thumb">' + thumb + '</div>' +
         '<div class="meta"><div class="t">' + esc(it.title) + '</div>' +
-        '<div class="d">' + esc(it.desc || '（无描述）') + '</div>' +
+        '<div class="d">' + esc(desc) + '</div>' +
         (chips ? '<div class="chips">' + chips + '</div>' : '') + '</div>' +
         '<div class="acts">' +
           '<button class="btn sm ghost icon" data-edit="' + it.id + '" title="编辑">' +
@@ -459,6 +582,7 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
   function showContent(){
     $('#commentPane').classList.remove('on');
     $('#settingsPane').classList.remove('on');
+    $('#statsPane').classList.remove('on');
     $('#list').style.display = '';
     $('#addBtn').style.display = '';
     closeEditor();
@@ -469,6 +593,7 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
       document.querySelectorAll('.seg [data-tab]').forEach(function(x){ x.classList.toggle('on', x === b) });
       $('#commentTab').classList.remove('on');
       $('#settingsTab').classList.remove('on');
+      $('#statsTab').classList.remove('on');
       showContent(); load();
     };
   });
@@ -480,6 +605,7 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
     $('#addBtn').style.display = 'none';
     closeEditor();
     $('#settingsTab').classList.remove('on');
+    $('#statsTab').classList.remove('on');
     $('#commentPane').classList.add('on');
     var f = $('#commentFrame');
     if (f.dataset.bound !== '1') {
@@ -502,6 +628,7 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
   $('#settingsTab').onclick = function(){
     document.querySelectorAll('.seg [data-tab]').forEach(function(x){ x.classList.remove('on') });
     $('#commentTab').classList.remove('on');
+    $('#statsTab').classList.remove('on');
     $('#settingsTab').classList.add('on');
     $('#list').style.display = 'none';
     $('#empty').style.display = 'none';
@@ -518,6 +645,7 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
         ? '初始密码（还没改过）'
         : '已修改于 ' + String(a.passwordChangedAt || '').replace('T', ' ').slice(0, 16);
       $('#wlEmail').textContent = a.walineEmail || '未配置';
+      var e2 = document.getElementById('wlEmail2'); if (e2) e2.textContent = a.walineEmail || '未配置';
     }).catch(function(){
       var el = document.getElementById('pwState'); if (el) el.textContent = '读取失败';
     });
@@ -581,8 +709,24 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
     $('#editorTitle').textContent = it ? '编辑' : '新增';
     $('#fieldsPhotos').style.display = tab === 'photos' ? '' : 'none';
     $('#fieldsShares').style.display = tab === 'shares' ? '' : 'none';
+    $('#fieldsDrafts').style.display = tab === 'drafts' ? '' : 'none';
+    $('#editor').classList.toggle('wide', tab === 'drafts');
     var today = new Date().toISOString().slice(0, 10);
-    if (tab === 'photos') {
+    if (tab === 'drafts') {
+      var nowD = new Date();
+      var local = new Date(nowD.getTime() - nowD.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+      $('#d_title').value = it ? it.title : '';
+      $('#d_slug').value = it ? (it.slug || '') : '';
+      $('#d_date').value = (it && it.date) ? String(it.date).replace(' ', 'T').slice(0, 16) : local;
+      $('#d_categories').value = it ? (it.categories || '') : '';
+      $('#d_tags').value = it ? (it.tags || '') : '';
+      $('#d_cover').value = it ? (it.cover || '') : '';
+      $('#d_excerpt').value = it ? (it.excerpt || '') : '';
+      $('#d_content').value = it ? (it.content || '') : '';
+      $('#mdPreview').style.display = 'none';
+      $('#mdPreviewBtn').classList.remove('on');
+      $('#d_content').style.display = '';
+    } else if (tab === 'photos') {
       $('#p_title').value = it ? it.title : '';
       $('#p_desc').value = it ? (it.desc || '') : '';
       $('#p_date').value = it ? (it.date || '') : today;
@@ -595,7 +739,7 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
       $('#s_desc').value = it ? (it.desc || '') : '';
       $('#s_url').value = it ? (it.url === '#' ? '' : it.url) : '';
     }
-    setTimeout(function(){ (tab === 'photos' ? $('#p_title') : $('#s_title')).focus() }, 320);
+    setTimeout(function(){ (tab === 'drafts' ? $('#d_title') : tab === 'photos' ? $('#p_title') : $('#s_title')).focus() }, 320);
   }
   function closeEditor(){
     $('#editor').classList.remove('on'); $('#scrim').classList.remove('on'); editing = null;
@@ -641,7 +785,15 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
   // ---------- 保存 ----------
   $('#saveBtn').onclick = function(){
     var body, path = 'api/items/' + tab;
-    if (tab === 'photos') {
+    if (tab === 'drafts') {
+      body = { title: $('#d_title').value, slug: $('#d_slug').value,
+               date: ($('#d_date').value || '').replace('T', ' '),
+               categories: $('#d_categories').value, tags: $('#d_tags').value,
+               cover: $('#d_cover').value, excerpt: $('#d_excerpt').value,
+               content: $('#d_content').value,
+               status: editing ? editing.status : 'draft',
+               publishedAt: editing ? editing.publishedAt : '' };
+    } else if (tab === 'photos') {
       body = { title: $('#p_title').value, desc: $('#p_desc').value, date: $('#p_date').value,
                icon: $('#p_icon').value, image: $('#p_preview')._path || '' };
     } else {
@@ -656,6 +808,129 @@ main{flex:1;width:100%;max-width:1000px;margin:0 auto;padding:22px 20px 80px}
       .catch(function(e){ toast(e.message) });
   };
 
+  // ---------- 统计 ----------
+  function fmtNum(n){ return (n === null || n === undefined) ? '—' : String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',') }
+  function fmtSize(b){
+    if (b === null || b === undefined) return '—';
+    if (b < 1024) return b + ' B';
+    if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+    return (b / 1024 / 1024).toFixed(1) + ' MB';
+  }
+  var setTxt = function(id, v){ var e = document.getElementById(id); if (e) e.textContent = v };
+
+  function loadStats(){
+    ['stPv','stUv','stArticles','stComments','stWaiting','stPhotos','stShares','stDrafts','stPublished','stImages','stImgSize'].forEach(function(id){ setTxt(id, '…') });
+    api('api/stats').then(function(s){
+      setTxt('stPv', s.visits ? fmtNum(s.visits.sitePv) : '—');
+      setTxt('stUv', s.visits ? fmtNum(s.visits.siteUv) : '—');
+      setTxt('stArticles', fmtNum(s.articles));
+      setTxt('stComments', s.comments ? fmtNum(s.comments.total) : '—');
+      setTxt('stWaiting', s.comments ? fmtNum(s.comments.waiting) : '—');
+      setTxt('stPhotos', fmtNum(s.content.photos));
+      setTxt('stShares', fmtNum(s.content.shares));
+      setTxt('stDrafts', fmtNum(s.content.drafts));
+      setTxt('stPublished', fmtNum(s.content.published));
+      setTxt('stImages', fmtNum(s.images.count));
+      setTxt('stImgSize', fmtSize(s.images.bytes));
+    }).catch(function(e){ toast(e.message) });
+  }
+
+  $('#statsTab').onclick = function(){
+    document.querySelectorAll('.seg [data-tab]').forEach(function(x){ x.classList.remove('on') });
+    $('#commentTab').classList.remove('on');
+    $('#settingsTab').classList.remove('on');
+    $('#statsTab').classList.add('on');
+    $('#list').style.display = 'none';
+    $('#empty').style.display = 'none';
+    $('#addBtn').style.display = 'none';
+    $('#commentPane').classList.remove('on');
+    $('#settingsPane').classList.remove('on');
+    closeEditor();
+    $('#statsPane').classList.add('on');
+    loadStats();
+  };
+
+  // ---------- Markdown ----------
+  function mdInline(s){
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>')
+      .replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, '<img src="$2" alt="$1">')
+      .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  }
+
+  function mdToHtml(src){
+    var lines = String(src || '').replace(/\r\n/g, '\n').split('\n');
+    var out = [], inCode = false, list = null, para = [];
+    function flushPara(){ if (para.length) { out.push('<p>' + mdInline(para.join(' ')) + '</p>'); para = [] } }
+    function closeList(){ if (list) { out.push('</' + list + '>'); list = null } }
+    lines.forEach(function(line){
+      if (/^```/.test(line)) {
+        flushPara(); closeList();
+        if (inCode) { out.push('</code></pre>'); inCode = false } else { out.push('<pre><code>'); inCode = true }
+        return;
+      }
+      if (inCode) { out.push(line.replace(/&/g, '&amp;').replace(/</g, '&lt;')); return }
+      if (/^\s*$/.test(line)) { flushPara(); closeList(); return }
+      if (/^(---|\*\*\*)\s*$/.test(line)) { flushPara(); closeList(); out.push('<hr>'); return }
+      var h = line.match(/^(#{1,4})\s+(.*)$/);
+      if (h) { flushPara(); closeList(); out.push('<h' + h[1].length + '>' + mdInline(h[2]) + '</h' + h[1].length + '>'); return }
+      if (/^>\s?/.test(line)) { flushPara(); closeList(); out.push('<blockquote>' + mdInline(line.replace(/^>\s?/, '')) + '</blockquote>'); return }
+      if (/^\s*[-*]\s+/.test(line)) { flushPara(); if (list !== 'ul') { closeList(); out.push('<ul>'); list = 'ul' } out.push('<li>' + mdInline(line.replace(/^\s*[-*]\s+/, '')) + '</li>'); return }
+      if (/^\s*\d+\.\s+/.test(line)) { flushPara(); if (list !== 'ol') { closeList(); out.push('<ol>'); list = 'ol' } out.push('<li>' + mdInline(line.replace(/^\s*\d+\.\s+/, '')) + '</li>'); return }
+      closeList();
+      para.push(line);
+    });
+    flushPara(); closeList();
+    if (inCode) out.push('</code></pre>');
+    return out.join('\n');
+  }
+
+  function renderPreview(){
+    var v = $('#d_content').value;
+    $('#mdPreview').innerHTML = v.trim() ? mdToHtml(v) : '<p style="color:var(--faint)">还没有内容</p>';
+  }
+
+  $('#mdPreviewBtn').onclick = function(){
+    var on = $('#mdPreview').style.display === 'none';
+    $('#mdPreview').style.display = on ? '' : 'none';
+    $('#d_content').style.display = on ? 'none' : '';
+    this.classList.toggle('on', on);
+    if (on) renderPreview();
+  };
+
+  document.querySelectorAll('.md-tools [data-md]').forEach(function(b){
+    b.onclick = function(){
+      var ta = $('#d_content');
+      var k = b.getAttribute('data-md');
+      var s = ta.selectionStart, e = ta.selectionEnd;
+      var sel = ta.value.slice(s, e);
+      var ins;
+      if (k === 'h2') ins = '## ' + (sel || '小标题');
+      else if (k === 'bold') ins = '**' + (sel || '加粗文字') + '**';
+      else if (k === 'quote') ins = '> ' + (sel || '引用内容');
+      else if (k === 'ul') ins = sel ? sel.split('\n').map(function(l){ return '- ' + l }).join('\n') : '- 列表项';
+      else if (k === 'code') ins = '```\n' + (sel || 'code') + '\n```';
+      else if (k === 'link') ins = '[' + (sel || '链接文字') + '](https://)';
+      else if (k === 'image') ins = '![' + (sel || '图片说明') + '](/content-img/xxx.jpg)';
+      else ins = '\n---\n';
+      ta.setRangeText(ins, s, e, 'end');
+      ta.focus();
+      if ($('#mdPreview').style.display !== 'none') renderPreview();
+    };
+  });
+
+  // ---------- 评论账号密码 ----------
+  $('#saveWlPw').onclick = function(){
+    var a = $('#wlPw').value, b = $('#wlPw2').value;
+    if (!a || a.length < 8) return toast('新密码至少 8 位');
+    if (a !== b) return toast('两次输入的新密码不一致');
+    api('api/waline-password', { method:'POST', body: JSON.stringify({ newPassword: a, confirmPassword: b }) })
+      .then(function(r){ toast('评论账号密码已更新' + (r.note ? '，' + r.note : '')); $('#wlPw').value = ''; $('#wlPw2').value = '' })
+      .catch(function(e){ toast(e.message) });
+  };
   // ---------- 启动 ----------
   if (token) {
     api('api/items/photos').then(showApp).catch(function(){ token=''; localStorage.removeItem('cs_token'); showLogin() });

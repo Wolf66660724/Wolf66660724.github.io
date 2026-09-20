@@ -35,6 +35,7 @@ const TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000
 const BODY_LIMIT = 12 * 1024 * 1024
 
 // 评论系统 Waline：合并后台用，登录时顺带换一个 Waline 的 token
+const SITE_URL = process.env.SITE_URL || 'https://worldpeace.top'
 const WALINE_API = process.env.WALINE_API || ''
 const WALINE_EMAIL = process.env.WALINE_EMAIL || ''
 const WALINE_PASSWORD = process.env.WALINE_PASSWORD || ''
@@ -217,6 +218,22 @@ function normalize (type, body, base) {
       icon: str(body.icon, 8) || '🖼️'
     })
   }
+  if (type === 'drafts') {
+    // 正文要保留换行，不能用 str()（它会清掉控制字符）
+    const content = String(body.content == null ? '' : body.content).replace(/\r\n/g, '\n').slice(0, 200000)
+    return Object.assign(base || {}, {
+      title: str(body.title, 120),
+      slug: str(body.slug, 80),
+      date: str(body.date, 19),
+      categories: str(body.categories, 200),
+      tags: str(body.tags, 200),
+      cover: str(body.cover, 300),
+      excerpt: str(body.excerpt, 300),
+      content,
+      status: body.status === 'published' ? 'published' : 'draft',
+      publishedAt: str(body.publishedAt, 30)
+    })
+  }
   return Object.assign(base || {}, {
     title: str(body.title, 120),
     desc: str(body.desc, 300),
@@ -257,16 +274,96 @@ function saveImage (filename, dataUrl) {
 // ---------- Waline 联动 ----------
 // 评论后台是独立应用（Waline），登录时用配置好的管理员账号换一个它的 token，
 // 前端拿到后写进 sessionStorage.TOKEN，内嵌的 Waline 后台就直接是登录态了。
+// 运行时可变：在后台改了 Waline 密码后，这里也要跟着变
+const walineCred = { password: WALINE_PASSWORD }
+
 function walineLogin () {
-  if (!WALINE_API || !WALINE_EMAIL || !WALINE_PASSWORD) return Promise.resolve(null)
+  if (!WALINE_API || !WALINE_EMAIL || !walineCred.password) return Promise.resolve(null)
   return fetch(WALINE_API + '/api/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: WALINE_EMAIL, password: WALINE_PASSWORD, code: '' })
+    body: JSON.stringify({ email: WALINE_EMAIL, password: walineCred.password, code: '' })
   }).then(function (r) { return r.json() }).then(function (j) {
     if (!j || j.errno !== 0 || !j.data || !j.data.token) return null
     return { token: j.data.token, name: j.data.display_name || '', avatar: j.data.avatar || '' }
   }).catch(function () { return null })
+}
+
+// ---------- 统计 ----------
+// busuanzi 每请求一次就 +1，所以这里缓存 10 分钟，避免后台刷新把访问量刷上去
+let bsCache = { t: 0, v: null }
+function busuanziStats () {
+  if (bsCache.v && Date.now() - bsCache.t < 10 * 60 * 1000) return Promise.resolve(bsCache.v)
+  // busuanzi 会校验 Referer，缺了直接 400
+  return fetch('https://busuanzi.ibruce.info/busuanzi?jsonpCallback=cb', {
+    headers: { Referer: SITE_URL + '/', 'User-Agent': 'Mozilla/5.0 (compatible; content-service)' }
+  })
+    .then(function (r) {
+      return r.text().then(function (txt) {
+        if (!r.ok) {
+          console.warn('[busuanzi] HTTP ' + r.status + ' body=' + String(txt).slice(0, 120))
+          return null
+        }
+        // 响应长这样：try{cb({"site_uv":1,"page_pv":2});}catch(e){}
+        // 注意不能用贪婪的 /\{[\s\S]*\}/，那样会把 try{ 和 catch(e){} 一起框进去
+        const m = String(txt).match(/\(\s*(\{[\s\S]*?\})\s*\)/)
+        if (!m) { console.warn('[busuanzi] 响应里没有 JSON: ' + String(txt).slice(0, 120)); return null }
+        const j = JSON.parse(m[1])
+        const v = { sitePv: j.site_pv, siteUv: j.site_uv }
+        bsCache = { t: Date.now(), v }
+        return v
+      })
+    })
+    .catch(function (e) {
+      console.warn('[busuanzi] 请求异常: ' + e.message + (e.cause ? ' (' + (e.cause.code || e.cause.message) + ')' : ''))
+      return null
+    })
+}
+
+// 评论总数（走 Waline 管理接口）
+let cmCache = { t: 0, v: null }
+function commentCount () {
+  if (cmCache.v && Date.now() - cmCache.t < 5 * 60 * 1000) return Promise.resolve(cmCache.v)
+  return walineLogin().then(function (w) {
+    if (!w) return null
+    // Waline 不返回评论总数，但 pageSize=1 时 totalPages 就等于总数
+    return fetch(WALINE_API + '/api/comment?type=list&owner=all&page=1&pageSize=1', {
+      headers: { Authorization: 'Bearer ' + w.token }
+    }).then(function (r) { return r.json() }).then(function (j) {
+      const d = j && j.data
+      if (!d) return null
+      const v = {
+        total: typeof d.totalPages === 'number' ? d.totalPages : null,
+        waiting: d.waitingCount != null ? d.waitingCount : null,
+        spam: d.spamCount != null ? d.spamCount : null
+      }
+      cmCache = { t: Date.now(), v }
+      return v
+    })
+  }).catch(function () { return null })
+}
+
+// 文章数：站点构建时会输出 /js/content-index.json，里面带全部文章
+let artCache = { t: 0, v: null }
+function articleCount () {
+  if (artCache.v !== null && Date.now() - artCache.t < 30 * 60 * 1000) return Promise.resolve(artCache.v)
+  return fetch(SITE_URL + '/js/content-index.json')
+    .then(function (r) { return r.json() })
+    .then(function (j) {
+      const n = (j.items || []).filter(function (x) { return x.type === 'post' }).length
+      artCache = { t: Date.now(), v: n }
+      return n
+    })
+    .catch(function () { return null })
+}
+
+function imageStats () {
+  try {
+    const files = fs.readdirSync(UPLOAD_DIR)
+    let bytes = 0
+    files.forEach(function (f) { try { bytes += fs.statSync(path.join(UPLOAD_DIR, f)).size } catch (e) {} })
+    return { count: files.length, bytes }
+  } catch (e) { return { count: 0, bytes: 0 } }
 }
 
 // ---------- 路由 ----------
@@ -327,6 +424,48 @@ const server = http.createServer(async (req, res) => {
     if (p.startsWith('/api/')) {
       if (!authed(req)) return send(res, 401, { error: '未登录或登录已过期' })
 
+      // 统计面板数据
+      if (method === 'GET' && p === '/api/stats') {
+        const photos = readItems('photos')
+        const shares = readItems('shares')
+        const drafts = readItems('drafts')
+        const img = imageStats()
+        const [visits, comments, articles] = await Promise.all([busuanziStats(), commentCount(), articleCount()])
+        return send(res, 200, {
+          visits,
+          comments,
+          articles,
+          content: {
+            photos: photos.length,
+            shares: shares.length,
+            drafts: drafts.filter(function (d) { return d.status !== 'published' }).length,
+            published: drafts.filter(function (d) { return d.status === 'published' }).length
+          },
+          images: img
+        })
+      }
+
+      // 修改 Waline（评论系统）账号的密码
+      if (method === 'POST' && p === '/api/waline-password') {
+        const body = await jsonBody(req)
+        const np = String(body.newPassword || '')
+        if (np.length < 8) return send(res, 400, { error: '新密码至少 8 位' })
+        if (!np || np !== body.confirmPassword) return send(res, 400, { error: '两次输入的新密码不一致' })
+        const w = await walineLogin()
+        if (!w) return send(res, 400, { error: '拿不到 Waline 登录态，检查 WALINE_* 配置' })
+        const r = await fetch(WALINE_API + '/api/user', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + w.token },
+          body: JSON.stringify({ password: np })
+        })
+        const j = await r.json().catch(function () { return {} })
+        if (!r.ok || j.errno !== 0) return send(res, 400, { error: j.errmsg || 'Waline 拒绝了这次修改' })
+        // 密码变了，同步更新服务端存的凭据，否则下次登录换不到 token
+        if (WALINE_PASSWORD) process.env.WALINE_PASSWORD = np
+        walineCred.password = np
+        return send(res, 200, { ok: true, note: '下次登录会自动用新密码换 token' })
+      }
+
       // 当前账号信息
       if (method === 'GET' && p === '/api/account') {
         const a = currentAuth()
@@ -357,7 +496,7 @@ const server = http.createServer(async (req, res) => {
         return send(res, 200, { url: saveImage(body.filename, body.data) })
       }
 
-      const item = p.match(/^\/api\/items\/(photos|shares)(?:\/([A-Za-z0-9_]+))?$/)
+      const item = p.match(/^\/api\/items\/(photos|shares|drafts)(?:\/([A-Za-z0-9_]+))?$/)
       if (item) {
         const type = item[1]
         const id = item[2]
@@ -367,7 +506,7 @@ const server = http.createServer(async (req, res) => {
 
         if (method === 'POST' && !id) {
           const body = await jsonBody(req)
-          const rec = normalize(type, body, { id: newId(type === 'photos' ? 'p' : 's'), created: new Date().toISOString() })
+          const rec = normalize(type, body, { id: newId(type === 'photos' ? 'p' : type === 'drafts' ? 'd' : 's'), created: new Date().toISOString() })
           if (!rec.title) return send(res, 400, { error: '标题不能为空' })
           list.unshift(rec)
           writeItems(type, list)
