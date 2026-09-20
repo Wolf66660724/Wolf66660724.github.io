@@ -315,7 +315,7 @@ footer:
   copyright:
     enable: true
     version: true
-  custom_text: 💻 用键盘书写，用代码生活 | 本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 | <span id="busuanzi_value_site_uv"></span> 位访客
+  custom_text: 💻 用键盘书写，用代码生活 | 本站总访问量 <span class="footer-bz-pv"></span> 次 | <span class="footer-bz-uv"></span> 位访客
 
 # --------------------------------------
 # Aside Settings
@@ -592,8 +592,7 @@ comments:
   # Choose: Disqus/Disqusjs/Livere/Gitalk/Valine/Waline/Utterances/Facebook Comments/Twikoo/Giscus/Remark42/Artalk
   # Format of two comments system : Disqus,Waline
   use:
-    - Livere
-    - Twikoo
+    - Waline
   # Display the comment name next to the button
   text: true
   # Lazyload: The comment system will be load when comment element enters the browser's viewport.
@@ -650,7 +649,8 @@ valine:
 # Waline - A simple comment system with backend support fork from Valine
 # https://waline.js.org/
 waline:
-  serverURL:
+  # 自建在后端，走 https://worldpeace.top/comment/
+  serverURL: https://worldpeace.top/comment
   bg:
   # Use Waline pageview count as the page view count
   pageview: false
@@ -1199,6 +1199,36 @@ inject:
     - <script src="/js/music-player.js" async></script>
 
     - <script src="/js/matrix-rain.js"></script>
+    - |
+      <script>
+      // 页脚访客数：文章页侧边栏没有 webinfo 卡片，需主动补上 busuanzi 的目标元素
+      (function () {
+        function ensure(id) {
+          var el = document.getElementById(id);
+          if (!el) {
+            el = document.createElement('span');
+            el.id = id;
+            el.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+            document.body.appendChild(el);
+          }
+          return el;
+        }
+        function sync() {
+          var pv = document.getElementById('busuanzi_value_site_pv');
+          var uv = document.getElementById('busuanzi_value_site_uv');
+          var fp = document.querySelector('.footer-bz-pv');
+          var fu = document.querySelector('.footer-bz-uv');
+          if (pv && fp && pv.textContent.trim()) fp.textContent = pv.textContent.trim();
+          if (uv && fu && uv.textContent.trim()) fu.textContent = uv.textContent.trim();
+        }
+        function boot() { ensure('busuanzi_value_site_pv'); ensure('busuanzi_value_site_uv'); sync(); }
+        boot();
+        var n = 0;
+        var timer = setInterval(function () { sync(); if (++n > 120) clearInterval(timer); }, 500);
+        window.addEventListener('load', sync);
+        document.addEventListener('pjax:complete', function () { boot(); });
+      })();
+      </script>
     - <script src="/js/visitor-map.js"></script>
     - <script src="/js/daily-quote.js"></script>
     - |
