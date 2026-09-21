@@ -37,7 +37,9 @@
 
     function loadIndex() {
         if (!indexPromise) {
-            indexPromise = fetch(INDEX_URL, { credentials: 'same-origin' })
+            // no-cache = 每次都跟服务器校验一下（没变会走 304，很便宜），
+            // 否则刚部署完的访客可能还在用浏览器里缓存的旧索引。
+            indexPromise = fetch(INDEX_URL, { credentials: 'same-origin', cache: 'no-cache' })
                 .then(function (r) { return r.ok ? r.json() : { items: [] }; })
                 .catch(function () { return { items: [] }; });
         }
@@ -178,7 +180,12 @@
         if (items && items.length) {
             rows.push('<div class="cal-d-content"><div class="cal-d-content-title">这一天记录了</div>' +
                 items.map(function (it) {
+                    // 索引里的 url 现在是绝对路径；这里再兜一层，
+                    // 防止相对路径在 /calendar/ 下被解析成 /calendar/2026/... 而 404
                     var href = it.url || '#';
+                    if (href !== '#' && !/^(?:https?:|mailto:|\/)/.test(href)) {
+                        href = '/' + href.replace(/^\.?\/+/, '');
+                    }
                     var ext = /^https?:/.test(href) ? ' target="_blank" rel="noopener"' : '';
                     return '<a class="cal-content-item" href="' + esc(href) + '"' + ext + '>' +
                         '<span class="cal-content-icon">' + it.icon + '</span>' +

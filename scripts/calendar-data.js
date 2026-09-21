@@ -77,7 +77,10 @@ hexo.extend.generator.register('calendar-index', function (locals) {
       icon: '📝',
       label: '文章',
       title: post.title,
-      url: post.path || '/'
+      // Hexo 的 post.path 不带开头斜杠（如 '2026/09/17/xxx/'），
+      // 直接塞进 JSON 的话，在 /calendar/ 这种子路径页面上会被浏览器
+      // 当成相对路径解析成 /calendar/2026/... → 404。这里补成绝对路径。
+      url: post.path ? (post.path.startsWith('/') ? post.path : '/' + post.path) : '/'
     })
   })
 
