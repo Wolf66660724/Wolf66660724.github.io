@@ -353,7 +353,8 @@ aside:
       enable: true
       icon: fab fa-github
       text: Follow Me
-      link: https://github.com/Wolf66660724
+      # 彩蛋：点「Follow Me」不是去 GitHub，而是进入 3D 简历世界
+      link: https://portfolio.worldpeace.top/
   card_announcement:
     enable: true
     content: welcome to my Blog
