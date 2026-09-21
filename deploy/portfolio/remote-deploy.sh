@@ -58,9 +58,11 @@ probe "纹理" "/textures/paper-texture.webp"
 probe "字体" "/fonts/HuawenHupo.ttf"
 probe "音效" "/sounds/szumwiatru.mp3"
 probe "SPA 路由" "/gallery"
-probe "JS bundle" "/assets/index-DUvL0fnS.js"
+# 主 JS 的文件名带内容哈希，每次构建都会变，这里动态取一个
+MAIN_JS=$(sudo find "$REMOTE_DIR/assets" -maxdepth 1 -name "index-*.js" -printf "%f\n" | head -1)
+probe "JS bundle" "/assets/$MAIN_JS"
 
 echo -n "   gzip 预压缩:          "
-sudo docker exec blog-nginx wget -qS -O /dev/null --no-check-certificate --header="Host: $HOST" --header='Accept-Encoding: gzip' "https://127.0.0.1/assets/index-DUvL0fnS.js" 2>&1 | grep -i -m1 'Content-Encoding' | tr -d '\r' || echo '（未启用）'
+sudo docker exec blog-nginx wget -qS -O /dev/null --no-check-certificate --header="Host: $HOST" --header='Accept-Encoding: gzip' "https://127.0.0.1/assets/$MAIN_JS" 2>&1 | grep -i -m1 'Content-Encoding' | tr -d '\r' || echo '（未启用）'
 
 echo "DEPLOY_OK"

@@ -96,7 +96,7 @@ services:
     healthcheck:
       # nginx 镜像里没有 node，原来那条检查在 nginx 容器里永远失败 -> 容器一直 unhealthy。
       # 改成真正验一次 TLS + HTTP：带上 Host 头打自己的 443。
-      test: ["CMD-SHELL", "wget --spider -T 5 --no-check-certificate --header='Host: worldpeace.top' https://127.0.0.1/ || exit 1"]
+      test: ["CMD-SHELL", "wget -q -T 5 -O /dev/null --no-check-certificate --header='Host: worldpeace.top' https://127.0.0.1/ || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
