@@ -50,6 +50,65 @@
         'Dalian': [38.91, 121.61],       'Xiamen': [24.48, 118.09]
     };
 
+    // 地理接口普遍返回英文城市名，这里映射成中文，认不出来的原样显示。
+    var CITY_CN = {
+        "Hong Kong": "香港", "Macau": "澳门", "Taipei": "台北", "Kaohsiung": "高雄",
+        "Ho Chi Minh City": "胡志明市", "Kuala Lumpur": "吉隆坡",
+        "San Francisco": "旧金山", "Los Angeles": "洛杉矶", "New York": "纽约",
+        "Washington": "华盛顿", "Frankfurt": "法兰克福", "Amsterdam": "阿姆斯特丹",
+        "Melbourne": "墨尔本", "Bangalore": "班加罗尔", "Mumbai": "孟买",
+        "New Delhi": "新德里", "Toronto": "多伦多", "Vancouver": "温哥华",
+        "Chicago": "芝加哥", "Seattle": "西雅图", "Boston": "波士顿",
+        "Singapore": "新加坡", "Tokyo": "东京", "Osaka": "大阪", "Seoul": "首尔",
+        "Bangkok": "曼谷", "Jakarta": "雅加达", "Manila": "马尼拉", "Hanoi": "河内",
+        "London": "伦敦", "Paris": "巴黎", "Berlin": "柏林", "Moscow": "莫斯科",
+        "Sydney": "悉尼", "Dubai": "迪拜",
+
+        "Beijing": "北京", "Shanghai": "上海", "Tianjin": "天津", "Chongqing": "重庆",
+        "Shijiazhuang": "石家庄", "Taiyuan": "太原", "Hohhot": "呼和浩特", "Shenyang": "沈阳",
+        "Changchun": "长春", "Harbin": "哈尔滨", "Nanjing": "南京", "Hangzhou": "杭州",
+        "Hefei": "合肥", "Fuzhou": "福州", "Nanchang": "南昌", "Jinan": "济南",
+        "Zhengzhou": "郑州", "Wuhan": "武汉", "Changsha": "长沙", "Guangzhou": "广州",
+        "Nanning": "南宁", "Haikou": "海口", "Chengdu": "成都", "Guiyang": "贵阳",
+        "Kunming": "昆明", "Lhasa": "拉萨", "Xi\u0027an": "西安", "Lanzhou": "兰州",
+        "Xining": "西宁", "Yinchuan": "银川", "Urumqi": "乌鲁木齐", "Shenzhen": "深圳",
+        "Suzhou": "苏州", "Qingdao": "青岛", "Dalian": "大连", "Xiamen": "厦门",
+        "Ningbo": "宁波", "Wuxi": "无锡", "Wenzhou": "温州", "Foshan": "佛山",
+        "Dongguan": "东莞", "Zhuhai": "珠海", "Zhongshan": "中山", "Huizhou": "惠州",
+        "Quanzhou": "泉州", "Yantai": "烟台", "Weifang": "潍坊", "Zibo": "淄博",
+        "Shaoxing": "绍兴", "Jiaxing": "嘉兴", "Taizhou": "台州", "Changzhou": "常州",
+        "Xuzhou": "徐州", "Nantong": "南通", "Yangzhou": "扬州", "Wuhu": "芜湖",
+        "Bengbu": "蚌埠", "Anqing": "安庆", "Ma\u0027anshan": "马鞍山", "Lu\u0027an": "六安",
+        "Fuyang": "阜阳", "Linyi": "临沂", "Jining": "济宁", "Handan": "邯郸",
+        "Baoding": "保定", "Tangshan": "唐山", "Luoyang": "洛阳", "Xiangyang": "襄阳",
+        "Yichang": "宜昌", "Zhuzhou": "株洲", "Guilin": "桂林", "Zhanjiang": "湛江",
+        "Sanya": "三亚", "Lijiang": "丽江", "Dali": "大理"
+    };
+
+    // 长的键排在前面，避免 Suzhou 这类被更短的键抢先匹配
+    var CITY_CN_KEYS = Object.keys(CITY_CN).sort(function (a, b) { return b.length - a.length; });
+
+    function cityCN(name) {
+        var key = String(name == null ? '' : name).trim();
+        if (!key) return '';
+        // 接口本来就返回中文就直接用
+        if (/[\u4e00-\u9fa5]/.test(key)) return key;
+
+        var lower = key.toLowerCase();
+        for (var i = 0; i < CITY_CN_KEYS.length; i++) {
+            if (CITY_CN_KEYS[i].toLowerCase() === lower) return CITY_CN[CITY_CN_KEYS[i]];
+        }
+
+        // 兼容 "Anhui, Hefei" 这类写法：把非字母统一成空格，再按整词比对
+        var hay = ' ' + lower.replace(/[^a-z']+/g, ' ') + ' ';
+        for (var j = 0; j < CITY_CN_KEYS.length; j++) {
+            var k = CITY_CN_KEYS[j];
+            if (hay.indexOf(' ' + k.toLowerCase() + ' ') !== -1) return CITY_CN[k];
+        }
+
+        return key;   // 认不出来就原样显示
+    }
+
     // 从城市名里取坐标（兼容 'Hefei' / '合肥' / '安徽, 合肥' 之类的写法）
     function lookupCityCoords(name) {
         if (!name) return null;
@@ -111,7 +170,7 @@
             var fixed = lookupCityCoords(d.city);
             visitorData = {
                 ip: d.ip || 'Unknown',
-                city: d.city || '',
+                city: cityCN(d.city),
                 region: d.region || '',
                 country: COUNTRY_NAMES[code] || (rawCountry.length > 3 ? d.country : code) || '',
                 lat: fixed ? fixed[0] : d.lat,
@@ -191,16 +250,21 @@
                 '<div id="mini-map-svg" style="display:none;border-radius:8px;overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);" onclick="expandMap()"></div>' +
             '</div>' +
             '<div style="padding:10px 16px;border-top:1px solid rgba(0,0,0,0.05);background:rgba(255,255,255,0.5);">' +
-                '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">' +
-                    // IPv6 最长 39 个字符，单独占一整行并允许断行，
-                    // 否则它会把右边几格挤变形
-                    '<div style="grid-column:1/-1;display:flex;align-items:baseline;gap:4px;min-width:0;">' +
+                // 三项各占一行：IP / 地点（城市+国家合一行）/ 时间。
+                // IPv6 最长 39 个字符且不可断行，单独整行并允许断行，避免把布局撑破。
+                '<div style="display:grid;grid-template-columns:1fr;gap:7px;font-size:11px;">' +
+                    '<div style="display:flex;align-items:baseline;gap:5px;min-width:0;line-height:1.35;">' +
                         '<span style="color:#718096;flex:0 0 auto;">IP</span>' +
                         '<span style="color:#4299e1;font-family:monospace;font-weight:500;min-width:0;overflow-wrap:anywhere;word-break:break-all;line-height:1.45;">' + esc(visitorData.ip) + '</span>' +
                     '</div>' +
-                    '<div style="display:flex;align-items:center;gap:4px;min-width:0;"><span style="color:#718096;flex:0 0 auto;">📍</span><span style="color:#4a5568;min-width:0;overflow-wrap:anywhere;">' + esc(visitorData.city) + '</span></div>' +
-                    '<div style="display:flex;align-items:center;gap:4px;min-width:0;"><span style="color:#718096;flex:0 0 auto;">🌐</span><span style="color:#4a5568;min-width:0;overflow-wrap:anywhere;">' + esc(visitorData.country) + '</span></div>' +
-                    '<div style="display:flex;align-items:center;gap:4px;min-width:0;"><span style="color:#718096;flex:0 0 auto;">🕐</span><span style="color:#4a5568;min-width:0;overflow-wrap:anywhere;">' + esc(visitorData.time) + '</span></div>' +
+                    '<div style="display:flex;align-items:baseline;gap:5px;min-width:0;line-height:1.35;">' +
+                        '<span style="color:#718096;flex:0 0 auto;">📍</span>' +
+                        '<span style="color:#4a5568;min-width:0;overflow-wrap:anywhere;">' + esc(visitorData.city) + (visitorData.country ? ', ' + esc(visitorData.country) : '') + '</span>' +
+                    '</div>' +
+                    '<div style="display:flex;align-items:baseline;gap:5px;min-width:0;line-height:1.35;">' +
+                        '<span style="color:#718096;flex:0 0 auto;">🕐</span>' +
+                        '<span style="color:#4a5568;min-width:0;overflow-wrap:anywhere;">' + esc(visitorData.time) + '</span>' +
+                    '</div>' +
                 '</div>' +
             '</div>';
 
