@@ -7,14 +7,21 @@ link(rel='stylesheet' href=url_for(theme.CDN.coin_css) media="defer" onload="thi
         .coin__middle
         .coin__back
         .coin__front
-    .reward-main
+
+  //- 弹层从 button 里挪出来：
+  //- 1) <a> 嵌在 <button> 里点击会被按钮吞掉，二维码点不开；
+  //- 2) 绝对定位以按钮为基准时宽度只有按钮的 150%，两个码会被挤出去。
+  .reward-main
+    .reward-card
+      p.reward-title= theme.reward.title || '如果这篇文章帮到了你'
       ul.reward-all
         each item in theme.reward.QR_code
           - var clickTo = (item.itemlist||item).link ? (item.itemlist||item).link : (item.itemlist||item).img
           li.reward-item
-            a(href=clickTo target='_blank')
-              img.post-qr-code-img(src=url_for((item.itemlist||item).img) alt=(item.itemlist||item).text)
+            a(href=clickTo target='_blank' rel='noopener')
+              img.post-qr-code-img(src=url_for((item.itemlist||item).img) alt=(item.itemlist||item).text loading='lazy')
             .post-qr-code-desc=(item.itemlist||item).text
+      p.reward-hint= theme.reward.hint || '扫码请我喝杯咖啡'
 if theme.reward.coinAudio
   - var coinAudio = theme.reward.coinAudio ? url_for(theme.reward.coinAudio) : 'https://npm.elemecdn.com/akilar-candyassets@1.0.16/audio/coin.mp3'
   audio#coinAudio(src=coinAudio)

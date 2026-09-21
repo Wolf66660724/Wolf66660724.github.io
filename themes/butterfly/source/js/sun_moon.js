@@ -20,6 +20,11 @@
   } else {
     document.addEventListener('DOMContentLoaded', check);
   }
+
+  // PJAX 换页会把 #rightside-config-hide 一起换掉，而 #modeicon 就在里面，
+  // 新内容里写死的是太阳图标。换页后必须按当前 data-theme 再同步一次，
+  // 否则会出现「明明是夜间模式，图标却还是太阳」的错位。
+  document.addEventListener('pjax:complete', check);
 })();
 
 function switchNightMode() {

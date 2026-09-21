@@ -2,6 +2,13 @@
 (function() {
     var visitorData = null;
 
+    // 接口返回的字段直接拼进 innerHTML，先转义一道
+    function esc(v) {
+        return String(v == null ? '' : v).replace(/[&<>"']/g, function(c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
     // 国家代码 -> 中文名（ipinfo.io 只返回 CN 这样的国家代码）
     var COUNTRY_NAMES = {
         CN: '中国', HK: '中国香港', MO: '中国澳门', TW: '中国台湾',
@@ -185,17 +192,24 @@
             '</div>' +
             '<div style="padding:10px 16px;border-top:1px solid rgba(0,0,0,0.05);background:rgba(255,255,255,0.5);">' +
                 '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">' +
-                    '<div style="display:flex;align-items:center;gap:4px;"><span style="color:#718096;">IP</span><span style="color:#4299e1;font-family:monospace;font-weight:500;">' + visitorData.ip + '</span></div>' +
-                    '<div style="display:flex;align-items:center;gap:4px;"><span style="color:#718096;">📍</span><span style="color:#4a5568;">' + visitorData.city + '</span></div>' +
-                    '<div style="display:flex;align-items:center;gap:4px;"><span style="color:#718096;">🌐</span><span style="color:#4a5568;">' + visitorData.country + '</span></div>' +
-                    '<div style="display:flex;align-items:center;gap:4px;"><span style="color:#718096;">🕐</span><span style="color:#4a5568;">' + visitorData.time + '</span></div>' +
+                    // IPv6 最长 39 个字符，单独占一整行并允许断行，
+                    // 否则它会把右边几格挤变形
+                    '<div style="grid-column:1/-1;display:flex;align-items:baseline;gap:4px;min-width:0;">' +
+                        '<span style="color:#718096;flex:0 0 auto;">IP</span>' +
+                        '<span style="color:#4299e1;font-family:monospace;font-weight:500;min-width:0;overflow-wrap:anywhere;word-break:break-all;line-height:1.45;">' + esc(visitorData.ip) + '</span>' +
+                    '</div>' +
+                    '<div style="display:flex;align-items:center;gap:4px;min-width:0;"><span style="color:#718096;flex:0 0 auto;">📍</span><span style="color:#4a5568;min-width:0;overflow-wrap:anywhere;">' + esc(visitorData.city) + '</span></div>' +
+                    '<div style="display:flex;align-items:center;gap:4px;min-width:0;"><span style="color:#718096;flex:0 0 auto;">🌐</span><span style="color:#4a5568;min-width:0;overflow-wrap:anywhere;">' + esc(visitorData.country) + '</span></div>' +
+                    '<div style="display:flex;align-items:center;gap:4px;min-width:0;"><span style="color:#718096;flex:0 0 auto;">🕐</span><span style="color:#4a5568;min-width:0;overflow-wrap:anywhere;">' + esc(visitorData.time) + '</span></div>' +
                 '</div>' +
             '</div>';
 
         // 插入到公告下方
         announcement.parentNode.insertBefore(mapCard, announcement.nextSibling);
 
-        // 创建悬浮放大容器
+        // 创建悬浮放大容器（PJAX 重挂时先清掉旧的，避免叠加）
+        var oldExpanded = document.getElementById('expanded-map-container');
+        if (oldExpanded && oldExpanded.parentNode) oldExpanded.parentNode.removeChild(oldExpanded);
         var expandedContainer = document.createElement('div');
         expandedContainer.id = 'expanded-map-container';
         expandedContainer.style.cssText = 'display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:10000;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);';
@@ -338,12 +352,12 @@
         html += '<circle cx="' + markerX + '" cy="' + markerY + '" r="10" fill="none" stroke="#05f2f2" stroke-width="1" opacity="0.6"><animate attributeName="r" values="5;25;5" dur="2.5s" repeatCount="indefinite" begin="0.8s"/><animate attributeName="opacity" values="0.6;0;0.6" dur="2.5s" repeatCount="indefinite" begin="0.8s"/></circle>';
         html += '<circle cx="' + markerX + '" cy="' + markerY + '" r="7" fill="#05f2f2" filter="url(#glow)"><animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/></circle>';
         html += '<circle cx="' + markerX + '" cy="' + markerY + '" r="3" fill="#fff"/>';
-        html += '<g transform="translate(' + markerX + ',' + (markerY - 38) + ')"><rect x="-55" y="-12" width="110" height="22" rx="4" fill="rgba(5,242,242,0.15)" stroke="rgba(5,242,242,0.5)" stroke-width="1"/><text x="0" y="4" text-anchor="middle" fill="#05f2f2" font-size="11" font-weight="bold" font-family="monospace">📍 ' + visitorData.city + '</text></g>';
+        html += '<g transform="translate(' + markerX + ',' + (markerY - 38) + ')"><rect x="-55" y="-12" width="110" height="22" rx="4" fill="rgba(5,242,242,0.15)" stroke="rgba(5,242,242,0.5)" stroke-width="1"/><text x="0" y="4" text-anchor="middle" fill="#05f2f2" font-size="11" font-weight="bold" font-family="monospace">📍 ' + esc(visitorData.city) + '</text></g>';
         html += '</svg></div>';
         html += '<div style="padding:12px 18px;border-top:1px solid rgba(48,55,69,0.3);background:rgba(0,0,0,0.15);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:11px;">';
-        html += '<span style="color:#7e8e9e;">IP: <span style="color:#05f2f2;font-family:monospace;">' + visitorData.ip + '</span></span>';
-        html += '<span style="color:#7e8e9e;">📍 <span style="color:#a7bcd1;">' + visitorData.city + ', ' + visitorData.country + '</span></span>';
-        html += '<span style="color:#7e8e9e;">🕐 <span style="color:#a7bcd1;">' + visitorData.time + '</span></span>';
+        html += '<span style="color:#7e8e9e;min-width:0;overflow-wrap:anywhere;word-break:break-all;">IP: <span style="color:#05f2f2;font-family:monospace;">' + esc(visitorData.ip) + '</span></span>';
+        html += '<span style="color:#7e8e9e;min-width:0;overflow-wrap:anywhere;">📍 <span style="color:#a7bcd1;">' + esc(visitorData.city) + ', ' + esc(visitorData.country) + '</span></span>';
+        html += '<span style="color:#7e8e9e;min-width:0;overflow-wrap:anywhere;">🕐 <span style="color:#a7bcd1;">' + esc(visitorData.time) + '</span></span>';
         html += '</div></div>';
         return html;
     }
@@ -393,5 +407,21 @@
     window.mapZoomOut = function() { var s = window._mapState; if (s && window._updateTransform) { s.scale = Math.max(0.5, s.scale - 0.5); window._updateTransform(s.scale, s.translateX, s.translateY); } };
     window.mapReset = function() { if (window._updateTransform) window._updateTransform(1, 0, 0); };
 
+    // ---------- PJAX 换页后重新挂载 ----------
+    // 侧边栏在 #body-wrap 里面，PJAX 换页会被换掉，这里补一次渲染。
+    function remount() {
+        if (document.querySelector('.card-map')) return;      // 已经挂过了
+        if (!document.querySelector('.card-announcement')) return;
+        if (visitorData) {
+            // 位置数据还在内存里，直接重绘，不再打一次接口
+            renderAnnouncement();
+            renderMapCard();
+            loadMap();
+        } else {
+            getVisitorLocation();
+        }
+    }
+
     setTimeout(getVisitorLocation, 1500);
+    document.addEventListener('pjax:complete', remount);
 })();

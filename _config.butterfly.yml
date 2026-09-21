@@ -238,13 +238,16 @@ reward:
   enable: true
   coinAudio: https://npm.elemecdn.com/akilar-candyassets@1.0.16/audio/coin.mp3
   text: thanks
+  # 打赏弹层里的两行文案，想改直接改这里
+  title: 如果这篇文章帮到了你
+  hint: 扫码请我喝杯咖啡 ☕
   QR_code:
     - img: /img/wechatpay.png
       link:
-      text: wechat
+      text: 微信
     - img: /img/alipay.png
       link:
-      text: alipay
+      text: 支付宝
 
 # Post edit
 # Easily browse and edit blog source code online.
@@ -1052,7 +1055,7 @@ note:
 
 # https://github.com/MoOx/pjax
 pjax:
-  enable: false
+  enable: true
   # Exclude the specified pages from pjax, such as '/music/'
   exclude:
     # - /xxxxxx/
@@ -1184,6 +1187,7 @@ inject:
       </script>
     - <script src="/js/visitor-map.js"></script>
     - <script src="/js/daily-quote.js"></script>
+    - <script src="/js/reward.js"></script>
     - |
       <script>
         (function () {

@@ -58,16 +58,19 @@
         announcement.innerHTML += quoteHtml;
     }
 
-    // 延迟执行，等待 visitor-map.js 渲染完成
-    function checkAndRender() {
+    // 延迟执行，等待 visitor-map.js 渲染完成。
+    // 轮询有限次数：PJAX 换页后公告是空的，要等 visitor-map 重新填上 welcome。
+    function checkAndRender(retries) {
+        if (retries == null) retries = 8;
         var announcement = document.querySelector('.card-announcement .announcement_content');
-        if (announcement && announcement.innerHTML.indexOf('welcome') !== -1 && announcement.innerHTML.indexOf('每日一句') === -1) {
-            renderDailyQuote();
-        } else if (!announcement) {
-            setTimeout(checkAndRender, 500);
+        if (announcement && announcement.innerHTML.indexOf('welcome') !== -1) {
+            if (announcement.innerHTML.indexOf('每日一句') === -1) renderDailyQuote();
+            return;
         }
+        if (retries > 0) setTimeout(function () { checkAndRender(retries - 1); }, 500);
     }
-    setTimeout(checkAndRender, 4000);
+    setTimeout(function () { checkAndRender(20); }, 4000);
+    document.addEventListener('pjax:complete', function () { setTimeout(function () { checkAndRender(10); }, 300); });
 
     // 暗黑模式适配
     if (!document.getElementById('daily-quote-styles')) {

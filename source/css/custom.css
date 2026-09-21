@@ -1,29 +1,169 @@
 /* 自定义样式 - 模块美化 */
 
-/* 赞助弹窗 - 两个二维码并排排列 */
-.reward-main .reward-all {
-    display: flex !important;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px !important;
+/* ==================== 文章打赏 ==================== */
+/* 两个收款码原本被塞在一个 161px 宽的弹层里（宽度按按钮算），
+   而且图片被强行拉成 120x120 正方形，比例失真、还会溢出到框外。
+   这里重做：弹层按内容自适应宽度并居中，图片保持原始比例。 */
+.post-reward {
+    --reward-card-bg: #ffffff;
+    --reward-card-border: rgba(15, 23, 42, .07);
+    --reward-card-shadow: 0 14px 34px rgba(15, 23, 42, .16);
+    --reward-title: #475569;
+    --reward-hint: #9aa7b5;
+    --reward-label: #64748b;
+    margin: 2.6rem 0 .3rem;
 }
 
-.reward-main .reward-item {
-    display: inline-block !important;
-    padding: 0 8px !important;
-    vertical-align: top !important;
+[data-theme="dark"] .post-reward {
+    --reward-card-bg: #262626;
+    --reward-card-border: rgba(255, 255, 255, .09);
+    --reward-card-shadow: 0 16px 38px rgba(0, 0, 0, .55);
+    --reward-title: rgba(255, 255, 255, .82);
+    --reward-hint: rgba(255, 255, 255, .42);
+    --reward-label: rgba(255, 255, 255, .62);
 }
 
-.reward-main .reward-item img {
-    width: 120px !important;
-    height: 120px !important;
-    border-radius: 8px;
+/* 弹层：宽度按内容撑开，不再受按钮宽度限制。
+   position / display 原本写在主题的后代选择器里，弹层挪出 button 后会一起失效，
+   所以这三条必须显式补回来（否则弹层会变成常驻在按钮下方的一块内容）。 */
+.post-reward .reward-main {
+    position: absolute;
+    display: none;
+    z-index: 100;
+    /* 不用 transform 居中：主题给 .reward-main 挂了 donate_effcet 动画，
+       动画的 transform 会盖掉这里的 translateX，改用 margin auto 居中 */
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: max-content;
+    max-width: min(92vw, 460px);
+    padding: 0 0 14px;
+    bottom: calc(100% - 2px);
 }
 
-.reward-main .post-qr-code-desc {
-    padding-top: 8px !important;
-    width: 120px !important;
+.post-reward .reward-card {
+    position: relative;
+    padding: 14px 18px 12px;
+    border-radius: 16px;
+    background: var(--reward-card-bg);
+    border: 1px solid var(--reward-card-border);
+    box-shadow: var(--reward-card-shadow);
+}
+
+/* 指向按钮的小三角 */
+.post-reward .reward-card::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -9px;
+    transform: translateX(-50%);
+    border-top: 10px solid var(--reward-card-bg);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+}
+
+.post-reward .reward-title {
+    margin: 0 0 12px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .3px;
+    color: var(--reward-title);
     text-align: center;
+}
+
+/* 两个码并排，各自独立成卡片 */
+.post-reward .reward-all {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+}
+
+/* 关掉主题自带的透明热区和小三角，改用上面的 */
+.post-reward .reward-all::before,
+.post-reward .reward-all::after {
+    content: none;
+}
+
+.post-reward .reward-item {
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.post-reward .reward-item a {
+    display: block;
+}
+
+/* 保持收款码原始比例，只做等比缩放 */
+.post-reward .post-qr-code-img {
+    display: block;
+    width: 132px;
+    height: 172px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, .08);
+    box-shadow: 0 2px 10px rgba(15, 23, 42, .07);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.post-reward .reward-item a:hover .post-qr-code-img {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, .18);
+}
+
+.post-reward .post-qr-code-desc {
+    width: auto;
+    padding: 9px 0 0;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--reward-label);
+    text-align: center;
+}
+
+.post-reward .reward-hint {
+    margin: 10px 0 0;
+    font-size: 11.5px;
+    color: var(--reward-hint);
+    text-align: center;
+}
+
+/* 悬停按钮叫出弹层；鼠标移进弹层时保持展开。
+   弹层底部那 14px 透明内边距就是用来接住鼠标的，别删。
+   必须限定在 (hover: hover) 里：触屏浏览器点完按钮会让 :hover 粘住，
+   那样 reward-open 被移除后弹层也关不掉。 */
+@media (hover: hover) {
+    .post-reward .reward-button:hover ~ .reward-main,
+    .post-reward .reward-main:hover {
+        display: block;
+    }
+}
+
+/* 触屏端由 reward.js 切换这个类（:focus-within 在 iOS 上不可靠） */
+.post-reward.reward-open .reward-main {
+    display: block;
+}
+
+@media (max-width: 560px) {
+    .post-reward .post-qr-code-img {
+        width: 116px;
+        height: 152px;
+    }
+
+    .post-reward .reward-all {
+        gap: 10px;
+    }
+
+    .post-reward .reward-card {
+        padding: 13px 14px 11px;
+    }
 }
 
 /* ==================== 白天模式 ==================== */

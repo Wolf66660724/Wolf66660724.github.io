@@ -325,6 +325,16 @@
         window.minimizeMusicPlayer = minimizeMusicPlayer;
         if (!document.getElementById('aplayer-slot')) return;
 
+        // PJAX 换页时只替换 #body-wrap，播放器面板在它外面，会原样留下来。
+        // 这种情况绝不能重建播放器：destroy + new 会把正在播的歌打断并从头开始。
+        // 只补一下绑定就行。
+        if (ap) {
+            applyPlayerTheme();
+            bindControls();
+            initDrag();
+            return;
+        }
+
         // 先用本地曲目把播放器立起来（秒开，不等网络）
         createPlayer(normalize(LOCAL_TRACKS));
         applyPlayerTheme();
